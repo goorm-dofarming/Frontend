@@ -2,7 +2,7 @@ REPOSITORY=/home/ubuntu/deploy
 
 cd $REPOSITORY
 
-sudo npm install
+sudo pnpm install
 
 sudo pm2 resurrect
 
