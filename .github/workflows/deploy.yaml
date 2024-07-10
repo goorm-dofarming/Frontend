@@ -44,11 +44,11 @@ jobs:
 
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install
+        run: pnpm install
 
       - name: Build
         run: |
-          npm run build:dev
+          pnpm build:dev
 
       - name: zip create
         run: |
