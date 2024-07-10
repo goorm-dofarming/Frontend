@@ -44,7 +44,7 @@ jobs:
 
       - name: Build
         run: |
-          pnpm build:dev
+          pnpm build
 
       - name: zip create
         run: |
