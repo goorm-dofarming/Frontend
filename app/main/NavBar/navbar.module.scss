@@ -1,0 +1,49 @@
+@use "../../_styles/constants/color" as c;
+@use "../../_styles/mixins/" as m;
+.nav {
+  @include m.flex(space-between, center, column);
+  width: 72px;
+  height: 100%;
+  background-color: c.$C_SECONDARY;
+  padding: 16px 0;
+  .menu {
+    @include m.flex(center, center, column);
+    width: 100%;
+    // padding: 12px;
+    row-gap: 16px;
+    .logo {
+      @include m.flex(center, center, row);
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+    }
+  }
+}
+
+.button {
+  @include m.flex(center, center, row);
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  > svg {
+    // @include m.flex(center, center, row);
+    width: 48px;
+    height: 48px;
+  }
+
+  &:hover {
+    background-color: c.$C_WHITE;
+    svg {
+      fill: c.$C_SECONDARY;
+    }
+  }
+  &:focus {
+    background-color: c.$C_WHITE;
+    svg {
+      fill: c.$C_SECONDARY;
+    }
+  }
+}
