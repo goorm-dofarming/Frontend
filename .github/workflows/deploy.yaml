@@ -16,6 +16,12 @@ jobs:
       - name: Checkout source code.
         uses: actions/checkout@v4
 
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
       - name: Check Node v
         run: node -v
 
@@ -36,7 +42,6 @@ jobs:
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 8
           run_install: false
 
       - name: Install dependencies
