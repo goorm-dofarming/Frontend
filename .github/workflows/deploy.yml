@@ -23,20 +23,6 @@ jobs:
       - name: Check Node v
         run: node -v
 
-      - name: Generate Environment Variables File
-        run: |
-          echo "NEXT_PUBLIC_MODE=$NEXT_PUBLIC_MODE" >> .env.development
-          echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL" >> .env.development
-          echo "NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_ID" >> .env.development
-          echo "NEXT_PUBLIC_GOOGLE_LOGIN_REDIRECT_URI=$NEXT_PUBLIC_GOOGLE_LOGIN_REDIRECT_URI" >> .env.development
-          echo "NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_PW=$NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_PW" >> .env.development
-        env:
-          NEXT_PUBLIC_MODE: ${{ secrets.NEXT_PUBLIC_MODE }}
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-          NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_ID }}
-          NEXT_PUBLIC_GOOGLE_LOGIN_REDIRECT_URI: ${{ secrets.NEXT_PUBLIC_GOOGLE_LOGIN_REDIRECT_URI }}
-          NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_PW: ${{ secrets.NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_PW }}
-
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
@@ -44,7 +30,7 @@ jobs:
           run_install: false
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build
         run: |
@@ -52,7 +38,7 @@ jobs:
 
       - name: zip create
         run: |
-          zip -qq -r --symlinks  ./til-dev.zip .
+          zip -qq -r ./til-dev.zip .
         shell: bash
 
       - name: Configure AWS credentials
