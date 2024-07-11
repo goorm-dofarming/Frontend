@@ -28,22 +28,27 @@
   width: 100%;
   text-align: center;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
   > svg {
     // @include m.flex(center, center, row);
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
   }
 
   &:hover {
-    background-color: c.$C_WHITE;
+    // background-color: c.$C_WHITE;
+    // filter: drop-shadow(2px 4px 8px rgb(230, 154, 154));
+    transform: translateY(-2px);
     svg {
-      fill: c.$C_SECONDARY;
+      // fill: c.$C_SECONDARY;
     }
   }
   &:focus {
-    background-color: c.$C_WHITE;
+    // background-color: c.$C_WHITE;
+    filter: drop-shadow(2px 4px 8px rgb(230, 154, 154));
+    // box-shadow: 2px 4px 4px white;
     svg {
-      fill: c.$C_SECONDARY;
+      // fill: c.$C_SECONDARY;
     }
   }
 }

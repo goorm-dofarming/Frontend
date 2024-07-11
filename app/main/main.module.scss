@@ -1,4 +1,14 @@
+@use "../_styles/constants/color" as c;
+@use "../_styles/mixins/" as m;
 .main {
+  @include m.flex(space-between, flex-start, row);
   width: 100vw;
   height: 100vh;
+  .navbar {
+    width: 72px;
+  }
+  .page {
+    width: calc(100vw - 72px);
+    height: 100%;
+  }
 }
