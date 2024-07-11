@@ -4,6 +4,10 @@ on:
     branches:
       - dev
 
+permissions:
+  id-token: write
+  contents: read
+
 env:
   S3_BUCKET_NAME: dofarming-fe-bucket
   CODE_DEPLOY_APPLICATION_NAME: dofarming_codeDeploy_FE
@@ -19,41 +23,29 @@ jobs:
       - name: Check Node v
         run: node -v
 
-      - name: Generate Environment Variables File
-        run: |
-          echo "NEXT_PUBLIC_MODE=$NEXT_PUBLIC_MODE" >> .env.development
-          echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL" >> .env.development
-          echo "NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_ID" >> .env.development
-          echo "NEXT_PUBLIC_GOOGLE_LOGIN_REDIRECT_URI=$NEXT_PUBLIC_GOOGLE_LOGIN_REDIRECT_URI" >> .env.development
-          echo "NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_PW=$NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_PW" >> .env.development
-        env:
-          NEXT_PUBLIC_MODE: ${{ secrets.NEXT_PUBLIC_MODE }}
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-          NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_ID }}
-          NEXT_PUBLIC_GOOGLE_LOGIN_REDIRECT_URI: ${{ secrets.NEXT_PUBLIC_GOOGLE_LOGIN_REDIRECT_URI }}
-          NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_PW: ${{ secrets.NEXT_PUBLIC_GOOGLE_LOGIN_CLIENT_PW }}
-
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
+          version: 9.4.0
           run_install: false
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build
         run: |
-          pnpm build:dev
+          pnpm build
 
       - name: zip create
         run: |
-          zip -qq -r --symlinks  ./til-dev.zip .
+          zip -qq -r ./til-dev.zip .
         shell: bash
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v4
+
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
