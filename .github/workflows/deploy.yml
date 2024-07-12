@@ -11,7 +11,7 @@ permissions:
 env:
   S3_BUCKET_NAME: dofarming-fe-bucket
   CODE_DEPLOY_APPLICATION_NAME: dofarming_codeDeploy_FE
-  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: dofarming_codeDeploy_FE_group
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: dofarming_codeDeploy_FE2
   ENVIRONMENT: development
 jobs:
   build:
@@ -26,7 +26,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 9.4.0
+          version: 9.5.0
           run_install: false
 
       - name: Install dependencies
