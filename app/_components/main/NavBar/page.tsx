@@ -4,23 +4,25 @@ import { RiChatHistoryFill } from "react-icons/ri";
 import { IoHeartSharp } from "react-icons/io5";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 import { IoMdLogOut } from "react-icons/io";
-import logo from "@/app/_assets/icons/logo.png";
+import logo from "@/app/_assets/icons/logo.svg";
 import Link from "next/link";
 import cx from "classnames";
 
 const NavBar = ({
   className,
   onClick,
+  setInitial,
 }: {
   className: string;
   onClick: React.Dispatch<React.SetStateAction<string>>;
+  setInitial: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
     <nav className={cx(styles.nav, className)}>
       <div className={styles.menu}>
-        <Link href="/">
-          <Image src={logo} width={52} height={52} alt="logo" />
-        </Link>
+        <button className={styles.logo} onClick={() => setInitial(false)}>
+          <Image src={logo} width={60} height={60} alt="logo" />
+        </button>
         <button className={styles.button} onClick={() => onClick("log")}>
           <RiChatHistoryFill fill="white" />
         </button>
