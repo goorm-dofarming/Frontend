@@ -4,7 +4,7 @@ import { RiChatHistoryFill } from "react-icons/ri";
 import { IoHeartSharp } from "react-icons/io5";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 import { IoMdLogOut } from "react-icons/io";
-import logo from "@/app/_assets/icons/logo.svg";
+import logo from "@/app/_assets/icons/logo.png";
 import Link from "next/link";
 import cx from "classnames";
 
@@ -21,7 +21,7 @@ const NavBar = ({
     <nav className={cx(styles.nav, className)}>
       <div className={styles.menu}>
         <button className={styles.logo} onClick={() => setInitial(false)}>
-          <Image src={logo} width={60} height={60} alt="logo" />
+          <Image src={logo} width={68} height={60} alt="logo" />
         </button>
         <button className={styles.button} onClick={() => onClick("log")}>
           <RiChatHistoryFill fill="white" />
