@@ -9,8 +9,6 @@
   .menu {
     @include m.flex(center, center, column);
     width: 100%;
-    // padding: 12px;
-    // row-gap: 16px;
     .logo {
       @include m.flex(center, center, row);
       background-color: transparent;
@@ -18,6 +16,26 @@
       cursor: pointer;
       text-align: center;
       margin-bottom: 12px;
+      &:hover {
+        > img {
+          animation: logo_animation 2s ease-in-out;
+          animation-iteration-count: infinite;
+          transform-origin: 0% 100%;
+        }
+        @keyframes logo_animation {
+          0% {
+            transform: rotate(5deg);
+          }
+
+          50% {
+            transform: rotate(-5deg);
+          }
+
+          100% {
+            transform: rotate(5deg);
+          }
+        }
+      }
     }
   }
 }
