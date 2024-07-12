@@ -11,7 +11,7 @@ permissions:
 env:
   S3_BUCKET_NAME: dofarming-fe-bucket
   CODE_DEPLOY_APPLICATION_NAME: dofarming_codeDeploy_FE
-  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: dofarming_codeDeploy_FE_group
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: dofarming_codeDeploy_FE2
   ENVIRONMENT: development
 jobs:
   build:
