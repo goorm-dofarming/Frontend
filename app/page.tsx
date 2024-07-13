@@ -1,95 +1,58 @@
-import Image from 'next/image';
-import styles from './page.module.css';
+"use client";
+import Image from "next/image";
+import styles from "./home.module.scss";
+import { useEffect, useState } from "react";
+import NavBar from "@/app/_components/main/NavBar/page";
+import { Map, Log, Likes, Chat } from "@/app/_components/main";
 
-export default function Home() {
+const Home = ({ children }: { children: React.ReactNode }) => {
+  const [fold, setFold] = useState(false);
+  const [page, setPage] = useState("");
+  const [element, setElement] = useState(Map);
+  useEffect(() => {
+    switch (page) {
+      case "":
+        setElement(Map);
+        break;
+      case "log":
+        setElement(Log);
+        break;
+      case "likes":
+        setElement(Likes);
+        break;
+      case "chat":
+        setElement(Chat);
+        break;
+      default:
+        setElement(Map);
+    }
+  }, [page]);
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          완료2 Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      <section className={fold ? styles.navBar : styles.pinSection}>
+        {fold ? (
+          <NavBar
+            onClick={setPage}
+            className={styles.navbar}
+            setInitial={setFold}
+          />
+        ) : (
+          <>
+            <div>
+              <button onClick={() => setFold(true)}>임시버튼</button>
+            </div>
+            <div className={styles.description}>
+              <p>Tap for a Random Adventure</p>
+              <p>원하는 테마를 골라 즐거운 여행을 경험해보세요!</p>
+            </div>
+          </>
+        )}
+      </section>
+      <section className={fold ? styles.page : styles.home}>
+        {fold ? <>{element}</> : <>home</>}
+      </section>
     </main>
   );
-}
+};
+
+export default Home;
