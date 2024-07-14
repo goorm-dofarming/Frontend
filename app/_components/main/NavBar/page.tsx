@@ -1,12 +1,12 @@
-import Image from "next/image";
-import styles from "./navbar.module.scss";
-import { RiChatHistoryFill } from "react-icons/ri";
-import { IoHeartSharp } from "react-icons/io5";
-import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
-import { IoMdLogOut } from "react-icons/io";
-import logo from "@/app/_assets/icons/logo.png";
-import Link from "next/link";
-import cx from "classnames";
+import Image from 'next/image';
+import styles from './navbar.module.scss';
+import { RiChatHistoryFill } from 'react-icons/ri';
+import { IoHeartSharp } from 'react-icons/io5';
+import { IoChatbubbleEllipsesSharp } from 'react-icons/io5';
+import { IoMdLogOut } from 'react-icons/io';
+import logo from '@/app/_assets/icons/logo.png';
+import Link from 'next/link';
+import cx from 'classnames';
 
 const NavBar = ({
   className,
@@ -23,13 +23,13 @@ const NavBar = ({
         <button className={styles.logo} onClick={() => setInitial(false)}>
           <Image src={logo} width={68} height={60} alt="logo" />
         </button>
-        <button className={styles.button} onClick={() => onClick("log")}>
+        <button className={styles.button} onClick={() => onClick('log')}>
           <RiChatHistoryFill fill="white" />
         </button>
-        <button className={styles.button} onClick={() => onClick("likes")}>
+        <button className={styles.button} onClick={() => onClick('likes')}>
           <IoHeartSharp fill="white" />
         </button>
-        <button className={styles.button} onClick={() => onClick("chat")}>
+        <button className={styles.button} onClick={() => onClick('chat')}>
           <IoChatbubbleEllipsesSharp fill="white" />
         </button>
       </div>
