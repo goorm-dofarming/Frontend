@@ -1,34 +1,34 @@
-'use client';
-import styles from './home.module.scss';
-import { createContext, useEffect, useState } from 'react';
-import Image from 'next/image';
+"use client";
+import styles from "./home.module.scss";
+import { createContext, useEffect, useState } from "react";
+import Image from "next/image";
 
 // components
-import NavBar from '@/app/_components/main/NavBar/page';
-import { Map, Log, Likes, Chat } from '@/app/_components/main';
-
+import NavBar from "@/app/_components/main/NavBar/page";
+import { Map, Log, Likes, Chat } from "@/app/_components/main";
+import RandomPin from "@/app/_components/main/RandomPin/page";
 // constants
-import MainModal from '@/app/_components/main/Modal';
-import { HomeContainer, LoginButton } from './_styles/main/mainStyles';
+import MainModal from "@/app/_components/main/Modal";
+import { HomeContainer, LoginButton } from "./_styles/main/mainStyles";
 
 // img
-import Profile from '@/app/_assets/main/userProfile.svg';
-import ColorMap from '@/app/_assets/main/colored_Map.svg';
-import Logo from '@/app/_assets/main/logo.svg';
-import ClickedProfile from '@/app/_assets/main/modalClicked_Profile.svg';
+import Profile from "@/app/_assets/main/userProfile.svg";
+import ColorMap from "@/app/_assets/main/colored_Map.svg";
+import Logo from "@/app/_assets/main/logo.svg";
+import ClickedProfile from "@/app/_assets/main/modalClicked_Profile.svg";
 
 // constants
-import { homeDropdown } from '@/app/constatns/icons';
-import { inputDataType } from './types/aboutMain';
+import { homeDropdown } from "@/app/constatns/icons";
+import { inputDataType } from "./types/aboutMain";
 
 export const contextData = createContext({
   pwdShow: false,
   handlePwd: () => {},
   inputData: {
-    email: '',
-    password: '',
-    checkPassword: '',
-    authentication: '',
+    email: "",
+    password: "",
+    checkPassword: "",
+    authentication: "",
   },
   handleInputData: (sort: string, value: string) => {},
 });
@@ -42,27 +42,27 @@ const Home = ({ children }: { children: React.ReactNode }) => {
   const [pwdShow, setPwdShow] = useState<boolean>(false);
   // input data
   const [inputData, setInputData] = useState<inputDataType>({
-    email: '',
-    password: '',
-    checkPassword: '',
-    authentication: '',
+    email: "",
+    password: "",
+    checkPassword: "",
+    authentication: "",
   });
   const [fold, setFold] = useState(false);
-  const [page, setPage] = useState('');
+  const [page, setPage] = useState("");
   const [element, setElement] = useState(Map);
 
   useEffect(() => {
     switch (page) {
-      case '':
+      case "":
         setElement(Map);
         break;
-      case 'log':
+      case "log":
         setElement(Log);
         break;
-      case 'likes':
+      case "likes":
         setElement(Likes);
         break;
-      case 'chat':
+      case "chat":
         setElement(Chat);
         break;
       default:
@@ -82,7 +82,7 @@ const Home = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    console.log('inputData: ', inputData);
+    console.log("inputData: ", inputData);
   }, [inputData]);
 
   return (
@@ -95,15 +95,17 @@ const Home = ({ children }: { children: React.ReactNode }) => {
             setInitial={setFold}
           />
         ) : (
-          <>
-            <div>
-              <button onClick={() => setFold(true)}>임시버튼</button>
+          <div className={styles.sliderSection}>
+            <div className={styles.slider}>
+              <RandomPin setFold={setFold} />
             </div>
             <div className={styles.description}>
-              <p>Tap for a Random Adventure</p>
-              <p>원하는 테마를 골라 즐거운 여행을 경험해보세요!</p>
+              <p className={styles.eng}>Tap for a Random Adventure</p>
+              <p className={styles.kor}>
+                원하는 테마를 골라 즐거운 여행을 경험해보세요!
+              </p>
             </div>
-          </>
+          </div>
         )}
       </section>
       <section className={fold ? styles.page : styles.home}>

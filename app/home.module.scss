@@ -6,14 +6,36 @@
   height: 100vh;
   .pinSection {
     @include m.flex(center, center, column);
+    padding: 16px 0;
     width: 32%;
     height: 100%;
     background-color: c.$C_SECONDARY;
     color: c.$C_WHITE;
-    padding: 16px 0;
-    row-gap: 16px;
-    column-gap: 16px;
     transition: 0.5s width ease-in-out;
+    .sliderSection {
+      @include m.flex(center, center, column);
+      row-gap: 16px;
+      column-gap: 16px;
+      width: 100%;
+      height: 50%;
+      .slider {
+        width: 100%;
+        height: 80%;
+      }
+      .description {
+        @include m.flex(flex-start, center, column);
+        width: 100%;
+        height: 50%;
+        row-gap: 28px;
+        .eng {
+          font-size: 32px;
+          font-weight: 500;
+        }
+        .kor {
+          font-size: 20px;
+        }
+      }
+    }
   }
   .navBar {
     width: 72px;
@@ -24,11 +46,10 @@
   .home {
     @include m.flex(space-between, flex-start, row);
     width: 68%;
-    height:100%;
+    height: 100%;
   }
   .page {
     width: calc(100vw - 72px);
     height: 100%;
-    
   }
 }
