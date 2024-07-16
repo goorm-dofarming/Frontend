@@ -1,0 +1,213 @@
+@use "../../../../_styles/constants/color" as c;
+@use "../../../../_styles/mixins/" as m;
+
+.logoImage {
+  @include m.flex(center, center, row);
+  width: 25rem;
+  height: 25rem;
+  position: relative;
+}
+
+.chatSpace {
+  @include m.flex(space-between, center, column);
+  width: 100%;
+  height: 100%;
+
+  .header {
+    @include m.flex(flex-start, center, row);
+    width: 100%;
+    padding: 0.5rem;
+    border-bottom: 1px solid c.$C_DIVIDER;
+    position: relative;
+
+    .quitBtn {
+      cursor: pointer;
+      position: absolute;
+      bottom: -3rem;
+      right: 10px;
+      color: c.$C_SECONDARY;
+      background-color: c.$C_WHITE;
+      padding: 0.5rem;
+      border: 1px solid c.$C_SECONDARY;
+      border-radius: 10px;
+      opacity: 80%;
+      z-index: 1000;
+
+      &:hover {
+        color: c.$C_WHITE;
+        background-color: c.$C_SECONDARY;
+      }
+    }
+
+    .imageContainer {
+      @include m.flex(center, center, column);
+      width: 4rem;
+
+      .imageSize {
+        width: 4rem;
+        height: 4rem;
+        position: relative;
+      }
+
+      .region {
+        padding-top: 0.2rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    .contentContainer {
+      @include m.flex(center, flex-start, column);
+      flex: 1;
+      padding: 1rem 0 0 1rem;
+
+      .title {
+        font-size: 2rem;
+        font-weight: 700;
+        padding-bottom: 0.3rem;
+      }
+
+      .overview {
+        @include m.flex(flex-start, center, row);
+
+        .hashtag {
+          font-size: 0.6rem;
+          padding: 0.3rem 0.6rem;
+          margin-right: 0.4rem;
+          border-radius: 20px;
+          color: c.$C_PRIMARY;
+          background-color: c.$TAG_PINK;
+        }
+      }
+    }
+  }
+
+  .chatRoom {
+    flex: 1;
+    justify-content: flex-start;
+    width: 100%;
+    position: relative;
+    overflow-y: auto;
+    margin-right: 1rem;
+
+    &::-webkit-scrollbar {
+      width: 5px; /* 스크롤바 너비 */
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: c.$C_TERTIARY; /* 스크롤바 색상 */
+      border-radius: 6px; /* 스크롤바 모서리 둥글게 */
+    }
+
+    .messageContainer {
+      @include m.flex(flex-start, flex-start, row);
+      padding: 0.5rem;
+
+      .profileSize {
+        width: 2.5rem;
+        height: 2.5rem;
+        position: relative;
+      }
+
+      .textArea {
+        padding-top: 1rem;
+
+        .name {
+          font-weight: 800;
+          padding-bottom: 0.5rem;
+        }
+        .message {
+          padding: 0.6rem;
+          max-width: 20rem;
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .othersMsg {
+      .textArea {
+        @include m.flex(center, flex-start, column);
+
+        .name {
+          padding-left: 0.5rem;
+        }
+
+        .message {
+          border-radius: 0 10px 10px 10px;
+          background-color: c.$C_CHAT_GRAY;
+        }
+      }
+    }
+
+    .myMsg {
+      flex-direction: row-reverse;
+
+      .textArea {
+        @include m.flex(center, flex-end, column);
+
+        .name {
+          padding-right: 0.5rem;
+        }
+
+        .message {
+          border-radius: 10px 0 10px 10px;
+          background-color: c.$C_TERTIARY;
+        }
+      }
+    }
+  }
+
+  .inputArea {
+    @include m.flex(flex-start, flex-end, column);
+    width: 95%;
+    height: 10rem;
+    padding: 0.5rem;
+    margin: 1rem 0;
+    border: 2px solid c.$C_TERTIARY;
+    border-radius: 20px;
+
+    .input {
+      width: 100%;
+      flex: 1;
+      padding: 8px;
+      font-size: 0.8rem;
+      border: none;
+      box-sizing: border-box;
+      overflow-y: auto;
+      resize: none;
+
+      &:focus {
+        outline: none;
+      }
+
+      &::-webkit-scrollbar {
+        width: 5px; /* 스크롤바 너비 */
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: c.$C_TERTIARY; /* 스크롤바 색상 */
+        border-radius: 6px; /* 스크롤바 모서리 둥글게 */
+      }
+    }
+
+    .input::placeholder {
+      color: #ccc;
+    }
+
+    .enterBtn {
+      cursor: pointer;
+
+      width: 5rem;
+      padding: 0.5rem;
+      color: c.$C_WHITE;
+      background-color: c.$C_TERTIARY;
+      border: 2px solid c.$C_TERTIARY;
+      border-radius: 10px;
+
+      &:hover {
+        color: c.$C_TERTIARY;
+        background-color: c.$C_WHITE;
+        border: 2px solid c.$C_TERTIARY;
+      }
+    }
+  }
+}
