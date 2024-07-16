@@ -1,0 +1,28 @@
+@use "../../../_styles/constants/color" as c;
+@use "../../../_styles/mixins" as m;
+.main {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  .map {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .locations {
+    @include m.flex(flex-start, center, column);
+    z-index: 100;
+    position: absolute;
+    width: 340px;
+    height: calc(100% - 100px); /* top에서 100px 뺀 높이 */
+    // margin-top: 100px;
+    // margin-right: 40px;
+    // right: 40px;
+    // flex-wrap: nowrap;
+    top: 100px;
+    right: 40px;
+    gap: 40px;
+    overflow-y: auto;
+  }
+}

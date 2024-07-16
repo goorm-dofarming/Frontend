@@ -25,16 +25,19 @@ const themes = [
 ];
 const RandomPin = ({
   setFold,
+  setPage,
 }: {
   setFold: React.Dispatch<React.SetStateAction<boolean>>;
+  setPage: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const [theme, setTheme] = useState("random");
   const onClick = () => {
     //랜덤핀 클릭시 api
     setFold(true);
+    setPage("map");
   };
 
-  const NextArrow = (props) => {
+  const NextArrow = (props: any) => {
     const { className, style, onClick } = props;
     return (
       <BsFillCaretRightFill
@@ -46,7 +49,7 @@ const RandomPin = ({
       />
     );
   };
-  const PrevArrow = (props) => {
+  const PrevArrow = (props: any) => {
     const { className, style, onClick } = props;
     return (
       <BsFillCaretLeftFill

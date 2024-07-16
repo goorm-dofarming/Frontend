@@ -48,12 +48,12 @@ const Home = ({ children }: { children: React.ReactNode }) => {
     authentication: "",
   });
   const [fold, setFold] = useState(false);
-  const [page, setPage] = useState("");
+  const [page, setPage] = useState("map");
   const [element, setElement] = useState(Map);
 
   useEffect(() => {
     switch (page) {
-      case "":
+      case "map":
         setElement(Map);
         break;
       case "log":
@@ -97,7 +97,7 @@ const Home = ({ children }: { children: React.ReactNode }) => {
         ) : (
           <div className={styles.sliderSection}>
             <div className={styles.slider}>
-              <RandomPin setFold={setFold} />
+              <RandomPin setFold={setFold} setPage={setPage} />
             </div>
             <div className={styles.description}>
               <p className={styles.eng}>Tap for a Random Adventure</p>
