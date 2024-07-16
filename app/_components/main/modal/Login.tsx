@@ -44,6 +44,7 @@ const Login = ({
   const { email, password } = inputData;
 
   const doLogin = useMutation({
+    mutationKey: ['login'],
     mutationFn: async () => {
       const body = {
         email,

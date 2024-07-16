@@ -35,6 +35,17 @@ export const SignupButton = styled.button`
   }
 `;
 
+export const SignupDisActiveButton = styled.button`
+  width: 23vw;
+  height: 7vh;
+  color: #c1c1c1;
+  border: 1px solid #c1c1c1;
+  background-color: #d2d1d1;
+  border-radius: 0.2rem;
+  font-family: 'RedHatDisplay_Italic';
+  font-weight: 700;
+`;
+
 export const ModalLoginButton = styled.button`
   width: 23vw;
   height: 7vh;

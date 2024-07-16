@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 // styles
 import { HomeContainer } from '@/app/_styles/main/mainStyles';
@@ -53,6 +53,10 @@ const Main = () => {
       [sort]: value,
     }));
   };
+
+  useEffect(() => {
+    console.log('inputData: ', inputData);
+  }, [inputData]);
 
   return (
     <HomeContainer $dropdown={dropdown} $modal={modal}>
