@@ -95,7 +95,7 @@ export const HomeContainer = styled.div<{
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
 
     button {
       width: 3vw;
@@ -116,7 +116,7 @@ export const HomeContainer = styled.div<{
     width: 23vw;
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin-bottom: 0.5rem;
 
     span {
@@ -169,6 +169,7 @@ export const HomeContainer = styled.div<{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    margin-bottom: 0.6rem;
   }
 `;
 

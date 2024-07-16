@@ -5,8 +5,6 @@ import React, { useEffect, useState } from 'react';
 // components
 import NavBar from '@/app/_components/main/NavBar/page';
 import { Map, Log, Likes, Chat } from '@/app/_components/main';
-
-// types
 import Main from './_components/main/Main';
 
 const Home = () => {

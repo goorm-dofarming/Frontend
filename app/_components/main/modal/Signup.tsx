@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 // img
@@ -14,6 +14,7 @@ import {
   KakaoCircleButton,
   NAverCircleButton,
   SignupButton,
+  SignupDisActiveButton,
 } from '@/app/_styles/main/buttons';
 
 // styles
@@ -24,7 +25,7 @@ import {
 
 // libraries
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { inputDataType } from '@/app/types/aboutMain';
 
 interface SignupType {
@@ -43,8 +44,44 @@ const Signup = ({
   handleComponent,
   setPageState,
 }: SignupType) => {
-  const { email, password, confirmPassword } = inputData;
+  // input data
+  const { email, password, confirmPassword, authentication } = inputData;
+  // 인증 버튼 컨트롤
+  const [isCertificate, setIsCertificate] = useState<boolean>(false);
+  // 회원가입 버튼 컨트롤
+  const [isActive, setIsActive] = useState<boolean>(false);
+  // 타이머
+  const MINUTES_IN_MS = 3 * 1 * 1000;
+  const INTERVAL = 1000;
+  const [timeLeft, setTimeLeft] = useState<number>(MINUTES_IN_MS);
+
+  useEffect(() => {
+    if (isCertificate === true) {
+      const timer = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - INTERVAL);
+      }, INTERVAL);
+      console.log('timer:', timer);
+      console.log('timeLeft:', timeLeft);
+
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        setTimeLeft(0);
+      }
+
+      return () => {
+        clearInterval(timer);
+      };
+    }
+  }, [timeLeft]);
+
+  const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(
+    2,
+    '0'
+  );
+  const second = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, '0');
+
   const doSignup = useMutation({
+    mutationKey: ['signup'],
     mutationFn: async () => {
       const body = {
         email,
@@ -62,6 +99,54 @@ const Signup = ({
       if (response.status === 201) {
         setPageState(false);
       }
+
+      return response;
+    },
+    onError: (e) => {
+      console.log(e.message);
+    },
+  });
+
+  const certification = useMutation({
+    mutationKey: ['certification'],
+    mutationFn: async () => {
+      const body = {
+        email,
+      };
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_ADDRESS}/email/send`,
+        body
+      );
+
+      console.log('email certification: ', response);
+      if (response.status === 204) {
+        setIsCertificate(true);
+        setTimeLeft((prev) => prev - 3 * INTERVAL);
+      }
+    },
+    onError: (e) => {
+      console.log(e.message);
+    },
+  });
+
+  const signup = useMutation({
+    mutationKey: ['signup'],
+    mutationFn: async () => {
+      const body = {
+        email,
+        emailNumber: authentication,
+      };
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_ADDRESS}/email/check`,
+        body
+      );
+
+      console.log('email certification: ', response);
+      if (response.status === 204) {
+        setIsActive(true);
+      }
     },
     onError: (e) => {
       console.log(e.message);
@@ -75,6 +160,7 @@ const Signup = ({
           <input
             name="email"
             onChange={(e) => handleInputData(e.target.name, e.target.value)}
+            placeholder="이메일을 입력해주세요"
           />
         </div>
       </InputSignupBorder>
@@ -85,6 +171,7 @@ const Signup = ({
             type={pwdShow === true ? 'text' : 'password'}
             name="password"
             onChange={(e) => handleInputData(e.target.name, e.target.value)}
+            placeholder="비밀번호를 입력해주세요(8~12자)"
           />
           <Image
             src={pwdShow === true ? HidePwd : ShowPwd}
@@ -96,12 +183,13 @@ const Signup = ({
         </div>
       </InputSignupBorder>
       <InputSignupBorder>
-        <div>Check Password</div>
+        <div style={{ marginBottom: '0.3rem' }}>Check Password</div>
         <div className="inputRow">
           <input
             type={pwdShow === true ? 'text' : 'password'}
             name="confirmPassword"
             onChange={(e) => handleInputData(e.target.name, e.target.value)}
+            placeholder="비민번호 확인"
           />
         </div>
       </InputSignupBorder>
@@ -110,19 +198,31 @@ const Signup = ({
           <div>Authentication</div>
           <div className="inputRow">
             <input
-              type="password"
               name="authentication"
               onChange={(e) => handleInputData(e.target.name, e.target.value)}
             />
           </div>
         </InputSignupAuthpBorder>
-        <button>인증</button>
+        {isCertificate === true ? (
+          <button onClick={() => signup.mutate()}>확인</button>
+        ) : (
+          <button onClick={() => certification.mutate()}>인증</button>
+        )}
       </div>
       <div className="limitTime">
-        <span>03:00</span>
+        <span>
+          {password !== confirmPassword && password.length > 7
+            ? '비밀번호가 틀립니다❌'
+            : null}
+        </span>
+        <span>{isCertificate === true && `${minutes}:${second}`}</span>
       </div>
       {/* 회원가입 버튼 */}
-      <SignupButton onClick={() => doSignup.mutate()}>회원 가입</SignupButton>
+      {isActive === true ? (
+        <SignupButton onClick={() => doSignup.mutate()}>회원 가입</SignupButton>
+      ) : (
+        <SignupDisActiveButton>회원 가입</SignupDisActiveButton>
+      )}
       <div className="socialContainer">
         <div className="line" />
         <div className="text">소셜 로그인</div>
