@@ -14,22 +14,24 @@ const Home = () => {
 
   useEffect(() => {
     switch (page) {
-      case '':
+      case "map":
         setElement(Map);
         break;
-      case 'log':
+      case "log":
         setElement(Log);
         break;
-      case 'likes':
+      case "likes":
         setElement(Likes);
         break;
-      case 'chat':
+      case "chat":
         setElement(Chat);
         break;
       default:
         setElement(Map);
     }
   }, [page]);
+
+
 
   return (
     <main className={styles.main}>
@@ -41,15 +43,17 @@ const Home = () => {
             setInitial={setFold}
           />
         ) : (
-          <>
-            <div>
-              <button onClick={() => setFold(true)}>임시버튼</button>
+          <div className={styles.sliderSection}>
+            <div className={styles.slider}>
+              <RandomPin setFold={setFold} setPage={setPage} />
             </div>
             <div className={styles.description}>
-              <p>Tap for a Random Adventure</p>
-              <p>원하는 테마를 골라 즐거운 여행을 경험해보세요!</p>
+              <p className={styles.eng}>Tap for a Random Adventure</p>
+              <p className={styles.kor}>
+                원하는 테마를 골라 즐거운 여행을 경험해보세요!
+              </p>
             </div>
-          </>
+          </div>
         )}
       </section>
       <section className={fold ? styles.page : styles.home}>
