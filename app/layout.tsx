@@ -1,10 +1,12 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { ReactQueryProvider } from "./utils/queryProvider";
-import { MSWComponent } from "./mocks/MSWComponent";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { ReactQueryProvider } from './utils/queryProvider';
+import { MSWComponent } from './mocks/MSWComponent';
+import StyledJsxRegistry from './registry';
+import { CookiesProvider } from 'react-cookie';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: "Dofarming",
@@ -12,7 +14,10 @@ export const metadata: Metadata = {
   icons: {
     icon: "/logo.svg",
   },
+
 };
+
+const enableMSW = process.env.NEXT_PUBLIC_ENABLE_MSW === 'false';
 
 export default function RootLayout({
   children,
@@ -22,9 +27,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <MSWComponent>
-          <ReactQueryProvider>{children}</ReactQueryProvider>
-        </MSWComponent>
+        <ReactQueryProvider>
+          {enableMSW ? (
+            <MSWComponent enableMSW={enableMSW}>{children}</MSWComponent>
+          ) : (
+            children
+          )}
+        </ReactQueryProvider>
       </body>
     </html>
   );
