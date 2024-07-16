@@ -1,9 +1,8 @@
 'use client';
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 // styles
 import { HomeContainer } from '@/app/_styles/main/mainStyles';
-import { contextData } from '@/app/page';
 
 // constants
 import { homeDropdown } from '@/app/constatns/icons';
@@ -20,14 +19,41 @@ import ColorMap from '@/app/_assets/main/colored_Map.svg';
 import Logo from '@/app/_assets/main/logo.svg';
 import ClickedProfile from '@/app/_assets/main/modalClicked_Profile.svg';
 
-interface MainType {
-  dropdown: boolean;
-  showDropdown: () => void;
-  pageState: boolean;
-}
+// types
+import { inputDataType } from '@/app/types/aboutMain';
 
-const Main = ({ dropdown, showDropdown, pageState }: MainType) => {
-  const { modal, openModal } = useContext(contextData);
+// hooks
+import useToggle from '@/app/hooks/Home/useToggle';
+
+const Main = () => {
+  // 모달 컨트롤
+  const [modal, setModal] = useState<boolean>(false);
+  // 로그인 회원가입 페이지 컨트롤
+  const [pageState, setPageState] = useState(false);
+  // dropdown 클릭 컨트롤
+  const [dropdown, setDropdown] = useState<boolean>(false);
+  // 비밀번호 show
+  const [pwdShow, setPwdShow] = useState<boolean>(false);
+  // input data
+  const [inputData, setInputData] = useState<inputDataType>({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    authentication: '',
+  });
+
+  const showDropdown = useToggle(dropdown, setDropdown);
+  const handlePwd = useToggle(pwdShow, setPwdShow);
+  const handleComponent = useToggle(pageState, setPageState);
+  const openModal = useToggle(modal, setModal);
+
+  const handleInputData = (sort: string, value: string) => {
+    setInputData((prev) => ({
+      ...prev,
+      [sort]: value,
+    }));
+  };
+
   return (
     <HomeContainer $dropdown={dropdown} $modal={modal}>
       <header>
@@ -70,8 +96,25 @@ const Main = ({ dropdown, showDropdown, pageState }: MainType) => {
           </LoginButton>
         </div>
       </main>
-      <Modal width="35vw" height="75vh">
-        {pageState ? <Signup /> : <Login />}
+      <Modal openModal={openModal} modal={modal} width="35vw" height="75vh">
+        {pageState ? (
+          <Signup
+            inputData={inputData}
+            pwdShow={pwdShow}
+            handlePwd={handlePwd}
+            handleInputData={handleInputData}
+            handleComponent={handleComponent}
+            setPageState={setPageState}
+          />
+        ) : (
+          <Login
+            inputData={inputData}
+            pwdShow={pwdShow}
+            handlePwd={handlePwd}
+            handleInputData={handleInputData}
+            handleComponent={handleComponent}
+          />
+        )}
       </Modal>
     </HomeContainer>
   );

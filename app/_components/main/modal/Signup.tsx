@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Image from 'next/image';
 
 // img
@@ -16,9 +16,6 @@ import {
   SignupButton,
 } from '@/app/_styles/main/buttons';
 
-// contextAPI
-import { contextData } from '@/app/page';
-
 // styles
 import {
   InputSignupAuthpBorder,
@@ -28,10 +25,24 @@ import {
 // libraries
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import { inputDataType } from '@/app/types/aboutMain';
 
-const Signup = () => {
-  const { inputData, pwdShow, handlePwd, handleInputData, handleComponent } =
-    useContext(contextData);
+interface SignupType {
+  inputData: inputDataType;
+  pwdShow: boolean;
+  handlePwd: () => void;
+  handleInputData: (sort: string, value: string) => void;
+  handleComponent: () => void;
+  setPageState: React.Dispatch<React.SetStateAction<boolean>>;
+}
+const Signup = ({
+  inputData,
+  pwdShow,
+  handlePwd,
+  handleInputData,
+  handleComponent,
+  setPageState,
+}: SignupType) => {
   const { email, password, confirmPassword } = inputData;
   const doSignup = useMutation({
     mutationFn: async () => {
@@ -47,6 +58,10 @@ const Signup = () => {
       );
 
       console.log('create user success: ', response);
+      console.log(response.status);
+      if (response.status === 201) {
+        setPageState(false);
+      }
     },
     onError: (e) => {
       console.log(e.message);

@@ -5,16 +5,22 @@ import Image from 'next/image';
 import CloseBtn from '@/app/_assets/main/close.svg';
 
 // contestAPI
-import { contextData } from '@/app/page';
 import { ModalContainer } from '@/app/_styles/common/modalStyles';
 interface MainModalType {
   children: React.ReactNode;
   width: string;
   height: string;
+  modal: boolean;
+  openModal: () => void;
 }
 
-const Modal: React.FC<MainModalType> = ({ children, width, height }) => {
-  const { openModal, modal } = useContext(contextData);
+const Modal: React.FC<MainModalType> = ({
+  children,
+  width,
+  height,
+  openModal,
+  modal,
+}) => {
   return (
     <ModalContainer $modal={modal} width={width} height={height}>
       {/* 모달 헤더 */}

@@ -1,37 +1,21 @@
 'use client';
 import styles from './home.module.scss';
-import React, { createContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // components
 import NavBar from '@/app/_components/main/NavBar/page';
 import { Map, Log, Likes, Chat } from '@/app/_components/main';
 
 // types
-import { contextDataType, inputDataType } from './types/aboutMain';
+import { inputDataType } from './types/aboutMain';
 import Main from './_components/main/Main';
-
-export const contextData = createContext<contextDataType>({
-  pwdShow: false,
-  handlePwd: () => {},
-  inputData: {
-    email: '',
-    password: '',
-    confirmPassword: '',
-    authentication: '',
-  },
-  handleInputData: (sort: string, value: string) => {},
-  openModal: () => {},
-  modal: false,
-  handleComponent: () => {},
-});
+import useToggle from './hooks/Home/useToggle';
 
 const Home = ({ children }: { children: React.ReactNode }) => {
   // 로그인 회원가입 페이지 컨트롤
   const [pageState, setPageState] = useState(false);
   // dropdown 클릭 컨트롤
-  const [dropdown, setDropdonw] = useState<boolean>(false);
-  // 모달 컨트롤
-  const [modal, setModal] = useState<boolean>(false);
+  const [dropdown, setDropdown] = useState<boolean>(false);
   // 비밀번호 show
   const [pwdShow, setPwdShow] = useState<boolean>(false);
   // input data
@@ -64,10 +48,9 @@ const Home = ({ children }: { children: React.ReactNode }) => {
     }
   }, [page]);
 
-  const showDropdown = () => setDropdonw(!dropdown);
-  const openModal = () => setModal(!modal);
-  const handlePwd = () => setPwdShow(!pwdShow);
-  const handleComponent = () => setPageState(!pageState);
+  const showDropdown = useToggle(dropdown, setDropdown);
+  const handlePwd = useToggle(pwdShow, setPwdShow);
+  const handleComponent = useToggle(pageState, setPageState);
 
   const handleInputData = (sort: string, value: string) => {
     setInputData((prev) => ({
@@ -102,27 +85,7 @@ const Home = ({ children }: { children: React.ReactNode }) => {
         )}
       </section>
       <section className={fold ? styles.page : styles.home}>
-        {fold ? (
-          <>{element}</>
-        ) : (
-          <contextData.Provider
-            value={{
-              pwdShow,
-              handlePwd,
-              inputData,
-              handleInputData,
-              openModal,
-              modal,
-              handleComponent,
-            }}
-          >
-            <Main
-              dropdown={dropdown}
-              showDropdown={showDropdown}
-              pageState={pageState}
-            />
-          </contextData.Provider>
-        )}
+        {fold ? <>{element}</> : <Main />}
       </section>
     </main>
   );

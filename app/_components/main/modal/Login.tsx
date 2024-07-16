@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 // img
 import ShowPwd from '@/app/_assets/main/eye.svg';
 import HidePwd from '@/app/_assets/main/eye-closed.svg';
@@ -17,18 +16,31 @@ import {
 } from '@/app/_styles/main/buttons';
 import { InputLoginBorder, InputPwdBorder } from '@/app/_styles/main/inputs';
 
-// contextAPI
-import { contextData } from '@/app/page';
-
 // libraries
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 
-const Login = () => {
+// types
+import { inputDataType } from '@/app/types/aboutMain';
+
+interface LoginType {
+  inputData: inputDataType;
+  pwdShow: boolean;
+  handlePwd: () => void;
+  handleInputData: (sort: string, value: string) => void;
+  handleComponent: () => void;
+}
+const Login = ({
+  inputData,
+  pwdShow,
+  handlePwd,
+  handleInputData,
+  handleComponent,
+}: LoginType) => {
   const [cookies, setCookies] = useCookies(['token']);
-  const { inputData, pwdShow, handlePwd, handleInputData, handleComponent } =
-    useContext(contextData);
+  // const { inputData, pwdShow, handlePwd, handleInputData, handleComponent } =
+  //   useContext(contextData);
   const { email, password } = inputData;
 
   const doLogin = useMutation({
