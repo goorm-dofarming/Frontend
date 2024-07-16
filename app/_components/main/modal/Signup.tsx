@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Image from 'next/image';
 
 // img
@@ -7,24 +7,69 @@ import HidePwd from '@/app/_assets/main/eye-closed.svg';
 import KakaoLogo from '@/app/_assets/main/kakao.svg';
 import NaverLogo from '@/app/_assets/main/N.svg';
 import GoogleLogo from '@/app/_assets/main/g-logo.svg';
+
+// styles
 import {
   GoogleCircleButton,
   KakaoCircleButton,
   NAverCircleButton,
   SignupButton,
-} from '@/app/_styles/main/mainStyles';
+} from '@/app/_styles/main/buttons';
 
-// contextAPI
-import { contextData } from '@/app/page';
+// styles
+import {
+  InputSignupAuthpBorder,
+  InputSignupBorder,
+} from '@/app/_styles/main/inputs';
+
+// libraries
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { inputDataType } from '@/app/types/aboutMain';
 
 interface SignupType {
+  inputData: inputDataType;
+  pwdShow: boolean;
+  handlePwd: () => void;
+  handleInputData: (sort: string, value: string) => void;
   handleComponent: () => void;
+  setPageState: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const Signup = ({ handleComponent }: SignupType) => {
-  const { pwdShow, handlePwd, handleInputData } = useContext(contextData);
+const Signup = ({
+  inputData,
+  pwdShow,
+  handlePwd,
+  handleInputData,
+  handleComponent,
+  setPageState,
+}: SignupType) => {
+  const { email, password, confirmPassword } = inputData;
+  const doSignup = useMutation({
+    mutationFn: async () => {
+      const body = {
+        email,
+        password,
+        confirmPassword,
+      };
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_ADDRESS}/signup`,
+        body
+      );
+
+      console.log('create user success: ', response);
+      console.log(response.status);
+      if (response.status === 201) {
+        setPageState(false);
+      }
+    },
+    onError: (e) => {
+      console.log(e.message);
+    },
+  });
   return (
     <div className="modalContents">
-      <div className="inputSignupBorder">
+      <InputSignupBorder>
         <div>Email</div>
         <div className="inputRow">
           <input
@@ -32,8 +77,8 @@ const Signup = ({ handleComponent }: SignupType) => {
             onChange={(e) => handleInputData(e.target.name, e.target.value)}
           />
         </div>
-      </div>
-      <div className="inputSignupBorder">
+      </InputSignupBorder>
+      <InputSignupBorder>
         <div>Password</div>
         <div className="inputRow">
           <input
@@ -49,32 +94,35 @@ const Signup = ({ handleComponent }: SignupType) => {
             onClick={handlePwd}
           />
         </div>
-      </div>
-      <div className="inputSignupBorder">
+      </InputSignupBorder>
+      <InputSignupBorder>
         <div>Check Password</div>
         <div className="inputRow">
           <input
             type={pwdShow === true ? 'text' : 'password'}
-            name="checkPassword"
+            name="confirmPassword"
             onChange={(e) => handleInputData(e.target.name, e.target.value)}
           />
         </div>
+      </InputSignupBorder>
+      <div className="authContainer">
+        <InputSignupAuthpBorder>
+          <div>Authentication</div>
+          <div className="inputRow">
+            <input
+              type="password"
+              name="authentication"
+              onChange={(e) => handleInputData(e.target.name, e.target.value)}
+            />
+          </div>
+        </InputSignupAuthpBorder>
+        <button>인증</button>
       </div>
-      <div className="inputSignupBorder" style={{ marginBottom: '0' }}>
-        <div>Authentication</div>
-        <div className="inputRow">
-          <input
-            type="password"
-            name="authentication"
-            onChange={(e) => handleInputData(e.target.name, e.target.value)}
-          />
-        </div>
-      </div>
-      <div>
-        <span>03분00초</span>
+      <div className="limitTime">
+        <span>03:00</span>
       </div>
       {/* 회원가입 버튼 */}
-      <SignupButton>회원 가입</SignupButton>
+      <SignupButton onClick={() => doSignup.mutate()}>회원 가입</SignupButton>
       <div className="socialContainer">
         <div className="line" />
         <div className="text">소셜 로그인</div>

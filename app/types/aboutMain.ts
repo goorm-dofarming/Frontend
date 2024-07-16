@@ -1,6 +1,11 @@
 export interface inputDataType {
   email: string;
   password: string;
-  checkPassword: string;
+  confirmPassword: string;
   authentication: string;
+}
+
+export interface contextDataType {
+  openModal: () => void;
+  modal: boolean;
 }

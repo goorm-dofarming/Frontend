@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Image from 'next/image';
 // img
 import ShowPwd from '@/app/_assets/main/eye.svg';
@@ -13,16 +13,62 @@ import {
   KakaoButton,
   ModalLoginButton,
   NaverButton,
-} from '@/app/_styles/main/mainStyles';
-import { contextData } from '@/app/page';
+} from '@/app/_styles/main/buttons';
+import { InputLoginBorder, InputPwdBorder } from '@/app/_styles/main/inputs';
+
+// libraries
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
+
+// types
+import { inputDataType } from '@/app/types/aboutMain';
+
 interface LoginType {
+  inputData: inputDataType;
+  pwdShow: boolean;
+  handlePwd: () => void;
+  handleInputData: (sort: string, value: string) => void;
   handleComponent: () => void;
 }
-const Login = ({ handleComponent }: LoginType) => {
-  const { pwdShow, handlePwd, handleInputData } = useContext(contextData);
+const Login = ({
+  inputData,
+  pwdShow,
+  handlePwd,
+  handleInputData,
+  handleComponent,
+}: LoginType) => {
+  const [cookies, setCookies] = useCookies(['token']);
+  // const { inputData, pwdShow, handlePwd, handleInputData, handleComponent } =
+  //   useContext(contextData);
+  const { email, password } = inputData;
+
+  const doLogin = useMutation({
+    mutationFn: async () => {
+      const body = {
+        email,
+        password,
+      };
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_ADDRESS}/login`,
+        body
+      );
+
+      console.log('login success: ', response);
+
+      if (response.status === 200) {
+        // 성공 시 cookie에 token 추가
+        setCookies('token', response.data);
+      }
+    },
+    onError: (e) => {
+      console.log(e.message);
+    },
+  });
   return (
     <div className="modalContents">
-      <div className="inputBorder">
+      <InputLoginBorder>
         <div>Email</div>
         <div className="inputRow">
           <input
@@ -30,8 +76,8 @@ const Login = ({ handleComponent }: LoginType) => {
             onChange={(e) => handleInputData(e.target.name, e.target.value)}
           />
         </div>
-      </div>
-      <div className="inputBorder2">
+      </InputLoginBorder>
+      <InputPwdBorder className="inputBorder2">
         <div>Password</div>
         <div className="inputRow">
           <input
@@ -47,8 +93,10 @@ const Login = ({ handleComponent }: LoginType) => {
             onClick={handlePwd}
           />
         </div>
-      </div>
-      <ModalLoginButton>로그인</ModalLoginButton>
+      </InputPwdBorder>
+      <ModalLoginButton onClick={() => doLogin.mutate()}>
+        로그인
+      </ModalLoginButton>
       <div className="socialContainer">
         <div className="line" />
         <div className="text">소셜 로그인</div>
