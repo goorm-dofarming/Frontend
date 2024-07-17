@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useCookies } from 'react-cookie';
 import Image from 'next/image';
 
 // styles
@@ -19,6 +20,9 @@ import { useRecoilState } from 'recoil';
 import { selectedChatState } from '@/app/atom/stats';
 
 const EntireChatList = () => {
+  const [cookies] = useCookies(['token']);
+  const { token } = cookies;
+
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
 
   const handleSelectedChat = (chat: Chat) => {
@@ -29,7 +33,7 @@ const EntireChatList = () => {
 
   const { data: myChats = [] } = useQuery<Chat[], Error>({
     queryKey: ['myChats'],
-    queryFn: getMyChats,
+    queryFn: () => getMyChats(token),
   });
 
   const {
@@ -78,7 +82,11 @@ const EntireChatList = () => {
             </div>
             <div className={styles.overview}>
               {chat.tags.map((tag, index) => (
-                <div key={index} className={styles.hashtag}>
+                <div
+                  key={index}
+                  className={styles.hashtag}
+                  style={{ backgroundColor: `#${tag.color}` }}
+                >
                   {tag.name}
                 </div>
               ))}
