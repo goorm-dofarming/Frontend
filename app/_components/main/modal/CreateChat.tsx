@@ -31,18 +31,29 @@ const CreateChat: React.FC<CreateChatProps> = ({ openModal, onCreateChat }) => {
   const handleTagInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const hashIndex = value.indexOf('#', 1);
+    const blankIndex = value.indexOf(' ', 1);
     if (hashIndex > 0) {
       const newTag = formatTag(value.substring(0, hashIndex).trim());
       if (!tags.includes(newTag)) {
         setTags((prevTags) => [...prevTags, newTag]);
       }
       setTagInput(value.substring(hashIndex + 1));
+    } else if (blankIndex > 0) {
+      const newTag = formatTag(value.substring(0, blankIndex).trim());
+      if (!tags.includes(newTag)) {
+        setTags((prevTags) => [...prevTags, newTag]);
+      }
+      setTagInput(value.substring(blankIndex + 1));
     } else {
       setTagInput(value);
     }
   };
 
   const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing) {
+      // 한글 또는 한자, 입력중이면 true였다가 false로 한번 더 실행됨
+      return;
+    }
     if ((e.key === ' ' || e.key === 'Enter') && tagInput.trim() !== '') {
       e.preventDefault();
       const formattedInput = formatTag(tagInput.trim());
@@ -102,19 +113,21 @@ const CreateChat: React.FC<CreateChatProps> = ({ openModal, onCreateChat }) => {
           onChange={handleRegionChange}
         >
           <option value="" disabled hidden></option>
-          <option value="서울특별시">서울특별시</option>
-          <option value="인천광역시">인천광역시</option>
-          <option value="울산광역시">울산광역시</option>
-          <option value="부산광역시">부산광역시</option>
-          <option value="광주광역시">광주광역시</option>
-          <option value="대전광역시">대전광역시</option>
-          <option value="경기도">경기도</option>
-          <option value="충청북도">충청북도</option>
-          <option value="충청남도">충청남도</option>
-          <option value="경상남도">경상남도</option>
-          <option value="경상북도">경상북도</option>
-          <option value="제주특별자치도">제주특별자치도</option>
-          <option value="강원특별자치도">강원특별자치도</option>
+          <option value="SEOUL">서울특별시</option>
+          <option value="INCHEON">인천광역시</option>
+          <option value="ULSAN">울산광역시</option>
+          <option value="BUSAN">부산광역시</option>
+          <option value="GWANGJU">광주광역시</option>
+          <option value="DAEJEON">대전광역시</option>
+          <option value="GYEONGGI">경기도</option>
+          <option value="CHUNGBUK">충청북도</option>
+          <option value="CHUNGNAM">충청남도</option>
+          <option value="GYEONGNAM">경상남도</option>
+          <option value="GYEONGBUK">경상북도</option>
+          <option value="JEONNAM">전라남도</option>
+          <option value="JEONBUK">전라북도</option>
+          <option value="JEJU">제주특별자치도</option>
+          <option value="GANGWON">강원특별자치도</option>
         </select>
       </div>
       <div className={styles.blank} />

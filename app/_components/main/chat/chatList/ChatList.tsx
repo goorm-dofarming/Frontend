@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import { useCookies } from 'react-cookie';
 
 // style
 import cx from 'classnames';
@@ -17,20 +18,50 @@ import CreateChat from '../../modal/CreateChat';
 // hooks
 import useToggle from '@/app/hooks/Home/useToggle';
 import Modal from '@/app/_components/Common/Modal';
+import axios from 'axios';
 
 const ChatList = () => {
+  const [cookies] = useCookies(['token']);
+  const { token } = cookies;
   // true => 내 채팅 , false => 오픈 채팅
   const [activeTab, setActiveTab] = useState(true);
 
   const [modal, setModal] = useState<boolean>(false);
   const openModal = useToggle(modal, setModal);
 
-  const handleCreateChat = (data: {
+  const handleCreateChat = async (data: {
     title: string;
     region: string;
     tags: string[];
   }) => {
-    console.log(data);
+    const { title, region, tags } = data;
+
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      };
+      const body = {
+        title,
+        region,
+        tagNames: tags,
+      };
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/chatroom`,
+        body,
+        {
+          headers: headers,
+        }
+      );
+      console.log('response', response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error:', error.response?.data);
+      } else {
+        console.error('Unexpected error:', error);
+      }
+    }
   };
 
   return (

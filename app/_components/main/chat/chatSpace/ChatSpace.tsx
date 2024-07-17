@@ -45,7 +45,11 @@ const ChatSpace = () => {
               <div className={styles.title}>{selectedChat.title}</div>
               <div className={styles.overview}>
                 {(selectedChat.tags ?? []).map((tag, index) => (
-                  <div key={index} className={styles.hashtag}>
+                  <div
+                    key={index}
+                    className={styles.hashtag}
+                    style={{ backgroundColor: `#${tag.color}` }}
+                  >
                     {tag.name}
                   </div>
                 ))}

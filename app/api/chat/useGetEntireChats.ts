@@ -1,6 +1,20 @@
-import axios from "axios";
+import { Chat } from '@/app/types/aboutChat';
+import axios from 'axios';
 
-export const getEntireChats = async () => {
-  const response = await axios.get("https://api.example.com/api/entireChats");
-  return response.data.data;
+export const getEntireChats = async (): Promise<Chat[]> => {
+  const body = {
+    roomId: null,
+    title: null,
+    tagName: null,
+    region: null,
+    createdAt: null,
+  };
+
+  const response = await axios.post<Chat[]>(
+    `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/chatroom`,
+    body
+  );
+
+  console.log('entire Chat: ', response.data);
+  return response.data;
 };
