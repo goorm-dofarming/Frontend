@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { ReactQueryProvider } from './utils/queryProvider';
+import { RecoilProvider } from "./utils/recoilProvider";
 import { MSWComponent } from './mocks/MSWComponent';
 import StyledJsxRegistry from './registry';
 import { CookiesProvider } from 'react-cookie';
@@ -27,13 +28,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ReactQueryProvider>
-          {enableMSW ? (
-            <MSWComponent enableMSW={enableMSW}>{children}</MSWComponent>
-          ) : (
-            children
-          )}
-        </ReactQueryProvider>
+        <RecoilProvider>
+          <ReactQueryProvider>
+            {enableMSW ? (
+              <MSWComponent enableMSW={enableMSW}>{children}</MSWComponent>
+            ) : (
+              children
+            )}
+          </ReactQueryProvider>
+        </RecoilProvider>
       </body>
     </html>
   );

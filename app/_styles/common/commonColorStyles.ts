@@ -5,4 +5,5 @@ export const colorTheme = {
   modelOpenBg: '#8D8C8C',
   modalOpenPrimaryColor: '#864447',
   inputBorder: '#A09F9F',
+  divider: "#D2D1D1",
 };

@@ -6,11 +6,11 @@ export const LoginButton = styled.button<{ modal: boolean }>`
   height: 5vh;
   color: ${colorTheme.primary};
   border: 1px solid ${colorTheme.secondary};
-  background-color: ${({ modal }) =>
-    modal === true ? colorTheme.modelOpenBg : "white"};
+  background-color: white;
   border-radius: 0.2rem;
   font-family: "RedHatDisplay_Italic";
-  font-size: 24px;
+
+
   &:hover {
     color: white;
     border: 1px solid ${colorTheme.secondary};
@@ -102,8 +102,8 @@ const SocialBtn = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3vw;
-  height: 6vh;
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
 `;
 

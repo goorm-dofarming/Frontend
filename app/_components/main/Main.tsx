@@ -9,7 +9,7 @@ import { homeDropdown } from "@/app/constatns/icons";
 import { LoginButton } from "@/app/_styles/main/buttons";
 
 // components
-import Modal from "@/app/_components/common/Modal";
+import Modal from "@/app/_components/Common/Modal";
 import Login from "@/app/_components/main/modal/Login";
 import Signup from "@/app/_components/main/modal/Signup";
 
@@ -69,7 +69,7 @@ const Main = () => {
           }}
         >
           <Image
-            src={modal === true ? ClickedProfile : Profile}
+            src={Profile}
             alt="유저 프로필"
             width={35}
             height={35}

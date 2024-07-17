@@ -3,6 +3,7 @@ import styles from "./home.module.scss";
 import React, { useEffect, useState } from "react";
 
 // components
+
 import NavBar from "@/app/_components/main/NavBar/page";
 import { Map, Log, Likes, Chat } from "@/app/_components/main";
 import Main from "./_components/main/Main";
@@ -13,6 +14,7 @@ const menu: { [key: string]: JSX.Element } = {
   likes: <Likes />,
   chat: <Chat />,
 };
+
 const Home = () => {
   const [fold, setFold] = useState<boolean>(false);
   const [page, setPage] = useState<string>("map");
@@ -24,6 +26,7 @@ const Home = () => {
 
   return (
     <main className={styles.main}>
+      <div id="modal-container"></div>
       <section className={fold ? styles.navBar : styles.pinSection}>
         {fold ? (
           <NavBar

@@ -8,6 +8,7 @@ import logo from "@/app/_assets/icons/logo.png";
 import cx from "classnames";
 import { MouseEvent, useState } from "react";
 
+
 const menu = [
   { page: "map", icon: <FaMapMarkedAlt fill="white" /> },
   { page: "log", icon: <RiChatHistoryFill fill="white" /> },
@@ -52,6 +53,7 @@ const NavBar = ({
       </button>
     </nav>
   );
+
 };
 
 export default NavBar;
