@@ -24,6 +24,10 @@ import { useCookies } from 'react-cookie';
 // types
 import { inputDataType } from '@/app/types/aboutMain';
 
+// hooks
+import useKaKaoLogin from '@/app/hooks/Home/useKaKaoLogin';
+import useNaverLogin from '@/app/hooks/Home/useNaverLogin';
+
 interface LoginType {
   inputData: inputDataType;
   pwdShow: boolean;
@@ -39,8 +43,6 @@ const Login = ({
   handleComponent,
 }: LoginType) => {
   const [cookies, setCookies] = useCookies(['token']);
-  // const { inputData, pwdShow, handlePwd, handleInputData, handleComponent } =
-  //   useContext(contextData);
   const { email, password } = inputData;
 
   const doLogin = useMutation({
@@ -65,6 +67,18 @@ const Login = ({
     },
     onError: (e) => {
       console.log(e.message);
+    },
+  });
+
+  const naverLogin = () => {
+    const naver = useNaverLogin();
+    naver();
+  };
+  const kakaoLogin = useMutation({
+    mutationKey: ['kakaologin'],
+    mutationFn: async () => {
+      const kakaoLogin = useKaKaoLogin();
+      kakaoLogin();
     },
   });
   return (
@@ -105,14 +119,14 @@ const Login = ({
       </div>
 
       <div className="socialButtonContainer">
-        <KakaoButton>
+        <KakaoButton onClick={() => kakaoLogin.mutate()}>
           <Image src={KakaoLogo} alt="kakao" style={{ paddingLeft: '0rem' }} />
           <span>카카오 로그인</span>
           <span>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;
           </span>
         </KakaoButton>
-        <NaverButton>
+        <NaverButton onClick={naverLogin}>
           <Image src={NaverLogo} alt="kakao" style={{ paddingLeft: '0rem' }} />
           <span>네이버 로그인</span>
           <span>
