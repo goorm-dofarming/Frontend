@@ -10,6 +10,7 @@ export const LoginButton = styled.button<{ modal: boolean }>`
   border-radius: 0.2rem;
   font-family: "RedHatDisplay_Italic";
 
+
   &:hover {
     color: white;
     border: 1px solid ${colorTheme.secondary};

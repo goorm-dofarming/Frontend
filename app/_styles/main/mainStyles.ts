@@ -26,7 +26,7 @@ export const HomeContainer = styled.div<{
 
   .logoContainer {
     top: 40%;
-    right: 24%;
+    /* right: 24%; */
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -71,6 +71,12 @@ export const HomeContainer = styled.div<{
     background-color: white;
     border-radius: 0.5rem;
     visibility: ${({ $modal }) => ($modal === true ? "visible" : "hidden")};
+  }
+  .mainSection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
   .logo {
     z-index: 0;

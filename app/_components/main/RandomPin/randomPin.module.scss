@@ -27,10 +27,12 @@
     > img {
       fill: c.$C_SECONDARY;
     }
-    &:hover {
-      animation: pinMove 1s ease-in-out infinite;
-      cursor: pointer;
-    }
+    animation: pinMove 1s ease-in-out infinite;
+    cursor: pointer;
+    // &:hover {
+    //   animation: pinMove 1s ease-in-out infinite;
+    //   cursor: pointer;
+    // }
   }
 }
 @keyframes pinMove {

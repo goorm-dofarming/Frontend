@@ -1,5 +1,5 @@
-@use '../../../_styles/constants/color' as c;
-@use '../../../_styles/mixins/' as m;
+@use "../../../_styles/constants/color" as c;
+@use "../../../_styles/mixins/" as m;
 .nav {
   @include m.flex(space-between, center, column);
   width: 72px;
@@ -61,10 +61,16 @@
       fill: c.$C_SECONDARY;
     }
   }
-  &:focus {
-    background-color: c.$C_WHITE;
-    svg {
-      fill: c.$C_SECONDARY;
-    }
+  // &:focus {
+  //   background-color: c.$C_WHITE;
+  //   svg {
+  //     fill: c.$C_SECONDARY;
+  //   }
+  // }
+}
+.focus {
+  background-color: c.$C_WHITE;
+  svg {
+    fill: c.$C_SECONDARY;
   }
 }
