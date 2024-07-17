@@ -1,6 +1,6 @@
-import styled, { css } from 'styled-components';
-import { colorTheme } from '../common/commonColorStyles';
-import { hideHomeIcons, showHomeIcons } from '../keyframes';
+import styled, { css } from "styled-components";
+import { colorTheme } from "../common/commonColorStyles";
+import { hideHomeIcons, showHomeIcons } from "../keyframes";
 
 export const HomeContainer = styled.div<{
   $dropdown?: boolean;
@@ -28,7 +28,7 @@ export const HomeContainer = styled.div<{
 
   .logoContainer {
     top: 40%;
-    right: 24%;
+    /* right: 24%; */
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -48,7 +48,7 @@ export const HomeContainer = styled.div<{
         : css`0.5s ${hideHomeIcons} ease-in-out`};
     transition: 0.3s visibility;
     visibility: ${({ $dropdown }) =>
-      $dropdown === true ? 'visible' : 'hidden'};
+      $dropdown === true ? "visible" : "hidden"};
   }
   .iconBg {
     width: 3vw;
@@ -72,7 +72,13 @@ export const HomeContainer = styled.div<{
     top: 15%;
     background-color: white;
     border-radius: 0.5rem;
-    visibility: ${({ $modal }) => ($modal === true ? 'visible' : 'hidden')};
+    visibility: ${({ $modal }) => ($modal === true ? "visible" : "hidden")};
+  }
+  .mainSection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
   .logo {
     z-index: 0;
@@ -121,7 +127,7 @@ export const HomeContainer = styled.div<{
 
     span {
       color: ${colorTheme.primary};
-      font-family: 'RedHatDisplay_Variable';
+      font-family: "RedHatDisplay_Variable";
     }
   }
   .socialContainer {
@@ -150,19 +156,19 @@ export const HomeContainer = styled.div<{
   .ment {
     color: #bdb8b8;
     font-size: 0.8rem;
-    font-family: 'RedHatDisplay_Variable';
+    font-family: "RedHatDisplay_Variable";
   }
   .ment2 {
     color: #bdb8b8;
     font-weight: 800;
     font-size: 0.9rem;
-    font-family: 'RedHatDisplay_Variable';
+    font-family: "RedHatDisplay_Variable";
     margin-left: 0.3rem;
   }
   .ment3 {
     color: ${colorTheme.primary};
     font-size: 0.8rem;
-    font-family: 'RedHatDisplay_Variable';
+    font-family: "RedHatDisplay_Variable";
   }
   .signupSocialContainer {
     width: 23vw;

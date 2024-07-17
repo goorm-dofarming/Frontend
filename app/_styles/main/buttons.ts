@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { colorTheme } from '../common/commonColorStyles';
+import styled from "styled-components";
+import { colorTheme } from "../common/commonColorStyles";
 
 export const LoginButton = styled.button<{ modal: boolean }>`
   width: 10vw;
@@ -7,10 +7,10 @@ export const LoginButton = styled.button<{ modal: boolean }>`
   color: ${colorTheme.primary};
   border: 1px solid ${colorTheme.secondary};
   background-color: ${({ modal }) =>
-    modal === true ? colorTheme.modelOpenBg : 'white'};
+    modal === true ? colorTheme.modelOpenBg : "white"};
   border-radius: 0.2rem;
-  font-family: 'RedHatDisplay_Italic';
-
+  font-family: "RedHatDisplay_Italic";
+  font-size: 24px;
   &:hover {
     color: white;
     border: 1px solid ${colorTheme.secondary};
@@ -26,7 +26,7 @@ export const SignupButton = styled.button`
   border: 1px solid ${colorTheme.secondary};
   background-color: ${colorTheme.secondary};
   border-radius: 0.2rem;
-  font-family: 'RedHatDisplay_Italic';
+  font-family: "RedHatDisplay_Italic";
 
   &:hover {
     color: ${colorTheme.secondary};
@@ -42,7 +42,7 @@ export const SignupDisActiveButton = styled.button`
   border: 1px solid #c1c1c1;
   background-color: #d2d1d1;
   border-radius: 0.2rem;
-  font-family: 'RedHatDisplay_Italic';
+  font-family: "RedHatDisplay_Italic";
   font-weight: 700;
 `;
 
@@ -79,14 +79,14 @@ export const KakaoButton = styled(SocialButton)`
   color: white;
   background-color: #fee500;
   font-size: 1.1rem;
-  font-family: 'RedHatDisplay_Variable';
+  font-family: "RedHatDisplay_Variable";
 `;
 
 export const NaverButton = styled(SocialButton)`
   color: white;
   background-color: #62b645;
   font-size: 1.1rem;
-  font-family: 'RedHatDisplay_Variable';
+  font-family: "RedHatDisplay_Variable";
 `;
 
 export const GoogleButton = styled(SocialButton)`
@@ -95,7 +95,7 @@ export const GoogleButton = styled(SocialButton)`
   color: #9c9c9c;
   background-color: white;
   font-size: 1.1rem;
-  font-family: 'RedHatDisplay_Variable';
+  font-family: "RedHatDisplay_Variable";
 `;
 
 const SocialBtn = styled.div`

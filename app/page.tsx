@@ -7,29 +7,19 @@ import NavBar from "@/app/_components/main/NavBar/page";
 import { Map, Log, Likes, Chat } from "@/app/_components/main";
 import Main from "./_components/main/Main";
 import RandomPin from "./_components/main/RandomPin/page";
-
+const menu: { [key: string]: JSX.Element } = {
+  map: <Map />,
+  log: <Log />,
+  likes: <Likes />,
+  chat: <Chat />,
+};
 const Home = () => {
   const [fold, setFold] = useState<boolean>(false);
-  const [page, setPage] = useState<string>("");
-  const [element, setElement] = useState<React.JSX.Element>(Map);
+  const [page, setPage] = useState<string>("map");
+  const [element, setElement] = useState<React.JSX.Element>(menu["map"]);
 
   useEffect(() => {
-    switch (page) {
-      case "map":
-        setElement(Map);
-        break;
-      case "log":
-        setElement(Log);
-        break;
-      case "likes":
-        setElement(Likes);
-        break;
-      case "chat":
-        setElement(Chat);
-        break;
-      default:
-        setElement(Map);
-    }
+    setElement(menu[page]);
   }, [page]);
 
   return (
@@ -37,7 +27,7 @@ const Home = () => {
       <section className={fold ? styles.navBar : styles.pinSection}>
         {fold ? (
           <NavBar
-            onClick={setPage}
+            setPage={setPage}
             className={styles.navbar}
             setInitial={setFold}
           />

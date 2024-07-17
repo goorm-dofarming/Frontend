@@ -1,29 +1,29 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
+"use client";
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
 // styles
-import { HomeContainer } from '@/app/_styles/main/mainStyles';
+import { HomeContainer } from "@/app/_styles/main/mainStyles";
 
 // constants
-import { homeDropdown } from '@/app/constatns/icons';
-import { LoginButton } from '@/app/_styles/main/buttons';
+import { homeDropdown } from "@/app/constatns/icons";
+import { LoginButton } from "@/app/_styles/main/buttons";
 
 // components
-import Modal from '@/app/_components/common/Modal';
-import Login from '@/app/_components/main/modal/Login';
-import Signup from '@/app/_components/main/modal/Signup';
+import Modal from "@/app/_components/common/Modal";
+import Login from "@/app/_components/main/modal/Login";
+import Signup from "@/app/_components/main/modal/Signup";
 
 // img
-import Profile from '@/app/_assets/main/userProfile.svg';
-import ColorMap from '@/app/_assets/main/colored_Map.svg';
-import Logo from '@/app/_assets/main/logo.svg';
-import ClickedProfile from '@/app/_assets/main/modalClicked_Profile.svg';
+import Profile from "@/app/_assets/main/userProfile.svg";
+import ColorMap from "@/app/_assets/main/colored_Map.svg";
+import Logo from "@/app/_assets/main/logo.svg";
+import ClickedProfile from "@/app/_assets/main/modalClicked_Profile.svg";
 
 // types
-import { inputDataType } from '@/app/types/aboutMain';
+import { inputDataType } from "@/app/types/aboutMain";
 
 // hooks
-import useToggle from '@/app/hooks/Home/useToggle';
+import useToggle from "@/app/hooks/Home/useToggle";
 
 const Main = () => {
   // 모달 컨트롤
@@ -36,10 +36,10 @@ const Main = () => {
   const [pwdShow, setPwdShow] = useState<boolean>(false);
   // input data
   const [inputData, setInputData] = useState<inputDataType>({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    authentication: '',
+    email: "",
+    password: "",
+    confirmPassword: "",
+    authentication: "",
   });
 
   const showDropdown = useToggle(dropdown, setDropdown);
@@ -55,7 +55,7 @@ const Main = () => {
   };
 
   useEffect(() => {
-    console.log('inputData: ', inputData);
+    console.log("inputData: ", inputData);
   }, [inputData]);
 
   return (
@@ -63,9 +63,9 @@ const Main = () => {
       <header>
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
           <Image
@@ -91,7 +91,7 @@ const Main = () => {
           </div>
         </div>
       </header>
-      <main>
+      <main className="mainSection">
         <Image className="colorMap" src={ColorMap} alt="맵" width={360} />
         <div className="logoContainer">
           <Image className="logo" src={Logo} alt="맵" width={250} />
