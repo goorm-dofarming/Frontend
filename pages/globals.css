@@ -1,0 +1,17 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+  font-family: 'RedHatDisplay_Variable';
+}
+
+@font-face {
+  font-family: 'RedHatDisplay_Italic';
+  src: url('/font/RedHatDisplay-Italic-VariableFont_wght.ttf')
+    format('truetype');
+}
+
+@font-face {
+  font-family: 'RedHatDisplay_Variable';
+  src: url('/font/RedHatDisplay-VariableFont_wght.ttf') format('truetype');
+}
