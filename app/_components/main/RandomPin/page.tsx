@@ -2,7 +2,6 @@
 import React, { SetStateAction, useState } from "react";
 import Image from "next/image";
 import styles from "./randomPin.module.scss";
-
 import pin_random from "@/app/_assets/main/map/pin_random.svg";
 import pin_food from "@/app/_assets/main/map/pin_food.svg";
 import pin_cafe from "@/app/_assets/main/map/pin_cafe.svg";

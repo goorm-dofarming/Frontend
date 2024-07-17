@@ -1,15 +1,16 @@
-'use client';
-import styles from './home.module.scss';
-import React, { useEffect, useState } from 'react';
+"use client";
+import styles from "./home.module.scss";
+import React, { useEffect, useState } from "react";
 
 // components
-import NavBar from '@/app/_components/main/NavBar/page';
-import { Map, Log, Likes, Chat } from '@/app/_components/main';
-import Main from './_components/main/Main';
+import NavBar from "@/app/_components/main/NavBar/page";
+import { Map, Log, Likes, Chat } from "@/app/_components/main";
+import Main from "./_components/main/Main";
+import RandomPin from "./_components/main/RandomPin/page";
 
 const Home = () => {
   const [fold, setFold] = useState<boolean>(false);
-  const [page, setPage] = useState<string>('');
+  const [page, setPage] = useState<string>("");
   const [element, setElement] = useState<React.JSX.Element>(Map);
 
   useEffect(() => {
@@ -30,8 +31,6 @@ const Home = () => {
         setElement(Map);
     }
   }, [page]);
-
-
 
   return (
     <main className={styles.main}>
