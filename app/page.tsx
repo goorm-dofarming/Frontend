@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import NavBar from '@/app/_components/main/NavBar/page';
 import { Map, Log, Likes, Chat } from '@/app/_components/main';
 import Main from './_components/main/Main';
+import RandomPin from './_components/main/RandomPin/page';
 
 const Home = () => {
   const [fold, setFold] = useState<boolean>(false);
@@ -14,16 +15,16 @@ const Home = () => {
 
   useEffect(() => {
     switch (page) {
-      case "map":
+      case 'map':
         setElement(Map);
         break;
-      case "log":
+      case 'log':
         setElement(Log);
         break;
-      case "likes":
+      case 'likes':
         setElement(Likes);
         break;
-      case "chat":
+      case 'chat':
         setElement(Chat);
         break;
       default:
@@ -31,10 +32,9 @@ const Home = () => {
     }
   }, [page]);
 
-
-
   return (
     <main className={styles.main}>
+      <div id="modal-container"></div>
       <section className={fold ? styles.navBar : styles.pinSection}>
         {fold ? (
           <NavBar
