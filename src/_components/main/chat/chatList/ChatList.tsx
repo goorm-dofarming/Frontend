@@ -12,7 +12,7 @@ import { TbMessageCirclePlus } from 'react-icons/tb';
 // components
 import EntireChatList from './EntireChatList';
 import MyChatList from './MyChatList';
-import CreateChat from '../../modal/CreateChat';
+import CreateChat from '../../modal/chat/CreateChat';
 import Modal from '@/src/_components/Common/Modal';
 
 // hooks
@@ -20,44 +20,36 @@ import useToggle from '@/src/hooks/Home/useToggle';
 
 // api
 import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
-import {
-  createChatRoom,
-  getEntireChatRooms,
-  getMyChatRooms,
-} from '@/pages/api/chat';
+import { createChatRoom } from '@/pages/api/chat';
 
-const ChatList = () => {
+// types
+import { Chat } from '@/src/types/aboutChat';
+
+interface ChatListProps {
+  myChats: Chat[];
+  myChatLoading: boolean;
+  myChatError: Error | null;
+  entireChats: Chat[];
+  entireChatLoading: boolean;
+  entireChatError: Error | null;
+  refetchChatList: () => void;
+}
+
+const ChatList: React.FC<ChatListProps> = ({
+  myChats,
+  myChatLoading,
+  myChatError,
+  entireChats,
+  entireChatLoading,
+  entireChatError,
+  refetchChatList,
+}) => {
   // true => 내 채팅 , false => 오픈 채팅
   const [activeTab, setActiveTab] = useState(true);
 
+  // 채팅방 생성 모달
   const [modal, setModal] = useState<boolean>(false);
   const openModal = useToggle(modal, setModal);
-
-  const {
-    data: myChats = [],
-    error: myChatError,
-    isLoading: myChatLoading,
-    refetch: refetchMyChats,
-  } = useQuery({
-    queryKey: ['myChats'],
-    queryFn: getMyChatRooms,
-  });
-
-  const {
-    data: entireChats = [],
-    error: entireChatError,
-    isLoading: entireChatLoading,
-    refetch: refetchEntireChats,
-  } = useQuery({
-    queryKey: ['entireChats'],
-    queryFn: getEntireChatRooms,
-  });
-
-  const refetchChatList = () => {
-    refetchMyChats();
-    refetchEntireChats();
-  };
 
   const handleCreateChat = async (data: {
     title: string;
@@ -136,6 +128,7 @@ const ChatList = () => {
           myChats={myChats}
           isLoading={entireChatLoading}
           error={entireChatError}
+          refetchChatList={refetchChatList}
         />
       )}
       <Modal openModal={openModal} modal={modal} width="35rem" height="40rem">

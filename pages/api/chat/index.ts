@@ -13,12 +13,12 @@ export const createChatRoom = async (body: {}): Promise<any> => {
 };
 
 //채팅방 퇴장
-export const leaveChatRoom = (roomId: number) => {
+export const leaveChatRoom = async (roomId: number) => {
   return apiClient.post(`/chatroom/${roomId}/leave`);
 };
 
 //채팅방 입장
-export const joinChatRoom = (roomId: number) => {
+export const joinChatRoom = async (roomId: number) => {
   return apiClient.post(`/chatroom/${roomId}/join`);
 };
 

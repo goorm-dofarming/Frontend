@@ -13,13 +13,13 @@ import { Chat } from '@/src/types/aboutChat';
 import { useRecoilState } from 'recoil';
 import { selectedChatState } from '@/src/atom/stats';
 
-interface MyChatChatProps {
+interface MyChatListProps {
   chats: Chat[];
   isLoading: boolean;
   error: Error | null;
 }
 
-const MyChatList: React.FC<MyChatChatProps> = ({ chats, isLoading, error }) => {
+const MyChatList: React.FC<MyChatListProps> = ({ chats, isLoading, error }) => {
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
 
   const handleSelectedChat = (chat: Chat) => {
