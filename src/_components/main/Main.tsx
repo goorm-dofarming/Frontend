@@ -16,15 +16,17 @@ import Signup from '@/src/_components/main/modal/Signup';
 import Profile from '@/src/_assets/main/userProfile.svg';
 import ColorMap from '@/src/_assets/main/colored_Map.svg';
 import Logo from '@/src/_assets/main/logo.svg';
-import ClickedProfile from '@/src/_assets/main/modalClicked_Profile.svg';
 
 // types
 import { inputDataType } from '@/src/types/aboutMain';
 
 // hooks
 import useToggle from '@/src/hooks/Home/useToggle';
+import { useCookies } from 'react-cookie';
 
 const Main = () => {
+  // cookie
+  const [cookies, setCookies] = useCookies(['token']);
   // 모달 컨트롤
   const [modal, setModal] = useState<boolean>(false);
   // 로그인 회원가입 페이지 컨트롤
@@ -94,9 +96,11 @@ const Main = () => {
         <Image className="colorMap" src={ColorMap} alt="맵" width={360} />
         <div className="logoContainer">
           <Image className="logo" src={Logo} alt="로고" width={280} />
-          <LoginButton onClick={openModal} modal={modal}>
-            로그인
-          </LoginButton>
+          {cookies.token ? null : (
+            <LoginButton onClick={openModal} modal={modal}>
+              로그인
+            </LoginButton>
+          )}
         </div>
       </main>
       <Modal openModal={openModal} modal={modal} width="35vw" height="75vh">
