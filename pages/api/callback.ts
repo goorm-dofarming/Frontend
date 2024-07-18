@@ -25,7 +25,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
     console.log(response);
-    res.status(200).json(response.data);
+
+    const userData = await axios.get(`https://openapi.naver.com/v1/nid/me`, {
+      headers: {
+        Authorization: ` Bearer ${response.data.access_token}`,
+      },
+    });
+
+    console.log('success get userData: ', userData);
+    res.status(200).json(userData.data);
   } catch (error: any) {
     res.status(error.response?.status || 500).json({ error: error.message });
   }
