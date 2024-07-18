@@ -42,7 +42,12 @@ const ChatSpace = () => {
               <div className={styles.region}>{selectedChat.regionName}</div>
             </div>
             <div className={styles.contentContainer}>
-              <div className={styles.title}>{selectedChat.title}</div>
+              <div className={styles.titleContainer}>
+                <div className={styles.title}>{selectedChat.title}</div>
+                <span className={styles.count}>
+                  {selectedChat.participantCount}
+                </span>
+              </div>
               <div className={styles.overview}>
                 {(selectedChat.tags ?? []).map((tag, index) => (
                   <div

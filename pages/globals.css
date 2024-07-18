@@ -2,7 +2,12 @@
   margin: 0;
   box-sizing: border-box;
   padding: 0;
-  font-family: 'RedHatDisplay_Variable';
+  font-family: 'NanumBarunGothic', 'RedHatDisplay_Variable';
+}
+
+html:lang(ko) *,
+body:lang(ko) * {
+  font-family: 'NanumBarunGothic' !important;
 }
 
 @font-face {
@@ -14,4 +19,14 @@
 @font-face {
   font-family: 'RedHatDisplay_Variable';
   src: url('/font/RedHatDisplay-VariableFont_wght.ttf') format('truetype');
+  unicode-range: U+0041-005A, U+0061-007A, U+0030-0039;
+  /* 영문과 숫자 */
+}
+
+@font-face {
+  font-family: 'NanumBarunGothic';
+  src: url('/font/NanumBarunGothic-YetHangul.ttf') format('truetype');
+  unicode-range: U+1100-11FF, U+3130-318F, U+A960-A97F, U+AC00-D7A3, U+D7B0-D7FF,
+    U+0020-002F, U+003A-0040, U+005B-0060, U+007B-007E;
+  /* 한글만 */
 }

@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import { useCookies } from 'react-cookie';
 
 // style
 import cx from 'classnames';
@@ -14,20 +13,51 @@ import { TbMessageCirclePlus } from 'react-icons/tb';
 import EntireChatList from './EntireChatList';
 import MyChatList from './MyChatList';
 import CreateChat from '../../modal/CreateChat';
+import Modal from '@/src/_components/Common/Modal';
 
 // hooks
 import useToggle from '@/src/hooks/Home/useToggle';
-import Modal from '@/src/_components/Common/Modal';
+
+// api
 import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import {
+  createChatRoom,
+  getEntireChatRooms,
+  getMyChatRooms,
+} from '@/pages/api/chat';
 
 const ChatList = () => {
-  const [cookies] = useCookies(['token']);
-  const { token } = cookies;
   // true => 내 채팅 , false => 오픈 채팅
   const [activeTab, setActiveTab] = useState(true);
 
   const [modal, setModal] = useState<boolean>(false);
   const openModal = useToggle(modal, setModal);
+
+  const {
+    data: myChats = [],
+    error: myChatError,
+    isLoading: myChatLoading,
+    refetch: refetchMyChats,
+  } = useQuery({
+    queryKey: ['myChats'],
+    queryFn: getMyChatRooms,
+  });
+
+  const {
+    data: entireChats = [],
+    error: entireChatError,
+    isLoading: entireChatLoading,
+    refetch: refetchEntireChats,
+  } = useQuery({
+    queryKey: ['entireChats'],
+    queryFn: getEntireChatRooms,
+  });
+
+  const refetchChatList = () => {
+    refetchMyChats();
+    refetchEntireChats();
+  };
 
   const handleCreateChat = async (data: {
     title: string;
@@ -35,26 +65,15 @@ const ChatList = () => {
     tags: string[];
   }) => {
     const { title, region, tags } = data;
+    const body = {
+      title,
+      region,
+      tagNames: tags,
+    };
 
     try {
-      const headers = {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      };
-      const body = {
-        title,
-        region,
-        tagNames: tags,
-      };
-
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/chatroom`,
-        body,
-        {
-          headers: headers,
-        }
-      );
-      console.log('response', response.data);
+      const response = await createChatRoom(body);
+      refetchChatList();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Axios error:', error.response?.data);
@@ -105,7 +124,20 @@ const ChatList = () => {
           onClick={openModal}
         />
       </div>
-      {activeTab ? <MyChatList /> : <EntireChatList />}
+      {activeTab ? (
+        <MyChatList
+          chats={myChats}
+          isLoading={myChatLoading}
+          error={myChatError}
+        />
+      ) : (
+        <EntireChatList
+          chats={entireChats}
+          myChats={myChats}
+          isLoading={entireChatLoading}
+          error={entireChatError}
+        />
+      )}
       <Modal openModal={openModal} modal={modal} width="35rem" height="40rem">
         <CreateChat openModal={openModal} onCreateChat={handleCreateChat} />
       </Modal>
