@@ -2,14 +2,14 @@ import styled from 'styled-components';
 import { colorTheme } from '@/src/_styles/common/commonColorStyles';
 
 export const ModalContainer = styled.div<{
-  $modal: boolean;
+  modal: string;
   width: string;
   height: string;
 }>`
   position: fixed;
   width: 100%;
   height: 100%;
-  visibility: ${({ $modal }) => ($modal === true ? 'visible' : 'hidden')};
+  visibility: ${({ modal }) => (modal === 'true' ? 'visible' : 'hidden')};
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
   display: flex;
@@ -53,13 +53,25 @@ export const ModalContainer = styled.div<{
     margin: 20px 0;
   }
 
+  .line {
+    width: 8vw;
+    height: 1px;
+    background-color: #ccc;
+  }
+
+  .text {
+    margin: 0 10px;
+    font-size: 16px;
+    color: #aaa;
+  }
+
   .ment {
-    color: #bdb8b8;
+    color: #8e8e8e;
     font-size: 0.8rem;
     font-family: 'RedHatDisplay_Variable';
   }
   .ment2 {
-    color: #bdb8b8;
+    color: #8e8e8e;
     font-weight: 800;
     font-size: 0.9rem;
     font-family: 'RedHatDisplay_Variable';
@@ -110,5 +122,12 @@ export const ModalContainer = styled.div<{
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+  }
+
+  .socialButtonContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 32%;
   }
 `;

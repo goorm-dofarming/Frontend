@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { colorTheme } from '@/src/_styles/common/commonColorStyles';
 
-export const LoginButton = styled.button<{ modal: boolean }>`
+export const LoginButton = styled.button`
   width: 10vw;
   height: 5vh;
   color: ${colorTheme.primary};
@@ -90,7 +90,7 @@ export const NaverButton = styled(SocialButton)`
 
 export const GoogleButton = styled(SocialButton)`
   justify-content: space-around;
-  border: 1px solid #9c9c9c;
+  border: 2px solid #9c9c9c;
   color: #9c9c9c;
   background-color: white;
   font-size: 1.1rem;

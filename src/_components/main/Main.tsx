@@ -60,7 +60,7 @@ const Main = () => {
   }, [inputData]);
 
   return (
-    <HomeContainer $dropdown={dropdown} modal={modal.toString()}>
+    <HomeContainer dropdown={dropdown.toString()} modal={modal.toString()}>
       <header>
         <div
           style={{
@@ -97,9 +97,7 @@ const Main = () => {
         <div className="logoContainer">
           <Image className="logo" src={Logo} alt="로고" width={280} />
           {cookies.token ? null : (
-            <LoginButton onClick={openModal} modal={modal}>
-              로그인
-            </LoginButton>
+            <LoginButton onClick={openModal}>로그인</LoginButton>
           )}
         </div>
       </main>

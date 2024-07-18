@@ -1,9 +1,8 @@
 import styled, { css } from 'styled-components';
-import { colorTheme } from '@/src/_styles/common/commonColorStyles';
 import { hideHomeIcons, showHomeIcons } from '../keyframes';
 
 export const HomeContainer = styled.div<{
-  $dropdown?: boolean;
+  dropdown: string;
   modal: string;
 }>`
   width: 100%;
@@ -40,13 +39,13 @@ export const HomeContainer = styled.div<{
     flex-direction: column;
     justify-content: space-around;
     align-items: cen4ter;
-    animation: ${({ $dropdown }) =>
-      $dropdown === true
+    animation: ${({ dropdown }) =>
+      dropdown === 'true'
         ? css`0.5s ${showHomeIcons} ease-in-out`
         : css`0.5s ${hideHomeIcons} ease-in-out`};
     transition: 0.3s visibility;
-    visibility: ${({ $dropdown }) =>
-      $dropdown === true ? 'visible' : 'hidden'};
+    visibility: ${({ dropdown }) =>
+      dropdown === 'true' ? 'visible' : 'hidden'};
   }
   .iconBg {
     width: 3vw;
