@@ -184,7 +184,7 @@
 
     .imageContainer {
       @include m.flex(center, center, column);
-      width: 4rem;
+      width: 5rem;
 
       .imageSize {
         width: 4rem;
@@ -225,7 +225,7 @@
 
         .hashtag {
           font-size: 0.6rem;
-          font-weight: 800;
+          font-weight: 900;
           padding: 0.3rem 0.6rem;
           margin-right: 0.2rem;
           border-radius: 20px;

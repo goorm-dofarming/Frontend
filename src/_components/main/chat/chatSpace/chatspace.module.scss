@@ -41,7 +41,7 @@
 
     .imageContainer {
       @include m.flex(center, center, column);
-      width: 4rem;
+      width: 5rem;
 
       .imageSize {
         width: 4rem;

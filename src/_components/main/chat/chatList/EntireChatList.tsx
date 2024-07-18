@@ -15,21 +15,34 @@ import { selectedChatState } from '@/src/atom/stats';
 
 // icons
 import { FaRegFaceSadCry } from 'react-icons/fa6';
+import useToggle from '@/src/hooks/Home/useToggle';
+import Modal from '@/src/_components/Common/Modal';
+import EnterChat from '../../modal/chat/EnterChat';
+import { joinChatRoom } from '@/pages/api/chat';
+import axios from 'axios';
 
-interface EntireChatChatProps {
+interface EntireChatListProps {
   chats: Chat[];
   myChats: Chat[];
   isLoading: boolean;
   error: Error | null;
+  refetchChatList: () => void;
 }
 
-const EntireChatList: React.FC<EntireChatChatProps> = ({
+const EntireChatList: React.FC<EntireChatListProps> = ({
   chats,
   myChats,
   isLoading,
   error,
+  refetchChatList,
 }) => {
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
+
+  // 채팅방 입장 모달
+  const [modal, setModal] = useState<boolean>(false);
+  const openModal = useToggle(modal, setModal);
+
+  const [selectedRoomId, setSelectedRoomId] = useState<number>(0);
 
   const handleSelectedChat = (chat: Chat) => {
     if (isInMyChats(chat.roomId)) {
@@ -39,6 +52,25 @@ const EntireChatList: React.FC<EntireChatChatProps> = ({
 
   const isInMyChats = (chatId: number) => {
     return myChats.some((chat) => chat.roomId === chatId);
+  };
+
+  const onClickEnterBtn = (roomId: number) => {
+    setSelectedRoomId(roomId);
+    openModal();
+  };
+
+  const handleEnterChat = async (data: { roomId: number }) => {
+    const { roomId } = data;
+    try {
+      const response = await joinChatRoom(roomId);
+      refetchChatList();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error:', error.response?.data);
+      } else {
+        console.error('Unexpected error:', error);
+      }
+    }
   };
 
   if (isLoading) {
@@ -91,7 +123,12 @@ const EntireChatList: React.FC<EntireChatChatProps> = ({
               </div>
             </div>
             {!isInMyChats(chat.roomId) && (
-              <div className={styles.enterBtn}>입장</div>
+              <div
+                className={styles.enterBtn}
+                onClick={() => onClickEnterBtn(chat.roomId)}
+              >
+                입장
+              </div>
             )}
           </div>
         ))
@@ -104,6 +141,13 @@ const EntireChatList: React.FC<EntireChatChatProps> = ({
           채팅방을 만들어보세요 !
         </div>
       )}
+      <Modal openModal={openModal} modal={modal} width="20rem" height="15rem">
+        <EnterChat
+          openModal={openModal}
+          roomId={selectedRoomId}
+          onEnterChat={handleEnterChat}
+        />
+      </Modal>
     </div>
   );
 };

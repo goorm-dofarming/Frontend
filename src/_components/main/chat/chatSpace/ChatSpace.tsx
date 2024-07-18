@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 
 // icon
@@ -9,12 +9,53 @@ import logo from '@/src/_assets/icons/main_logo.png';
 import styles from './chatspace.module.scss';
 
 // atom
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { selectedChatState } from '@/src/atom/stats';
-import ChatRoom from './ChatRoom';
 
-const ChatSpace = () => {
-  const selectedChat = useRecoilValue(selectedChatState);
+// components
+import ChatRoom from './ChatRoom';
+import Modal from '@/src/_components/Common/Modal';
+import LeaveChat from '../../modal/chat/LeaveChat';
+
+// hooks
+import useToggle from '@/src/hooks/Home/useToggle';
+
+// api
+import axios from 'axios';
+import { leaveChatRoom } from '@/pages/api/chat';
+
+const ChatSpace: React.FC<{ refetchChatList: () => void }> = ({
+  refetchChatList,
+}) => {
+  const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
+
+  // 채팅방 퇴장 모달
+  const [modal, setModal] = useState<boolean>(false);
+  const openModal = useToggle(modal, setModal);
+
+  const handleLeaveChat = async (data: { roomId: number }) => {
+    const { roomId } = data;
+    try {
+      const response = await leaveChatRoom(roomId);
+      refetchChatList();
+      // 선택된 채팅 초기화
+      setSelectedChat({
+        roomId: 0,
+        title: '',
+        regionName: '',
+        regionImageUrl: '',
+        tags: [],
+        participantCount: 0,
+        createAt: new Date(),
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error:', error.response?.data);
+      } else {
+        console.error('Unexpected error:', error);
+      }
+    }
+  };
 
   if (selectedChat.title === '') {
     return (
@@ -29,7 +70,9 @@ const ChatSpace = () => {
       <div className="chatSpace">
         <div className={styles.chatSpace}>
           <div className={styles.header}>
-            <button className={styles.quitBtn}>나가기</button>
+            <button className={styles.quitBtn} onClick={openModal}>
+              나가기
+            </button>
             <div className={styles.imageContainer}>
               <div className={styles.imageSize}>
                 <Image
@@ -70,6 +113,13 @@ const ChatSpace = () => {
             <button className={styles.enterBtn}>전송</button>
           </div>
         </div>
+        <Modal openModal={openModal} modal={modal} width="20rem" height="15rem">
+          <LeaveChat
+            openModal={openModal}
+            roomId={selectedChat.roomId}
+            onLeaveChat={handleLeaveChat}
+          />
+        </Modal>
       </div>
     );
   }
