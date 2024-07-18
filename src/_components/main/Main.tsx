@@ -90,7 +90,7 @@ const Main = () => {
           </div>
         </div>
       </header>
-      <main>
+      <main className='mainSection'>
         <Image className="colorMap" src={ColorMap} alt="맵" width={360} />
         <div className="logoContainer">
           <Image className="logo" src={Logo} alt="로고" width={280} />
