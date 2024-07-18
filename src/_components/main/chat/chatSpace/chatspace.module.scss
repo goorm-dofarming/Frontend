@@ -31,7 +31,7 @@
       border: 1px solid c.$C_SECONDARY;
       border-radius: 10px;
       opacity: 80%;
-      z-index: 1000;
+      z-index: 1;
 
       &:hover {
         color: c.$C_WHITE;
@@ -60,10 +60,21 @@
       flex: 1;
       padding: 1rem 0 0 1rem;
 
-      .title {
-        font-size: 2rem;
-        font-weight: 700;
-        padding-bottom: 0.3rem;
+      .titleContainer {
+        @include m.flex(center, flex-end, row);
+
+        .title {
+          font-size: 2rem;
+          font-weight: 700;
+          padding-bottom: 0.3rem;
+        }
+
+        .count {
+          color: c.$C_SMALL_TEXT;
+          padding-left: 0.5rem;
+          font-size: 1.4rem;
+          font-weight: 800;
+        }
       }
 
       .overview {
