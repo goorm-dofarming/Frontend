@@ -1,38 +1,13 @@
 #!/bin/bash
 
 REPOSITORY=/home/ubuntu/deploy
-REPOSITORY_PROD=/home/ubuntu/deploy
 
-echo "DEPLOYMENT_GROUP_NAME: ${DEPLOYMENT_GROUP_NAME}"
+cd $REPOSITORY
 
-if [ "${DEPLOYMENT_GROUP_NAME}" == "til_fe_prod" ]; then
-  echo "운영 서버 배포"
-  cd "${REPOSITORY_PROD}"
-  
-  # production 환경인 경우에 대한 처리
-  sudo npm install
-  pm2 describe til-product > /dev/null
-  if [ $? -eq 0 ]; then
-	  # 실행 중인 경우
-	  echo "til-product 프로세스가 실행 중입니다."
-	  sudo npm run pm2:reload:prod
-  else
-  	# 실행 중이 아닌 경우
-  	echo "til-product 프로세스가 실행되지 않았습니다."
-	  sudo npm run pm2:start:prod
-  fi
-elif [ "${DEPLOYMENT_GROUP_NAME}" == "til_fe_dev" ]; then
-  echo "개발 서버 배포"
-  cd "${REPOSITORY}"
-  sudo npm install
-  pm2 describe til-dev > /dev/null
-  if [ $? -eq 0 ]; then
-	  # 실행 중인 경우
-	  echo "til-dev 프로세스가 실행 중입니다."
-	  sudo npm run pm2:reload:dev
-  else
-  	# 실행 중이 아닌 경우
-  	echo "til-dev 프로세스가 실행되지 않았습니다."
-	  sudo npm run pm2:start:dev
-  fi
-fi
+# Remove existing problematic file if it exists
+rm -f /home/ubuntu/deploy/node_modules/.pnpm/eslint-config-next@14.2.4_eslint@8.57.0_typescript@5.5.3/node_modules/typescript/lib/zh-cn/diagnosticMessages.generated.json
+
+sudo pnpm install
+
+# Start or restart the application
+sudo pm2 start npm --name "dofarming" -- start -- -p 4000

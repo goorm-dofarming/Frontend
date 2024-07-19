@@ -1,0 +1,60 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  S3_BUCKET_NAME: dofarming-fe-bucket
+  CODE_DEPLOY_APPLICATION_NAME: dofarming_codeDeploy_FE
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: dofarming_codeDeploy_FE2
+  ENVIRONMENT: development
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code.
+        uses: actions/checkout@v4
+
+      - name: Check Node v
+        run: node -v
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9.5.0
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build
+        run: |
+          pnpm build
+
+      - name: zip create
+        run: |
+          zip -qq -r ./til-dev.zip .
+        shell: bash
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Upload to S3
+        run: |
+          aws s3 cp --region ap-northeast-2 ./til-dev.zip s3://$S3_BUCKET_NAME/til-dev.zip
+
+      - name: Deploy For Development
+        run: |
+          aws deploy create-deployment \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+          --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
+          --s3-location bucket=$S3_BUCKET_NAME,key=til-dev.zip,bundleType=zip
