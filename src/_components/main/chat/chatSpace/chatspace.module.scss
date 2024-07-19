@@ -79,6 +79,7 @@
 
       .overview {
         @include m.flex(flex-start, center, row);
+        flex-wrap: wrap;
 
         .hashtag {
           font-size: 0.6rem;

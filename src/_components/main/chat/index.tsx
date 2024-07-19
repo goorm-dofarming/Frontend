@@ -12,40 +12,26 @@ import { useQuery } from '@tanstack/react-query';
 import { getEntireChatRooms, getMyChatRooms } from '@/pages/api/chat';
 
 const Chat = () => {
-  const {
-    data: myChats = [],
-    error: myChatError,
-    isLoading: myChatLoading,
-    refetch: refetchMyChats,
-  } = useQuery({
+  const myChatQuery = useQuery({
     queryKey: ['myChats'],
     queryFn: getMyChatRooms,
   });
 
-  const {
-    data: entireChats = [],
-    error: entireChatError,
-    isLoading: entireChatLoading,
-    refetch: refetchEntireChats,
-  } = useQuery({
+  const entireChatQuery = useQuery({
     queryKey: ['entireChats'],
     queryFn: getEntireChatRooms,
   });
 
   const refetchChatList = () => {
-    refetchMyChats();
-    refetchEntireChats();
+    myChatQuery.refetch();
+    entireChatQuery.refetch();
   };
 
   return (
     <ChatContainer>
       <ChatList
-        myChats={myChats}
-        myChatError={myChatError}
-        myChatLoading={myChatLoading}
-        entireChats={entireChats}
-        entireChatError={entireChatError}
-        entireChatLoading={entireChatLoading}
+        myChatQuery={myChatQuery}
+        entireChatQuery={entireChatQuery}
         refetchChatList={refetchChatList}
       />
       <ChatSpace refetchChatList={refetchChatList} />
