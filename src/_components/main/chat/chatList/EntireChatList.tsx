@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { QueryObserverResult } from '@tanstack/react-query';
 
 // styles
 import cx from 'classnames';
@@ -13,29 +14,35 @@ import { Chat } from '@/src/types/aboutChat';
 import { useRecoilState } from 'recoil';
 import { selectedChatState } from '@/src/atom/stats';
 
-// icons
-import { FaRegFaceSadCry } from 'react-icons/fa6';
-import useToggle from '@/src/hooks/Home/useToggle';
+// components
 import Modal from '@/src/_components/Common/Modal';
 import EnterChat from '../../modal/chat/EnterChat';
-import { joinChatRoom } from '@/pages/api/chat';
+
+// icons
+import { FaRegFaceSadCry } from 'react-icons/fa6';
+
+// hooks
+import useToggle from '@/src/hooks/Home/useToggle';
+
+// api
 import axios from 'axios';
+import { joinChatRoom } from '@/pages/api/chat';
 
 interface EntireChatListProps {
-  chats: Chat[];
-  myChats: Chat[];
-  isLoading: boolean;
-  error: Error | null;
+  mainQuery: QueryObserverResult<Chat[], Error>;
+  myChatQuery: QueryObserverResult<Chat[], Error>;
   refetchChatList: () => void;
+  searchState: boolean;
 }
 
 const EntireChatList: React.FC<EntireChatListProps> = ({
-  chats,
-  myChats,
-  isLoading,
-  error,
+  mainQuery,
+  myChatQuery,
   refetchChatList,
+  searchState,
 }) => {
+  const { data: myChats = [] } = myChatQuery;
+  const { data: chats = [], error, isLoading } = mainQuery;
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
 
   // 채팅방 입장 모달
@@ -132,6 +139,12 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
             )}
           </div>
         ))
+      ) : searchState ? (
+        <div className={styles.noChat}>
+          <FaRegFaceSadCry />
+          <br />
+          검색 결과가 없습니다.
+        </div>
       ) : (
         <div className={styles.noChat}>
           <FaRegFaceSadCry />

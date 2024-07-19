@@ -40,7 +40,7 @@ const CreateChat: React.FC<CreateChatProps> = ({ openModal, onCreateChat }) => {
       setTagInput(value.substring(hashIndex + 1));
     } else if (blankIndex > 0) {
       const newTag = formatTag(value.substring(0, blankIndex).trim());
-      if (!tags.includes(newTag)) {
+      if (!tags.includes(newTag) && tags.length < 7) {
         setTags((prevTags) => [...prevTags, newTag]);
       }
       setTagInput(value.substring(blankIndex + 1));
