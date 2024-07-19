@@ -57,11 +57,11 @@ const Map = () => {
               const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
               const imageSrc =
-                "http://54.180.126.49/home/ubuntu/images/Cat1.png";
+                "http://54.180.126.49/images/pin/pin_location.png";
               // "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png";
               // "http://localhost:4000/app/_assets/main/map/pin_location.png";
               // 마커이미지의 주소입니다
-              const imageSize = new kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
+              const imageSize = new kakao.maps.Size(60, 80); // 마커이미지의 크기입니다
               const imageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
               const markerImage = new kakao.maps.MarkerImage(

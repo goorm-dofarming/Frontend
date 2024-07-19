@@ -44,7 +44,7 @@ const RandomPin = ({
     console.log({ lat, lng });
     setTimeout(() => {
       setFold(true);
-    }, 3000);
+    }, 4000);
   };
 
   const NextArrow = (props: any) => {

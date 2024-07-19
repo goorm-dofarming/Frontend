@@ -58,6 +58,9 @@ const Main = ({ pin }: { pin: string }) => {
   };
 
   useEffect(() => {
+    console.log(showFog);
+  }, [showFog]);
+  useEffect(() => {
     console.log("inputData: ", inputData);
   }, [inputData]);
 
@@ -70,7 +73,7 @@ const Main = ({ pin }: { pin: string }) => {
       pinElement.addEventListener("animationend", handleAnimationEnd);
       return () => {
         pinElement.removeEventListener("animationend", handleAnimationEnd);
-        setShowFog(false);
+        // setShowFog(false);
       };
     }
   }, []);
@@ -116,13 +119,6 @@ const Main = ({ pin }: { pin: string }) => {
             로그인
           </LoginButton>
         </div>
-        {/* <Image
-          className={pin === "pin_hide" ? "pin_hide" : "pin_show"}
-          src={pin_location}
-          alt="pin"
-          width={40}
-        /> */}
-
         <Image
           ref={pinRef}
           className={pin === "pin_hide" ? "pin_hide" : "pin_show"}

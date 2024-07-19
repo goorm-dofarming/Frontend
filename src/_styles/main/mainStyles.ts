@@ -32,7 +32,7 @@ export const HomeContainer = styled.div<{
     width: 100%;
     height: 100%;
     background: rgba(255, 255, 255, 0.8); /* 반투명 흰색 */
-    filter: blur(5px); /* 블러 효과 */
+    filter: blur(12px); /* 블러 효과 */
     opacity: 0; /* 초기 투명도 */
     transition: opacity 2s; /* 부드러운 전환 효과 */
   }

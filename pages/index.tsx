@@ -19,8 +19,7 @@ const Home = () => {
   const [page, setPage] = useState<string>("map");
   const [element, setElement] = useState<React.JSX.Element>(menu["map"]);
   const [pin, setPin] = useState<string>("pin_hide");
-  // const dartRef = useRef<HTMLButtonElement>(null);
-  // const targetRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     setElement(menu[page]);
   }, [page]);
