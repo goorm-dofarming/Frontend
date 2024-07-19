@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 // img
 import ShowPwd from '@/src/_assets/main/eye.svg';
@@ -20,6 +20,7 @@ import { InputLoginBorder, InputPwdBorder } from '@/src/_styles/main/inputs';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
+import { useGoogleLogin } from '@react-oauth/google';
 
 // types
 import { inputDataType } from '@/src/types/aboutMain';
@@ -43,6 +44,8 @@ const Login = ({
   handleComponent,
 }: LoginType) => {
   const [cookies, setCookies] = useCookies(['token']);
+  // 구글 로그인 토큰
+  const [gToken, setGToken] = useState<string>('');
   const { email, password } = inputData;
 
   const doLogin = useMutation({
@@ -54,7 +57,7 @@ const Login = ({
       };
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_ADDRESS}/login`,
+        `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/login`,
         body
       );
 
@@ -74,6 +77,49 @@ const Login = ({
     const naver = useNaverLogin();
     naver();
   };
+
+  const gLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      console.log('토큰 발급 성공: ', tokenResponse);
+      setCookies('token', tokenResponse.access_token, { path: '/' });
+      setGToken(tokenResponse.access_token);
+    },
+    onError: (errorResponse) => console.log('Error: ', errorResponse),
+  });
+
+  const googleLogin = useMutation({
+    mutationKey: ['googleLogin'],
+    mutationFn: async () => {
+      const userResponse = await axios.get(
+        'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
+        {
+          headers: {
+            Authorization: `Bearer ${gToken}`,
+          },
+        }
+      );
+
+      console.log('userResponse:', userResponse);
+
+      const body = {
+        socialType: 'GOOGLE',
+        data: userResponse.data,
+      };
+
+      const signupGoogle = await axios.post(
+        `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/oauth`,
+        body
+      );
+
+      console.log('signupKakao: ', signupGoogle);
+
+      return signupGoogle;
+    },
+    onError: (error) => {
+      console.error('Error fetching access token:', error);
+    },
+  });
+
   const kakaoLogin = useMutation({
     mutationKey: ['kakaologin'],
     mutationFn: async () => {
@@ -81,6 +127,12 @@ const Login = ({
       kakaoLogin();
     },
   });
+
+  useEffect(() => {
+    if (gToken) {
+      googleLogin.mutate();
+    }
+  }, [gToken]);
   return (
     <div className="modalContents">
       <InputLoginBorder>
@@ -133,8 +185,13 @@ const Login = ({
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;
           </span>
         </NaverButton>
-        <GoogleButton>
-          <Image src={GoogleLogo} alt="kakao" style={{ paddingLeft: '0rem' }} />
+        <GoogleButton onClick={() => gLogin()}>
+          <Image
+            // onClick={googleLogin}
+            src={GoogleLogo}
+            alt="kakao"
+            style={{ paddingLeft: '0rem' }}
+          />
           <span>구글 로그인</span>
           <span>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;

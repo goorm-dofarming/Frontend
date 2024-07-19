@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import { useCookies } from 'react-cookie';
 
 // style
 import cx from 'classnames';
@@ -13,19 +12,38 @@ import { TbMessageCirclePlus } from 'react-icons/tb';
 // components
 import EntireChatList from './EntireChatList';
 import MyChatList from './MyChatList';
-import CreateChat from '../../modal/CreateChat';
+import CreateChat from '../../modal/chat/CreateChat';
+import Modal from '@/src/_components/Common/Modal';
 
 // hooks
 import useToggle from '@/src/hooks/Home/useToggle';
-import Modal from '@/src/_components/Common/Modal';
-import axios from 'axios';
 
-const ChatList = () => {
-  const [cookies] = useCookies(['token']);
-  const { token } = cookies;
+// api
+import axios from 'axios';
+import { QueryObserverResult, useQuery } from '@tanstack/react-query';
+import { createChatRoom, getChatRoomList } from '@/pages/api/chat';
+
+// types
+import { Chat } from '@/src/types/aboutChat';
+
+interface ChatListProps {
+  myChatQuery: QueryObserverResult<Chat[], Error>;
+  entireChatQuery: QueryObserverResult<Chat[], Error>;
+  refetchChatList: () => void;
+}
+
+const ChatList: React.FC<ChatListProps> = ({
+  myChatQuery,
+  entireChatQuery,
+  refetchChatList,
+}) => {
   // true => 내 채팅 , false => 오픈 채팅
   const [activeTab, setActiveTab] = useState(true);
 
+  const [searchInput, setSearchInput] = useState<string>('');
+  const [searchState, setSearchState] = useState<boolean>(false);
+
+  // 채팅방 생성 모달
   const [modal, setModal] = useState<boolean>(false);
   const openModal = useToggle(modal, setModal);
 
@@ -35,26 +53,15 @@ const ChatList = () => {
     tags: string[];
   }) => {
     const { title, region, tags } = data;
+    const body = {
+      title,
+      region,
+      tagNames: tags,
+    };
 
     try {
-      const headers = {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      };
-      const body = {
-        title,
-        region,
-        tagNames: tags,
-      };
-
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/chatroom`,
-        body,
-        {
-          headers: headers,
-        }
-      );
-      console.log('response', response.data);
+      const response = await createChatRoom(body);
+      refetchChatList();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Axios error:', error.response?.data);
@@ -63,6 +70,30 @@ const ChatList = () => {
       }
     }
   };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.trim() === '') {
+      setSearchState(false);
+    }
+    setSearchInput(e.target.value);
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing) {
+      return;
+    }
+    if (e.key === 'Enter' && searchInput.trim() !== '') {
+      e.preventDefault();
+      setSearchState(true);
+      setSearchInput(searchInput.trim());
+    }
+  };
+
+  const searchQuery = useQuery({
+    queryKey: ['searchChat', searchInput],
+    queryFn: () => getChatRoomList({ condition: searchInput }),
+    enabled: searchState && searchInput.trim() !== '', // 검색어가 있을 때만 쿼리 활성화
+  });
 
   return (
     <div className="chatList">
@@ -88,10 +119,16 @@ const ChatList = () => {
         <div>
           <input
             type="text"
+            value={searchInput}
             className={styles.searchInput}
             placeholder="검색어를 입력하세요"
+            onChange={handleSearchChange}
+            onKeyDown={handleSearchKeyDown}
           />
-          <button className={styles.searchBtn}>
+          <button
+            className={styles.searchBtn}
+            onClick={() => setSearchState(true)}
+          >
             <IoSearch fill="#ED5A51" size="1.5rem" />
           </button>
         </div>
@@ -105,7 +142,20 @@ const ChatList = () => {
           onClick={openModal}
         />
       </div>
-      {activeTab ? <MyChatList /> : <EntireChatList />}
+      {activeTab ? (
+        <MyChatList
+          myChatQuery={myChatQuery}
+          searchQuery={searchQuery}
+          searchState={searchState}
+        />
+      ) : (
+        <EntireChatList
+          mainQuery={searchState ? searchQuery : entireChatQuery}
+          myChatQuery={myChatQuery}
+          refetchChatList={refetchChatList}
+          searchState={searchState}
+        />
+      )}
       <Modal openModal={openModal} modal={modal} width="35rem" height="40rem">
         <CreateChat openModal={openModal} onCreateChat={handleCreateChat} />
       </Modal>

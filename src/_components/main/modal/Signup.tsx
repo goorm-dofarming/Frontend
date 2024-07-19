@@ -90,7 +90,7 @@ const Signup = ({
       };
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_ADDRESS}/signup`,
+        `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/signup`,
         body
       );
 
@@ -115,7 +115,7 @@ const Signup = ({
       };
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_ADDRESS}/email/send`,
+        `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/email/send`,
         body
       );
 
@@ -139,7 +139,7 @@ const Signup = ({
       };
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_ADDRESS}/email/check`,
+        `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/email/check`,
         body
       );
 

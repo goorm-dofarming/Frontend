@@ -68,9 +68,115 @@
   }
 }
 
-.chats {
-  @include m.flex(space-evenly, flex-start, column);
+.container {
+  @include m.flex(center, center, column);
   width: 100%;
+  height: 10rem;
+
+  .error {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: c.$C_PRIMARY;
+  }
+
+  .errorMsg {
+    font-weight: 600;
+    color: c.$C_SECONDARY;
+  }
+
+  .loader {
+    animation: rotate 1s infinite;
+    height: 50px;
+    width: 50px;
+  }
+
+  .loader:before,
+  .loader:after {
+    border-radius: 50%;
+    content: '';
+    display: block;
+    height: 20px;
+    width: 20px;
+  }
+  .loader:before {
+    animation: ball1 1s infinite;
+    background-color: c.$C_TERTIARY;
+    box-shadow: 30px 0 0 c.$C_PRIMARY;
+    margin-bottom: 10px;
+  }
+  .loader:after {
+    animation: ball2 1s infinite;
+    background-color: c.$C_PRIMARY;
+    box-shadow: 30px 0 0 c.$C_TERTIARY;
+  }
+
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg) scale(0.8);
+    }
+    50% {
+      transform: rotate(360deg) scale(1.2);
+    }
+    100% {
+      transform: rotate(720deg) scale(0.8);
+    }
+  }
+
+  @keyframes ball1 {
+    0% {
+      box-shadow: 30px 0 0 c.$C_PRIMARY;
+    }
+    50% {
+      box-shadow: 0 0 0 c.$C_PRIMARY;
+      margin-bottom: 0;
+      transform: translate(15px, 15px);
+    }
+    100% {
+      box-shadow: 30px 0 0 c.$C_PRIMARY;
+      margin-bottom: 10px;
+    }
+  }
+
+  @keyframes ball2 {
+    0% {
+      box-shadow: 30px 0 0 c.$C_TERTIARY;
+    }
+    50% {
+      box-shadow: 0 0 0 c.$C_TERTIARY;
+      margin-top: -20px;
+      transform: translate(15px, 15px);
+    }
+    100% {
+      box-shadow: 30px 0 0 c.$C_TERTIARY;
+      margin-top: 0;
+    }
+  }
+}
+
+.chats {
+  @include m.flex(flex-start, flex-start, column);
+  width: 100%;
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 5px; /* 스크롤바 너비 */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: c.$C_TERTIARY; /* 스크롤바 색상 */
+    border-radius: 6px; /* 스크롤바 모서리 둥글게 */
+  }
+
+  .noChat {
+    width: 100%;
+    text-align: center;
+    padding-top: 5rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: c.$C_SECONDARY;
+  }
 
   .chat {
     @include m.flex(flex-start, center, row);
@@ -90,7 +196,7 @@
 
     .imageContainer {
       @include m.flex(center, center, column);
-      width: 4rem;
+      width: 5rem;
 
       .imageSize {
         width: 4rem;
@@ -128,12 +234,14 @@
 
       .overview {
         @include m.flex(flex-start, center, row);
+        flex-wrap: wrap;
+        gap: 0.2rem;
 
         .hashtag {
           font-size: 0.6rem;
-          font-weight: 800;
+          font-weight: 900;
           padding: 0.3rem 0.6rem;
-          margin-right: 0.2rem;
+
           border-radius: 20px;
           color: c.$C_PRIMARY;
         }
