@@ -1,11 +1,12 @@
-import styles from '@/src/home.module.scss';
-import React, { useEffect, useState } from 'react';
+import styles from "@/src/home.module.scss";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 // components
-import NavBar from '@/src/_components/main/NavBar';
-import { Map, Log, Likes, Chat } from '@/src/_components/main';
-import Main from '@/src/_components/main/Main';
-import RandomPin from '@/src/_components/main/RandomPin';
+import NavBar from "@/src/_components/main/NavBar";
+import { Map, Log, Likes, Chat } from "@/src/_components/main";
+import Main from "@/src/_components/main/Main";
+import RandomPin from "@/src/_components/main/RandomPin";
+
 const menu: { [key: string]: JSX.Element } = {
   map: <Map />,
   log: <Log />,
@@ -15,8 +16,9 @@ const menu: { [key: string]: JSX.Element } = {
 
 const Home = () => {
   const [fold, setFold] = useState<boolean>(false);
-  const [page, setPage] = useState<string>('map');
-  const [element, setElement] = useState<React.JSX.Element>(menu['map']);
+  const [page, setPage] = useState<string>("map");
+  const [element, setElement] = useState<React.JSX.Element>(menu["map"]);
+  const [pin, setPin] = useState<string>("pin_hide");
 
   useEffect(() => {
     setElement(menu[page]);
@@ -35,7 +37,7 @@ const Home = () => {
         ) : (
           <div className={styles.sliderSection}>
             <div className={styles.slider}>
-              <RandomPin setFold={setFold} setPage={setPage} />
+              <RandomPin setFold={setFold} setPage={setPage} setPin={setPin} />
             </div>
             <div className={styles.description}>
               <p className={styles.eng}>Tap for a Random Adventure</p>
@@ -47,7 +49,7 @@ const Home = () => {
         )}
       </section>
       <section className={fold ? styles.page : styles.home}>
-        {fold ? <>{element}</> : <Main />}
+        {fold ? <>{element}</> : <Main pin={pin} />}
       </section>
     </main>
   );

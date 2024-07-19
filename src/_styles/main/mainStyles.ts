@@ -1,6 +1,6 @@
-import styled, { css } from 'styled-components';
-import { colorTheme } from '@/src/_styles/common/commonColorStyles';
-import { hideHomeIcons, showHomeIcons } from '../keyframes';
+import styled, { css } from "styled-components";
+import { colorTheme } from "@/src/_styles/common/commonColorStyles";
+import { hideHomeIcons, showHomeIcons } from "../keyframes";
 
 export const HomeContainer = styled.div<{
   $dropdown?: boolean;
@@ -23,7 +23,23 @@ export const HomeContainer = styled.div<{
     justify-content: center;
     align-items: center;
   }
+  .fog {
+    z-index: 1000;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8); /* 반투명 흰색 */
+    filter: blur(12px); /* 블러 효과 */
+    opacity: 0; /* 초기 투명도 */
+    transition: opacity 2s; /* 부드러운 전환 효과 */
+  }
 
+  .fog_show {
+    opacity: 1;
+  }
   .logoContainer {
     top: 40%;
     /* right: 24%; */
@@ -46,7 +62,7 @@ export const HomeContainer = styled.div<{
         : css`0.5s ${hideHomeIcons} ease-in-out`};
     transition: 0.3s visibility;
     visibility: ${({ $dropdown }) =>
-      $dropdown === true ? 'visible' : 'hidden'};
+      $dropdown === true ? "visible" : "hidden"};
   }
   .iconBg {
     width: 3vw;
@@ -71,13 +87,42 @@ export const HomeContainer = styled.div<{
     background-color: white;
     border-radius: 0.5rem;
     // true 말고 show hide로 바꾸기
-    visibility: ${({ modal }) => (modal === 'true' ? 'visible' : 'hidden')};
+    visibility: ${({ modal }) => (modal === "true" ? "visible" : "hidden")};
   }
   .mainSection {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+  .colorMap {
+    position: relative;
+  }
+
+  .pin_show {
+    position: absolute;
+    left: 0;
+    z-index: 100;
+    transform-style: preserve-3d;
+    animation: pinAnimation 1.6s ease-in-out;
+
+    @keyframes pinAnimation {
+      0% {
+        transform: translateX(0) translateZ(0) scale(0) rotateX(0) rotateY(0)
+          rotateZ(0);
+      }
+      50% {
+        transform: translateX(50vw) translateZ(-50px) scale(10) rotateX(30deg)
+          rotateY(30deg) rotateZ(30deg);
+      }
+      100% {
+        transform: translateX(65vw) translateZ(0) scale(0) rotateX(0) rotateY(0)
+          rotateZ(0);
+      }
+    }
+  }
+  .pin_hide {
+    display: none;
   }
   .logo {
     z-index: 0;

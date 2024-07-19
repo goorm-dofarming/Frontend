@@ -1,30 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
+import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 // styles
-import { HomeContainer } from '@/src/_styles/main/mainStyles';
+import { HomeContainer } from "@/src/_styles/main/mainStyles";
 
 // constants
-import { homeDropdown } from '@/src/constatns/icons';
-import { LoginButton } from '@/src/_styles/main/buttons';
+import { homeDropdown } from "@/src/constatns/icons";
+import { LoginButton } from "@/src/_styles/main/buttons";
 
 // components
-import Modal from '@/src/_components/Common/Modal';
-import Login from '@/src/_components/main/modal/Login';
-import Signup from '@/src/_components/main/modal/Signup';
+import Modal from "@/src/_components/Common/Modal";
+import Login from "@/src/_components/main/modal/Login";
+import Signup from "@/src/_components/main/modal/Signup";
 
 // img
 import Profile from '@/src/_assets/main/userProfile.svg';
 import ColorMap from '@/src/_assets/main/colored_Map.svg';
 import Logo from '@/src/_assets/main/logo.svg';
+import pin_location from "@/src/_assets/main/map/pin_location.png";
 
 // types
-import { inputDataType } from '@/src/types/aboutMain';
+import { inputDataType } from "@/src/types/aboutMain";
 
 // hooks
 import useToggle from '@/src/hooks/Home/useToggle';
 import { useCookies } from 'react-cookie';
 
-const Main = () => {
+const Main = ({ pin }: { pin: string }) => {
   // cookie
   const [cookies, setCookies] = useCookies(['token']);
   // 모달 컨트롤
@@ -37,11 +38,14 @@ const Main = () => {
   const [pwdShow, setPwdShow] = useState<boolean>(false);
   // input data
   const [inputData, setInputData] = useState<inputDataType>({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    authentication: '',
+    email: "",
+    password: "",
+    confirmPassword: "",
+    authentication: "",
   });
+  const [showFog, setShowFog] = useState<boolean>(false);
+
+  const pinRef = useRef<HTMLImageElement>(null); // 핀 요소에 대한 ref
 
   const showDropdown = useToggle(dropdown, setDropdown);
   const handlePwd = useToggle(pwdShow, setPwdShow);
@@ -56,17 +60,34 @@ const Main = () => {
   };
 
   useEffect(() => {
-    console.log('inputData: ', inputData);
+    console.log(showFog);
+  }, [showFog]);
+  useEffect(() => {
+    console.log("inputData: ", inputData);
   }, [inputData]);
 
+  useEffect(() => {
+    const pinElement = pinRef.current;
+    if (pinElement) {
+      const handleAnimationEnd = () => {
+        setShowFog(true);
+      };
+      pinElement.addEventListener("animationend", handleAnimationEnd);
+      return () => {
+        pinElement.removeEventListener("animationend", handleAnimationEnd);
+        // setShowFog(false);
+      };
+    }
+  }, []);
   return (
     <HomeContainer $dropdown={dropdown} modal={modal.toString()}>
+      <div className={`fog ${showFog ? "fog_show" : ""}`}></div>
       <header>
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
           <Image
@@ -92,7 +113,7 @@ const Main = () => {
           </div>
         </div>
       </header>
-      <main>
+      <main className="mainSection">
         <Image className="colorMap" src={ColorMap} alt="맵" width={360} />
         <div className="logoContainer">
           <Image className="logo" src={Logo} alt="로고" width={280} />
@@ -102,6 +123,13 @@ const Main = () => {
             </LoginButton>
           )}
         </div>
+        <Image
+          ref={pinRef}
+          className={pin === "pin_hide" ? "pin_hide" : "pin_show"}
+          src={pin_location}
+          alt="pin"
+          width={40}
+        />
       </main>
       <Modal openModal={openModal} modal={modal} width="35vw" height="75vh">
         {pageState ? (
