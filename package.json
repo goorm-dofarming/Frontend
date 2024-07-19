@@ -32,6 +32,7 @@
     "axios": "^1.7.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
+    "kakao.maps.d.ts": "^0.1.40",
     "mapbox-gl": "^3.5.2",
     "msw": "^2.3.1",
     "react-cookie": "^7.1.4",

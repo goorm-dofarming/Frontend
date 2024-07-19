@@ -55,6 +55,7 @@ const Signup = ({
   const INTERVAL = 1000;
   const [timeLeft, setTimeLeft] = useState<number>(MINUTES_IN_MS);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (isCertificate === true) {
       const timer = setInterval(() => {

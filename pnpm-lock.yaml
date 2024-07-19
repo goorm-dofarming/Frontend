@@ -69,6 +69,9 @@ importers:
       eslint-config-next:
         specifier: 14.2.4
         version: 14.2.4(eslint@8.57.0)(typescript@5.5.3)
+      kakao.maps.d.ts:
+        specifier: ^0.1.40
+        version: 0.1.40
       mapbox-gl:
         specifier: ^3.5.2
         version: 3.5.2

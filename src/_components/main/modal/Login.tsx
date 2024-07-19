@@ -76,7 +76,7 @@ const Login = ({
     },
   });
 
-  const naverLogin = () => {
+  const NaverLogin = () => {
     const naver = useNaverLogin();
     naver();
   };
@@ -123,19 +123,18 @@ const Login = ({
     },
   });
 
-  const kakaoLogin = useMutation({
-    mutationKey: ['kakaologin'],
-    mutationFn: async () => {
-      const kakaoLogin = useKaKaoLogin();
-      kakaoLogin();
-    },
-  });
+  const KakaoLogin = () => {
+    const kLogin = useKaKaoLogin();
+    kLogin();
+  };
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (gToken) {
       googleLogin.mutate();
     }
   }, [gToken]);
+  /* eslint-enable react-hooks/exhaustive-deps */
   return (
     <div className="modalContents">
       <InputLoginBorder>
@@ -192,14 +191,14 @@ const Login = ({
       </div>
 
       <div className="socialButtonContainer">
-        <KakaoButton onClick={() => kakaoLogin.mutate()}>
+        <KakaoButton onClick={KakaoLogin}>
           <Image src={KakaoLogo} alt="kakao" style={{ paddingLeft: '0rem' }} />
           <span>카카오 로그인</span>
           <span>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;
           </span>
         </KakaoButton>
-        <NaverButton onClick={naverLogin}>
+        <NaverButton onClick={NaverLogin}>
           <Image src={NaverLogo} alt="kakao" style={{ paddingLeft: '0rem' }} />
           <span>네이버 로그인</span>
           <span>

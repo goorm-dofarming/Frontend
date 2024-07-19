@@ -13,7 +13,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useCookies } from 'react-cookie';
 import { useRouter } from 'next/navigation';
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const [, setCookies] = useCookies(['token']);
 
@@ -74,7 +74,7 @@ const page = () => {
 
   useEffect(() => {
     getAccesstoken.mutate();
-  }, []);
+  }, [getAccesstoken]);
   return (
     <SocialLoginContainer>
       <div>
@@ -84,4 +84,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

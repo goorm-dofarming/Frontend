@@ -25,6 +25,7 @@ import { inputDataType } from '@/src/types/aboutMain';
 import useToggle from '@/src/hooks/Home/useToggle';
 import { useCookies } from 'react-cookie';
 import { colorTheme } from '@/src/_styles/common/commonColorStyles';
+import axios from 'axios';
 
 const Main = ({ pin }: { pin: string }) => {
   // cookie
@@ -80,6 +81,7 @@ const Main = ({ pin }: { pin: string }) => {
       };
     }
   }, []);
+
   return (
     <HomeContainer dropdown={dropdown.toString()} modal={modal.toString()}>
       <header>

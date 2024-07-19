@@ -12,8 +12,8 @@ import { useCookies } from 'react-cookie';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 
-const page = () => {
-  const [cookies, setCookies] = useCookies(['token']);
+const Page = () => {
+  const [, setCookies] = useCookies(['token']);
 
   const getAccesstoken = useMutation({
     mutationKey: ['getAccesstoken'],
@@ -56,7 +56,7 @@ const page = () => {
 
   useEffect(() => {
     getAccesstoken.mutate();
-  }, []);
+  }, [getAccesstoken]);
   return (
     <SocialLoginContainer>
       <Image src={Logo} alt="로고" />
@@ -64,4 +64,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
