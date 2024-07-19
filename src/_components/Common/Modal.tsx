@@ -34,7 +34,7 @@ const Modal: React.FC<MainModalType> = ({
   if (!modalRoot) return null;
 
   return ReactDOM.createPortal(
-    <ModalContainer $modal={modal} width={width} height={height}>
+    <ModalContainer modal={modal.toString()} width={width} height={height}>
       <div className="modal">
         {/* 모달 헤더 */}
         <div className="modalHeader">

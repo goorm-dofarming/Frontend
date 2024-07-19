@@ -7,7 +7,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import Head from "next/head";
 
 export default function App({ Component, pageProps }: AppProps) {
-  const enableMSW = process.env.NEXT_PUBLIC_ENABLE_MSW === 'false';
+  const enableMSW = process.env.NEXT_PUBLIC_ENABLE_MSW === 'true';
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
   if (!clientId) {

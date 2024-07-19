@@ -15,13 +15,13 @@ import {
   NAverCircleButton,
   SignupButton,
   SignupDisActiveButton,
-} from '@/src/_styles/main/buttons';
+} from '@/src/_styles/common/buttons';
 
 // styles
 import {
   InputSignupAuthpBorder,
   InputSignupBorder,
-} from '@/src/_styles/main/inputs';
+} from '@/src/_styles/common/inputs';
 
 // libraries
 import { useMutation } from '@tanstack/react-query';
@@ -51,7 +51,7 @@ const Signup = ({
   // 회원가입 버튼 컨트롤
   const [isActive, setIsActive] = useState<boolean>(false);
   // 타이머
-  const MINUTES_IN_MS = 3 * 1 * 1000;
+  const MINUTES_IN_MS = 3 * 61 * 1000;
   const INTERVAL = 1000;
   const [timeLeft, setTimeLeft] = useState<number>(MINUTES_IN_MS);
 
@@ -155,52 +155,90 @@ const Signup = ({
   return (
     <div className="modalContents">
       <InputSignupBorder>
-        <div>Email</div>
-        <div className="inputRow">
-          <input
-            name="email"
-            onChange={(e) => handleInputData(e.target.name, e.target.value)}
-            placeholder="이메일을 입력해주세요"
-          />
+        <div
+          style={{
+            width: '90%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
+          <div className="inputInMent">Email</div>
+          <div className="inputRow">
+            <input
+              name="email"
+              onChange={(e) => handleInputData(e.target.name, e.target.value)}
+              placeholder="이메일을 입력해주세요"
+            />
+          </div>
         </div>
       </InputSignupBorder>
       <InputSignupBorder>
-        <div>Password</div>
-        <div className="inputRow">
-          <input
-            type={pwdShow === true ? 'text' : 'password'}
-            name="password"
-            onChange={(e) => handleInputData(e.target.name, e.target.value)}
-            placeholder="비밀번호를 입력해주세요(8~12자)"
-          />
-          <Image
-            src={pwdShow === true ? HidePwd : ShowPwd}
-            alt="비밀번호 확인"
-            width={25}
-            height={25}
-            onClick={handlePwd}
-          />
+        <div
+          style={{
+            width: '90%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
+          <div className="inputInMent">Password</div>
+          <div className="inputRow">
+            <input
+              type={pwdShow === true ? 'text' : 'password'}
+              name="password"
+              onChange={(e) => handleInputData(e.target.name, e.target.value)}
+              placeholder="비밀번호를 입력해주세요(8~12자)"
+            />
+          </div>
         </div>
+        <Image
+          src={pwdShow === true ? HidePwd : ShowPwd}
+          alt="비밀번호 확인"
+          width={25}
+          height={25}
+          onClick={handlePwd}
+        />
       </InputSignupBorder>
       <InputSignupBorder>
-        <div style={{ marginBottom: '0.3rem' }}>Check Password</div>
-        <div className="inputRow">
-          <input
-            type={pwdShow === true ? 'text' : 'password'}
-            name="confirmPassword"
-            onChange={(e) => handleInputData(e.target.name, e.target.value)}
-            placeholder="비민번호 확인"
-          />
+        <div
+          style={{
+            width: '90%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
+          <div className="inputInMent" style={{ marginBottom: '0.3rem' }}>
+            Check Password
+          </div>
+          <div className="inputRow">
+            <input
+              type={pwdShow === true ? 'text' : 'password'}
+              name="confirmPassword"
+              onChange={(e) => handleInputData(e.target.name, e.target.value)}
+              placeholder="비밀번호 확인"
+            />
+          </div>
         </div>
       </InputSignupBorder>
       <div className="authContainer">
         <InputSignupAuthpBorder>
-          <div>Authentication</div>
-          <div className="inputRow">
-            <input
-              name="authentication"
-              onChange={(e) => handleInputData(e.target.name, e.target.value)}
-            />
+          <div
+            style={{
+              width: '90%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}
+          >
+            <div className="inputInMent">Authentication</div>
+            <div className="inputRow">
+              <input
+                name="authentication"
+                onChange={(e) => handleInputData(e.target.name, e.target.value)}
+              />
+            </div>
           </div>
         </InputSignupAuthpBorder>
         {isCertificate === true ? (

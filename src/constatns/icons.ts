@@ -1,23 +1,28 @@
-import Log from '@/src/_assets/main/log.svg';
-import Chat from '@/src/_assets/main/chat.svg';
-import Hearts from '@/src/_assets/main/hearts.svg';
-import Settings from '@/src/_assets/main/settings.svg';
+import { FaRegClock } from 'react-icons/fa';
+import { IoChatbubbleEllipsesSharp } from 'react-icons/io5';
+import { FaHeart } from 'react-icons/fa';
+import { IoMdSettings } from 'react-icons/io';
+import { FaMapMarkedAlt } from 'react-icons/fa';
 
 export const homeDropdown = [
   {
+    id: 'map',
+    img: FaMapMarkedAlt,
+  },
+  {
     id: 'logs',
-    img: Log,
+    img: FaRegClock,
   },
   {
     id: 'chat',
-    img: Chat,
+    img: IoChatbubbleEllipsesSharp,
   },
   {
     id: 'hearts',
-    img: Hearts,
+    img: FaHeart,
   },
   {
     id: 'settings',
-    img: Settings,
+    img: IoMdSettings,
   },
 ];

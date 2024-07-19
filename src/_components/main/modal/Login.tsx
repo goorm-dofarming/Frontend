@@ -13,8 +13,8 @@ import {
   KakaoButton,
   ModalLoginButton,
   NaverButton,
-} from '@/src/_styles/main/buttons';
-import { InputLoginBorder, InputPwdBorder } from '@/src/_styles/main/inputs';
+} from '@/src/_styles/common/buttons';
+import { InputLoginBorder, InputPwdBorder } from '@/src/_styles/common/inputs';
 
 // libraries
 import { useMutation } from '@tanstack/react-query';
@@ -35,6 +35,7 @@ interface LoginType {
   handlePwd: () => void;
   handleInputData: (sort: string, value: string) => void;
   handleComponent: () => void;
+  openModal: () => void;
 }
 const Login = ({
   inputData,
@@ -42,6 +43,7 @@ const Login = ({
   handlePwd,
   handleInputData,
   handleComponent,
+  openModal,
 }: LoginType) => {
   const [cookies, setCookies] = useCookies(['token']);
   // 구글 로그인 토큰
@@ -66,6 +68,7 @@ const Login = ({
       if (response.status === 200) {
         // 성공 시 cookie에 token 추가
         setCookies('token', response.data);
+        openModal();
       }
     },
     onError: (e) => {
@@ -136,30 +139,48 @@ const Login = ({
   return (
     <div className="modalContents">
       <InputLoginBorder>
-        <div>Email</div>
-        <div className="inputRow">
-          <input
-            name="email"
-            onChange={(e) => handleInputData(e.target.name, e.target.value)}
-          />
+        <div
+          style={{
+            width: '90%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
+          <div className="inputInMent">Email</div>
+          <div className="inputRow">
+            <input
+              name="email"
+              onChange={(e) => handleInputData(e.target.name, e.target.value)}
+            />
+          </div>
         </div>
       </InputLoginBorder>
-      <InputPwdBorder className="inputBorder2">
-        <div>Password</div>
-        <div className="inputRow">
-          <input
-            type={pwdShow === true ? 'text' : 'password'}
-            name="password"
-            onChange={(e) => handleInputData(e.target.name, e.target.value)}
-          />
-          <Image
-            src={pwdShow === true ? HidePwd : ShowPwd}
-            alt="비밀번호 확인"
-            width={25}
-            height={25}
-            onClick={handlePwd}
-          />
+      <InputPwdBorder>
+        <div
+          style={{
+            width: '90%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
+          <div className="inputInMent">Password</div>
+          <div className="inputRow">
+            <input
+              type={pwdShow === true ? 'text' : 'password'}
+              name="password"
+              onChange={(e) => handleInputData(e.target.name, e.target.value)}
+            />
+          </div>
         </div>
+        <Image
+          src={pwdShow === true ? HidePwd : ShowPwd}
+          alt="비밀번호 확인"
+          width={30}
+          height={30}
+          onClick={handlePwd}
+        />
       </InputPwdBorder>
       <ModalLoginButton onClick={() => doLogin.mutate()}>
         로그인
@@ -186,12 +207,7 @@ const Login = ({
           </span>
         </NaverButton>
         <GoogleButton onClick={() => gLogin()}>
-          <Image
-            // onClick={googleLogin}
-            src={GoogleLogo}
-            alt="kakao"
-            style={{ paddingLeft: '0rem' }}
-          />
+          <Image src={GoogleLogo} alt="kakao" style={{ paddingLeft: '0rem' }} />
           <span>구글 로그인</span>
           <span>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;
