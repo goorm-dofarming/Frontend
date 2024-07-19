@@ -26,16 +26,28 @@
     }
     > img {
       fill: c.$C_SECONDARY;
+      z-index: 1000;
     }
-    animation: pinMove 1s ease-in-out infinite;
+    animation: pin 1s ease-in-out infinite;
     cursor: pointer;
     // &:hover {
     //   animation: pinMove 1s ease-in-out infinite;
     //   cursor: pointer;
     // }
+
+    &:focus {
+      > img {
+        // position: absolute;
+        // z-index: 1000;
+        // transform: translateX(-50%) translateY(-100%) rotate(45deg);
+        // animation: throwDart 1s ease-out forwards;
+        // animation: pinMove 3s ease-in;
+        // animation: rotate 0.5s ease-in-out infinite;
+      }
+    }
   }
 }
-@keyframes pinMove {
+@keyframes pin {
   0% {
     transform: translateY(-12px);
   }
@@ -44,5 +56,42 @@
   }
   100% {
     transform: translateY(-12px);
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+@keyframes pinMove {
+  0% {
+    transform: translateY(-20px) translateX(0%) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) translateX(400px) rotate(180deg);
+  }
+  100% {
+    transform: translateY(20px) translateX(900px) rotate(360deg);
+  }
+}
+
+@keyframes throwDart {
+  0% {
+    // left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  50% {
+    top: 50%;
+    transform: translateY(-50%) translateX(400px) rotate(20deg);
+  }
+  100% {
+    // left: calc(100% - 200px);
+    top: 50%;
+    transform: translateY(-50%) translateX(800px) rotate(45deg);
   }
 }

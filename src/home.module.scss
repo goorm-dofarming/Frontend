@@ -1,5 +1,5 @@
-@use './_styles/constants/color' as c;
-@use './_styles/mixins/' as m;
+@use "./_styles/constants/color" as c;
+@use "./_styles/mixins/" as m;
 .main {
   @include m.flex(space-between, flex-start, row);
   width: 100vw;

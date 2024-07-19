@@ -1,24 +1,24 @@
-import Card from '@/src/_components/Common/Card';
-import styles from './map.module.scss';
+import Card from "@/src/_components/Common/Card";
+import styles from "./map.module.scss";
 // import Script from "next/script";
-import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
-import pin_location from '@/src/_assets/main/map/pin_location.png';
-import pin_activity from '@/src/_assets/main/map/pin_activity.svg';
-import pin_cafe from '@/src/_assets/main/map/pin_cafe.svg';
-import pin_food from '@/src/_assets/main/map/pin_food.svg';
-import pin_ocean from '@/src/_assets/main/map/pin_ocean.png';
-import pin_mountain from '@/src/_assets/main/map/pin_mountain.svg';
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import pin_location from "@/src/_assets/main/map/pin_location.png";
+import pin_activity from "@/src/_assets/main/map/pin_activity.svg";
+import pin_cafe from "@/src/_assets/main/map/pin_cafe.svg";
+import pin_food from "@/src/_assets/main/map/pin_food.svg";
+import pin_ocean from "@/src/_assets/main/map/pin_ocean.png";
+import pin_mountain from "@/src/_assets/main/map/pin_mountain.svg";
 
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=cf2b17f421b6bb8091a506fb2e0a675c&autoload=false&libraries=services`;
-// const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&libraries=services`;
+// const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services`;
 const data = {
   id: 1,
-  imgUrl: '',
-  name: '용용선생 선릉점',
-  type: '음식점',
-  location: '서울특별시 성동구 마조로3가길 15',
-  phone: '02-1234-5678',
+  imgUrl: "",
+  name: "용용선생 선릉점",
+  type: "음식점",
+  location: "서울특별시 성동구 마조로3가길 15",
+  phone: "02-1234-5678",
   // likes:
 };
 const recommend = [
@@ -33,7 +33,7 @@ const Map = () => {
   const [kakaoMap, setKakaoMap] = useState(null);
   const container = useRef();
   useEffect(() => {
-    const script = document.createElement('script');
+    const script = document.createElement("script");
     script.src = KAKAO_SDK_URL;
     document.head.appendChild(script);
 
@@ -50,14 +50,15 @@ const Map = () => {
         const geocoder = new kakao.maps.services.Geocoder();
 
         geocoder.addressSearch(
-          '제주특별자치도 제주시 첨단로 242',
+          "제주특별자치도 제주시 첨단로 242",
           function (result, status) {
             // 정상적으로 검색이 완료됐으면
             if (status === kakao.maps.services.Status.OK) {
               const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
               const imageSrc =
-                'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png';
+                "http://54.180.126.49/home/ubuntu/images/Cat1.png";
+              // "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png";
               // "http://localhost:4000/app/_assets/main/map/pin_location.png";
               // 마커이미지의 주소입니다
               const imageSize = new kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
@@ -113,7 +114,12 @@ const Map = () => {
   }, [kakaoMap]);
   return (
     <main className={styles.main}>
-      <section id="container" ref={container} className={styles.map}></section>
+      <section id="container" ref={container} className={styles.map}>
+        <div className={styles.info}>
+          <p>대구광역시 군위군</p>
+          <span> {`37˚00'00"N 127˚00'00"E`}</span>
+        </div>
+      </section>
       <div className={styles.locations}>
         {recommend.map((location, index) => (
           <Card key={location.id} {...location} />

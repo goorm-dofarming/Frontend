@@ -1,5 +1,5 @@
 "use client";
-import React, { SetStateAction, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import styles from "./randomPin.module.scss";
 import pin_random from "@/src/_assets/main/map/pin_random.svg";
@@ -25,17 +25,26 @@ const themes = [
 const RandomPin = ({
   setFold,
   setPage,
+  setPin,
 }: {
   setFold: React.Dispatch<React.SetStateAction<boolean>>;
   setPage: React.Dispatch<React.SetStateAction<string>>;
+  setPin: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const [theme, setTheme] = useState("random");
   const onClick = () => {
     //랜덤핀 클릭시 api
     const { lat, lng } = getRandomCoord();
-    console.log(lat, lng);
-    setFold(true);
+    setPin("pin_show");
     setPage("map");
+    setTimeout(() => {
+      setPin("pin_hide");
+    }, 1600);
+    // setFold(true);
+    console.log({ lat, lng });
+    setTimeout(() => {
+      setFold(true);
+    }, 3000);
   };
 
   const NextArrow = (props: any) => {

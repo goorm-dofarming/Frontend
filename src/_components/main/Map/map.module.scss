@@ -9,6 +9,21 @@
     position: relative;
     width: 100%;
     height: 100%;
+    .info {
+      position: absolute;
+      z-index: 20;
+      top: 8px;
+      left: 16px;
+      color: c.$C_BRWON;
+      > p {
+        font-size: 44px;
+        font-weight: bold;
+      }
+      > span {
+        font-size: 24px;
+        font-weight: 500;
+      }
+    }
   }
   .locations {
     @include m.flex(flex-start, center, column);
@@ -16,10 +31,6 @@
     position: absolute;
     width: 340px;
     height: calc(100% - 100px); /* top에서 100px 뺀 높이 */
-    // margin-top: 100px;
-    // margin-right: 40px;
-    // right: 40px;
-    // flex-wrap: nowrap;
     top: 100px;
     right: 40px;
     gap: 40px;
