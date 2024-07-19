@@ -13,8 +13,8 @@ import {
   KakaoButton,
   ModalLoginButton,
   NaverButton,
-} from '@/src/_styles/main/buttons';
-import { InputLoginBorder, InputPwdBorder } from '@/src/_styles/main/inputs';
+} from '@/src/_styles/common/buttons';
+import { InputLoginBorder, InputPwdBorder } from '@/src/_styles/common/inputs';
 
 // libraries
 import { useMutation } from '@tanstack/react-query';
@@ -35,6 +35,7 @@ interface LoginType {
   handlePwd: () => void;
   handleInputData: (sort: string, value: string) => void;
   handleComponent: () => void;
+  openModal: () => void;
 }
 const Login = ({
   inputData,
@@ -42,6 +43,7 @@ const Login = ({
   handlePwd,
   handleInputData,
   handleComponent,
+  openModal,
 }: LoginType) => {
   const [cookies, setCookies] = useCookies(['token']);
   // 구글 로그인 토큰
@@ -66,6 +68,7 @@ const Login = ({
       if (response.status === 200) {
         // 성공 시 cookie에 token 추가
         setCookies('token', response.data);
+        openModal();
       }
     },
     onError: (e) => {

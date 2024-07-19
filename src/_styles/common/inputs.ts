@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { colorTheme } from '../common/commonColorStyles';
+import { colorTheme } from './commonColorStyles';
 
 export const InputBorder = styled.div`
   height: 7vh;

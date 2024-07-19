@@ -34,10 +34,10 @@ export const HomeContainer = styled.div<{
   .iconCol {
     position: absolute;
     top: 8%;
-    height: 23vh;
+    height: 30vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-evenly;
     align-items: cen4ter;
     animation: ${({ dropdown }) =>
       dropdown === 'true'

@@ -76,6 +76,7 @@ export const ModalContainer = styled.div<{
     font-size: 0.9rem;
     font-family: 'RedHatDisplay_Variable';
     margin-left: 0.3rem;
+    cursor: pointer;
   }
   .ment3 {
     color: ${colorTheme.primary};

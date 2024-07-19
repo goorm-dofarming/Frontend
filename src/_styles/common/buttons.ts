@@ -26,6 +26,7 @@ export const SignupButton = styled.button`
   background-color: ${colorTheme.secondary};
   border-radius: 0.2rem;
   font-family: 'RedHatDisplay_Italic';
+  cursor: pointer;
 
   &:hover {
     color: ${colorTheme.secondary};
@@ -59,6 +60,7 @@ export const ModalLoginButton = styled.button`
     border: 1px solid ${colorTheme.secondary};
     background-color: white;
     color: ${colorTheme.secondary};
+    cursor: pointer;
   }
 `;
 
@@ -70,8 +72,8 @@ const SocialButton = styled.div`
   align-items: center;
   justify-content: space-around;
   border-radius: 0.3rem;
-
   font-weight: 700;
+  cursor: pointer;
 `;
 
 export const KakaoButton = styled(SocialButton)`

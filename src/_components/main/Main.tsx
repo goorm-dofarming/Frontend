@@ -5,7 +5,7 @@ import { HomeContainer } from '@/src/_styles/main/mainStyles';
 
 // constants
 import { homeDropdown } from '@/src/constatns/icons';
-import { LoginButton } from '@/src/_styles/main/buttons';
+import { LoginButton } from '@/src/_styles/common/buttons';
 
 // components
 import Modal from '@/src/_components/Common/Modal';
@@ -23,6 +23,7 @@ import { inputDataType } from '@/src/types/aboutMain';
 // hooks
 import useToggle from '@/src/hooks/Home/useToggle';
 import { useCookies } from 'react-cookie';
+import { colorTheme } from '@/src/_styles/common/commonColorStyles';
 
 const Main = () => {
   // cookie
@@ -78,17 +79,19 @@ const Main = () => {
             className="icons"
           />
           <div className="iconCol">
-            {homeDropdown.map((item, i) => (
-              <div key={i} className="iconBg">
-                <Image
-                  className="icons"
-                  src={item.img}
-                  alt={item.id}
-                  width={25}
-                  height={25}
-                />
-              </div>
-            ))}
+            {homeDropdown.map((item, i) => {
+              const IconComponent = item.img; // 각 아이콘 컴포넌트를 변수에 저장
+              return (
+                <div key={i} className="iconBg">
+                  <IconComponent
+                    className="icons"
+                    size={25}
+                    color={colorTheme.primary}
+                  />
+                  {/* 아이콘 컴포넌트를 직접 렌더링 */}
+                </div>
+              );
+            })}
           </div>
         </div>
       </header>
@@ -118,6 +121,7 @@ const Main = () => {
             handlePwd={handlePwd}
             handleInputData={handleInputData}
             handleComponent={handleComponent}
+            openModal={openModal}
           />
         )}
       </Modal>

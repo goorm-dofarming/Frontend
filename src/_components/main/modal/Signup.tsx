@@ -15,13 +15,13 @@ import {
   NAverCircleButton,
   SignupButton,
   SignupDisActiveButton,
-} from '@/src/_styles/main/buttons';
+} from '@/src/_styles/common/buttons';
 
 // styles
 import {
   InputSignupAuthpBorder,
   InputSignupBorder,
-} from '@/src/_styles/main/inputs';
+} from '@/src/_styles/common/inputs';
 
 // libraries
 import { useMutation } from '@tanstack/react-query';
