@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app';
 import { ReactQueryProvider } from '@/src/utils/queryProvider';
 import { MSWComponent } from '@/src/mocks/MSWComponent';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import Head from "next/head";
 
 export default function App({ Component, pageProps }: AppProps) {
   const enableMSW = process.env.NEXT_PUBLIC_ENABLE_MSW === 'true';
@@ -22,6 +23,11 @@ export default function App({ Component, pageProps }: AppProps) {
     >
       <RecoilProvider>
         <ReactQueryProvider>
+           <Head>
+            <title>Dofarming</title>
+            <meta property="og:title" content="Dofarming" key="title" />
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
           {enableMSW ? (
             <MSWComponent enableMSW={enableMSW}>
               <Component {...pageProps} />

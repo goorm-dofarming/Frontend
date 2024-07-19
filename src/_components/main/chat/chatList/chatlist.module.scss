@@ -154,8 +154,20 @@
 }
 
 .chats {
-  @include m.flex(space-evenly, flex-start, column);
+  @include m.flex(flex-start, flex-start, column);
   width: 100%;
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 5px; /* 스크롤바 너비 */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: c.$C_TERTIARY; /* 스크롤바 색상 */
+    border-radius: 6px; /* 스크롤바 모서리 둥글게 */
+  }
 
   .noChat {
     width: 100%;
@@ -222,12 +234,14 @@
 
       .overview {
         @include m.flex(flex-start, center, row);
+        flex-wrap: wrap;
+        gap: 0.2rem;
 
         .hashtag {
           font-size: 0.6rem;
           font-weight: 900;
           padding: 0.3rem 0.6rem;
-          margin-right: 0.2rem;
+
           border-radius: 20px;
           color: c.$C_PRIMARY;
         }

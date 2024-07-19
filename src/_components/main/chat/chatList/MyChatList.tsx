@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { QueryObserverResult } from '@tanstack/react-query';
 
 // styles
 import cx from 'classnames';
@@ -13,20 +14,51 @@ import { Chat } from '@/src/types/aboutChat';
 import { useRecoilState } from 'recoil';
 import { selectedChatState } from '@/src/atom/stats';
 
+// icons
+import { FaRegFaceSadCry } from 'react-icons/fa6';
+
 interface MyChatListProps {
-  chats: Chat[];
-  isLoading: boolean;
-  error: Error | null;
+  myChatQuery: QueryObserverResult<Chat[], Error>;
+  searchQuery: QueryObserverResult<Chat[], Error>;
+  searchState: boolean;
 }
 
-const MyChatList: React.FC<MyChatListProps> = ({ chats, isLoading, error }) => {
+const MyChatList: React.FC<MyChatListProps> = ({
+  myChatQuery,
+  searchQuery,
+  searchState,
+}) => {
+  const [error, setError] = useState<Error | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const { data: myChats = [] } = myChatQuery;
+  const { data: srhChats = [] } = searchQuery;
+
+  useEffect(() => {
+    if (searchState) {
+      setError(searchQuery.error);
+      setLoading(searchQuery.isLoading);
+    } else {
+      setError(myChatQuery.error);
+      setLoading(myChatQuery.isLoading);
+    }
+  }, [searchState, searchQuery, myChatQuery]);
+
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
 
   const handleSelectedChat = (chat: Chat) => {
     setSelectedChat(chat);
   };
 
-  if (isLoading) {
+  const isInMyChats = (chatId: number) => {
+    return myChats.some((chat) => chat.roomId === chatId);
+  };
+
+  const chats = searchState
+    ? srhChats.filter((srhChat) => isInMyChats(srhChat.roomId))
+    : myChats;
+
+  if (loading) {
     return (
       <div className={styles.container}>
         <span className={styles.loader}></span>
@@ -83,6 +115,12 @@ const MyChatList: React.FC<MyChatListProps> = ({ chats, isLoading, error }) => {
             <div className={styles.chatBadge}>300+</div>
           </div>
         ))
+      ) : searchState ? (
+        <div className={styles.noChat}>
+          <FaRegFaceSadCry />
+          <br />
+          검색 결과가 없습니다.
+        </div>
       ) : (
         <div className={styles.noChat}>
           아직 채팅에 참여를 안하셨군요 !

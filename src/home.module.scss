@@ -1,5 +1,5 @@
-@use './_styles/constants/color' as c;
-@use './_styles/mixins/' as m;
+@use "./_styles/constants/color" as c;
+@use "./_styles/mixins/" as m;
 .main {
   @include m.flex(space-between, flex-start, row);
   width: 100vw;
@@ -44,6 +44,7 @@
     height: 100%;
     background-color: c.$C_SECONDARY;
     transition: 0.5s all ease-in-out;
+    animation: fadein 2s ease-in-out;
   }
   .home {
     @include m.flex(space-between, flex-start, row);

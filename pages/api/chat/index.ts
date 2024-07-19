@@ -1,9 +1,13 @@
 import { Chat } from '@/src/types/aboutChat';
 import apiClient from '../apiClient';
 
-//오픈 채팅방 검색(?)
-export const getChatRoomList = () => {
-  return apiClient.get('/chatroom');
+// 오픈 채팅방 검색
+// condition : 검색용
+// roomId, createdAt은 무한 스크롤용
+export const getChatRoomList = async (params: {}): Promise<Chat[]> => {
+  const response = await apiClient.get('/chatroom', { params });
+  const data = response.data;
+  return data;
 };
 
 // 채팅방 생성
@@ -12,12 +16,12 @@ export const createChatRoom = async (body: {}): Promise<any> => {
   return response;
 };
 
-//채팅방 퇴장
+// 채팅방 퇴장
 export const leaveChatRoom = async (roomId: number) => {
   return apiClient.post(`/chatroom/${roomId}/leave`);
 };
 
-//채팅방 입장
+// 채팅방 입장
 export const joinChatRoom = async (roomId: number) => {
   return apiClient.post(`/chatroom/${roomId}/join`);
 };
@@ -26,7 +30,6 @@ export const joinChatRoom = async (roomId: number) => {
 export const getMyChatRooms = async (): Promise<Chat[]> => {
   const response = await apiClient.get('/chatroom/my');
   const data = response.data;
-  console.log('my chat : ', data);
   return data;
 };
 
@@ -34,13 +37,13 @@ export const getMyChatRooms = async (): Promise<Chat[]> => {
 export const getEntireChatRooms = async (): Promise<Chat[]> => {
   const response = await apiClient.get('/chatroom');
   const data = response.data;
-  console.log('entire chat : ', data);
   return data;
 };
 
-export const deleteChatRoom = (roomId: number) => {
-  return apiClient.delete(`/chatroom/${roomId}`);
-};
+// 채팅방 삭제는 인원수가 0이 되면 자동 삭제됨
+// export const deleteChatRoom = (roomId: number) => {
+//   return apiClient.delete(`/chatroom/${roomId}`);
+// };
 
 //NOTE:message
 
