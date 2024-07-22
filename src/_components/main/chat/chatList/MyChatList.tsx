@@ -11,8 +11,8 @@ import styles from './chatlist.module.scss';
 import { Chat } from '@/src/types/aboutChat';
 
 // atom
-import { useRecoilState } from 'recoil';
-import { selectedChatState } from '@/src/atom/stats';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { searchState, selectedChatState } from '@/src/atom/stats';
 
 // icons
 import { FaRegFaceSadCry } from 'react-icons/fa6';
@@ -20,29 +20,29 @@ import { FaRegFaceSadCry } from 'react-icons/fa6';
 interface MyChatListProps {
   myChatQuery: QueryObserverResult<Chat[], Error>;
   searchQuery: QueryObserverResult<Chat[], Error>;
-  searchState: boolean;
 }
 
 const MyChatList: React.FC<MyChatListProps> = ({
   myChatQuery,
   searchQuery,
-  searchState,
 }) => {
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const search = useRecoilValue(searchState);
 
   const { data: myChats = [] } = myChatQuery;
   const { data: srhChats = [] } = searchQuery;
 
   useEffect(() => {
-    if (searchState) {
+    if (search) {
       setError(searchQuery.error);
       setLoading(searchQuery.isLoading);
     } else {
       setError(myChatQuery.error);
       setLoading(myChatQuery.isLoading);
     }
-  }, [searchState, searchQuery, myChatQuery]);
+  }, [search, searchQuery, myChatQuery]);
 
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
 
@@ -54,7 +54,7 @@ const MyChatList: React.FC<MyChatListProps> = ({
     return myChats.some((chat) => chat.roomId === chatId);
   };
 
-  const chats = searchState
+  const chats = search
     ? srhChats.filter((srhChat) => isInMyChats(srhChat.roomId))
     : myChats;
 
@@ -87,10 +87,11 @@ const MyChatList: React.FC<MyChatListProps> = ({
             <div className={styles.imageContainer}>
               <div className={styles.imageSize}>
                 <Image
-                  src={'/region/경상남도.png'}
+                  src={`/region/${chat.regionName}.png`}
                   alt={`${chat.regionName}`}
-                  layout="fill"
-                  objectFit="contain"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  style={{ objectFit: 'contain' }}
                 />
               </div>
               <div className={styles.region}>{chat.regionName}</div>
@@ -115,7 +116,7 @@ const MyChatList: React.FC<MyChatListProps> = ({
             <div className={styles.chatBadge}>300+</div>
           </div>
         ))
-      ) : searchState ? (
+      ) : search ? (
         <div className={styles.noChat}>
           <FaRegFaceSadCry />
           <br />
