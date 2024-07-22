@@ -15,3 +15,18 @@ export const selectedChatState = atom<Chat>({
     createAt: new Date(),
   },
 });
+
+export const randomPinState = atom<RandomPin>({
+  key: 'randomPinState',
+  default: {
+    id: 0,
+    name: '',
+    description: '',
+    image: '',
+  },
+});
+
+export const searchState = atom<boolean>({
+  key: 'searchState',
+  default: false,
+});

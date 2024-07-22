@@ -46,7 +46,7 @@ const ChatSpace: React.FC<{ refetchChatList: () => void }> = ({
         regionImageUrl: '',
         tags: [],
         participantCount: 0,
-        createAt: new Date(),
+        createdAt: new Date(),
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -61,7 +61,13 @@ const ChatSpace: React.FC<{ refetchChatList: () => void }> = ({
     return (
       <div className="chatSpace">
         <div className={styles.logoImage}>
-          <Image src={logo} alt="logo" layout="fill" objectFit="contain" />
+          <Image
+            src={logo}
+            alt="logo"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            style={{ objectFit: 'contain' }}
+          />
         </div>
       </div>
     );
@@ -76,10 +82,11 @@ const ChatSpace: React.FC<{ refetchChatList: () => void }> = ({
             <div className={styles.imageContainer}>
               <div className={styles.imageSize}>
                 <Image
-                  src={'/region/경상남도.png'}
+                  src={`/region/${selectedChat.regionName}.png`}
                   alt={`Region ${selectedChat.regionName}`}
-                  layout="fill"
-                  objectFit="contain"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  style={{ objectFit: 'contain' }}
                 />
               </div>
               <div className={styles.region}>{selectedChat.regionName}</div>

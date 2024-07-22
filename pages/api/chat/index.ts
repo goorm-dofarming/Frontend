@@ -10,6 +10,18 @@ export const getChatRoomList = async (params: {}): Promise<Chat[]> => {
   return data;
 };
 
+export const getNextChatList = async ({
+  pageParam = { lastId: 0, lastCreatedAt: new Date() },
+}): Promise<Chat[]> => {
+  const params = {
+    roomId: pageParam.lastId,
+    createdAt: pageParam.lastCreatedAt,
+  };
+  const response = await apiClient.get('/chatroom', { params });
+  const data = response.data;
+  return data;
+};
+
 // 채팅방 생성
 export const createChatRoom = async (body: {}): Promise<any> => {
   const response = await apiClient.post('/chatroom', body);
@@ -30,6 +42,7 @@ export const joinChatRoom = async (roomId: number) => {
 export const getMyChatRooms = async (): Promise<Chat[]> => {
   const response = await apiClient.get('/chatroom/my');
   const data = response.data;
+  // console.log('my chat : ', data);
   return data;
 };
 
@@ -37,6 +50,7 @@ export const getMyChatRooms = async (): Promise<Chat[]> => {
 export const getEntireChatRooms = async (): Promise<Chat[]> => {
   const response = await apiClient.get('/chatroom');
   const data = response.data;
+  // console.log('entire chat : ', data);
   return data;
 };
 

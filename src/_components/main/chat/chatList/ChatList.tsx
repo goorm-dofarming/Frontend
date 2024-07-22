@@ -26,6 +26,10 @@ import { createChatRoom, getChatRoomList } from '@/pages/api/chat';
 // types
 import { Chat } from '@/src/types/aboutChat';
 
+// atoms
+import { useRecoilState } from 'recoil';
+import { searchState } from '@/src/atom/stats';
+
 interface ChatListProps {
   myChatQuery: QueryObserverResult<Chat[], Error>;
   entireChatQuery: QueryObserverResult<Chat[], Error>;
@@ -41,7 +45,7 @@ const ChatList: React.FC<ChatListProps> = ({
   const [activeTab, setActiveTab] = useState(true);
 
   const [searchInput, setSearchInput] = useState<string>('');
-  const [searchState, setSearchState] = useState<boolean>(false);
+  const [search, setSearch] = useRecoilState(searchState);
 
   // 채팅방 생성 모달
   const [modal, setModal] = useState<boolean>(false);
@@ -73,7 +77,7 @@ const ChatList: React.FC<ChatListProps> = ({
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.trim() === '') {
-      setSearchState(false);
+      setSearch(false);
     }
     setSearchInput(e.target.value);
   };
@@ -84,7 +88,7 @@ const ChatList: React.FC<ChatListProps> = ({
     }
     if (e.key === 'Enter' && searchInput.trim() !== '') {
       e.preventDefault();
-      setSearchState(true);
+      setSearch(true);
       setSearchInput(searchInput.trim());
     }
   };
@@ -92,7 +96,7 @@ const ChatList: React.FC<ChatListProps> = ({
   const searchQuery = useQuery({
     queryKey: ['searchChat', searchInput],
     queryFn: () => getChatRoomList({ condition: searchInput }),
-    enabled: searchState && searchInput.trim() !== '', // 검색어가 있을 때만 쿼리 활성화
+    enabled: search && searchInput.trim() !== '', // 검색어가 있을 때만 쿼리 활성화
   });
 
   return (
@@ -125,10 +129,7 @@ const ChatList: React.FC<ChatListProps> = ({
             onChange={handleSearchChange}
             onKeyDown={handleSearchKeyDown}
           />
-          <button
-            className={styles.searchBtn}
-            onClick={() => setSearchState(true)}
-          >
+          <button className={styles.searchBtn} onClick={() => setSearch(true)}>
             <IoSearch fill="#ED5A51" size="1.5rem" />
           </button>
         </div>
@@ -143,17 +144,12 @@ const ChatList: React.FC<ChatListProps> = ({
         />
       </div>
       {activeTab ? (
-        <MyChatList
-          myChatQuery={myChatQuery}
-          searchQuery={searchQuery}
-          searchState={searchState}
-        />
+        <MyChatList myChatQuery={myChatQuery} searchQuery={searchQuery} />
       ) : (
         <EntireChatList
-          mainQuery={searchState ? searchQuery : entireChatQuery}
+          mainQuery={search ? searchQuery : entireChatQuery}
           myChatQuery={myChatQuery}
           refetchChatList={refetchChatList}
-          searchState={searchState}
         />
       )}
       <Modal openModal={openModal} modal={modal} width="35rem" height="40rem">
