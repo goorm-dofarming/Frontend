@@ -15,7 +15,7 @@ permissions:
 
 hooks:
   BeforeInstall:
-    - location: scripts/cleanup.sh
+    - location: scripts/clean_node_modules.sh
       runas: ubuntu
     - location: scripts/clean_node_modules.sh
       timeout: 180
