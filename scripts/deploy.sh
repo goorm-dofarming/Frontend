@@ -15,11 +15,8 @@ if [ -d "$REPOSITORY/node_modules" ]; then
   sudo rm -rf "$REPOSITORY/node_modules"
 fi
 
-# Clear pnpm store cache
-sudo pnpm store prune
-
 # Install packages
-sudo pnpm install --force
+sudo pnpm install
 
 # Start or restart the application
 sudo pm2 start npm --name "dofarming" -- start -- -p 4000
