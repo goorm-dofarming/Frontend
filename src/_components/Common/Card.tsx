@@ -25,7 +25,6 @@ const Container = styled.div`
   border-radius: 8px;
   filter: drop-shadow(0 20px 13px rgb(0 0 0 / 0.03))
     drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
-  /* margin-bottom: 0.6rem; */
 `;
 const LocationImage = styled.div`
   width: 92%;
