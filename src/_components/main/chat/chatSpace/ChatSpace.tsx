@@ -46,7 +46,7 @@ const ChatSpace: React.FC<{ refetchChatList: () => void }> = ({
         regionImageUrl: '',
         tags: [],
         participantCount: 0,
-        createdAt: new Date(),
+        createAt: new Date(),
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {
