@@ -7,7 +7,7 @@ const redirectURI = encodeURIComponent(
   `${process.env.NEXT_PUBLIC_NAVER_REDIRECT_URI}`
 );
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const naverAuthHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const code = req.query.code;
   const state = req.query.state;
 
@@ -28,7 +28,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     const userData = await axios.get(`https://openapi.naver.com/v1/nid/me`, {
       headers: {
-        Authorization: ` Bearer ${response.data.access_token}`,
+        Authorization: `Bearer ${response.data.access_token}`,
       },
     });
 
@@ -38,3 +38,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(error.response?.status || 500).json({ error: error.message });
   }
 };
+
+export default naverAuthHandler;

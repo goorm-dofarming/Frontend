@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw';
+import { logs } from '../constatns/logExample';
 
 export const handlers = [
   http.get('https://api.example.com/api/user', () => {
@@ -76,5 +77,8 @@ export const handlers = [
         },
       ],
     });
+  }),
+  http.get(`/logs`, () => {
+    return HttpResponse.json(logs);
   }),
 ];
