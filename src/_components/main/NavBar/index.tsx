@@ -1,18 +1,18 @@
-import Image from 'next/image';
-import styles from './navbar.module.scss';
-import { RiChatHistoryFill } from 'react-icons/ri';
-import { IoHeartSharp, IoChatbubbleEllipsesSharp } from 'react-icons/io5';
-import { IoMdLogOut } from 'react-icons/io';
-import { FaMapMarkedAlt } from 'react-icons/fa';
-import logo from '@/src/_assets/icons/logo.png';
-import cx from 'classnames';
-import { MouseEvent, useState } from 'react';
+import Image from "next/image";
+import styles from "./navbar.module.scss";
+import { RiChatHistoryFill } from "react-icons/ri";
+import { IoHeartSharp, IoChatbubbleEllipsesSharp } from "react-icons/io5";
+import { IoMdLogOut } from "react-icons/io";
+import { FaMapMarkedAlt, FaRegClock } from "react-icons/fa";
+import logo from "@/src/_assets/icons/logo.png";
+import cx from "classnames";
+import { MouseEvent, useState } from "react";
 
 const menu = [
-  { page: 'map', icon: <FaMapMarkedAlt fill="white" /> },
-  { page: 'log', icon: <RiChatHistoryFill fill="white" /> },
-  { page: 'likes', icon: <IoHeartSharp fill="white" /> },
-  { page: 'chat', icon: <IoChatbubbleEllipsesSharp fill="white" /> },
+  { page: "map", icon: <FaMapMarkedAlt fill="white" /> },
+  { page: "log", icon: <FaRegClock fill="white" /> },
+  { page: "likes", icon: <IoHeartSharp fill="white" /> },
+  { page: "chat", icon: <IoChatbubbleEllipsesSharp fill="white" /> },
 ];
 const NavBar = ({
   className,
@@ -23,7 +23,7 @@ const NavBar = ({
   setPage: React.Dispatch<React.SetStateAction<string>>;
   setInitial: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const [active, setActive] = useState('map');
+  const [active, setActive] = useState("map");
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const id = event.currentTarget.id;
     setPage(id);
