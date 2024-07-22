@@ -1,5 +1,5 @@
-import styled, { css } from 'styled-components';
-import { hideHomeIcons, showHomeIcons } from '../keyframes';
+import styled, { css } from "styled-components";
+import { hideHomeIcons, showHomeIcons } from "../keyframes";
 
 export const HomeContainer = styled.div<{
   dropdown: string;
@@ -30,7 +30,7 @@ export const HomeContainer = styled.div<{
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.8); /* 반투명 흰색 */
+    background: rgba(255, 255, 255, 1); /* 반투명 흰색 */
     filter: blur(12px); /* 블러 효과 */
     opacity: 0; /* 초기 투명도 */
     transition: opacity 2s; /* 부드러운 전환 효과 */
@@ -56,12 +56,12 @@ export const HomeContainer = styled.div<{
     justify-content: space-evenly;
     align-items: cen4ter;
     animation: ${({ dropdown }) =>
-      dropdown === 'true'
+      dropdown === "true"
         ? css`0.5s ${showHomeIcons} ease-in-out`
         : css`0.5s ${hideHomeIcons} ease-in-out`};
     transition: 0.3s visibility;
     visibility: ${({ dropdown }) =>
-      dropdown === 'true' ? 'visible' : 'hidden'};
+      dropdown === "true" ? "visible" : "hidden"};
   }
   .iconBg {
     width: 3vw;
@@ -86,7 +86,7 @@ export const HomeContainer = styled.div<{
     background-color: white;
     border-radius: 0.5rem;
     // true 말고 show hide로 바꾸기
-    visibility: ${({ modal }) => (modal === 'true' ? 'visible' : 'hidden')};
+    visibility: ${({ modal }) => (modal === "true" ? "visible" : "hidden")};
   }
   .mainSection {
     display: flex;

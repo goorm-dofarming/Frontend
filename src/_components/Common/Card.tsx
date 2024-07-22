@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import Image from 'next/image';
-import { IoHeartSharp } from 'react-icons/io5'; //꽉찬하트
-import { IoHeartOutline } from 'react-icons/io5'; //빈하트
+import React, { useState } from "react";
+import styled from "styled-components";
+import Image from "next/image";
+import { IoHeartSharp } from "react-icons/io5"; //꽉찬하트
+import { IoHeartOutline } from "react-icons/io5"; //빈하트
 
 type Card = {
   id: number;
@@ -25,7 +25,7 @@ const Container = styled.div`
   border-radius: 8px;
   filter: drop-shadow(0 20px 13px rgb(0 0 0 / 0.03))
     drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
-  margin-bottom: 0.6rem;
+  /* margin-bottom: 0.6rem; */
 `;
 const LocationImage = styled.div`
   width: 92%;
