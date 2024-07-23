@@ -13,7 +13,7 @@ export const selectedChatState = atom<Chat>({
     regionImageUrl: '',
     tags: [],
     participantCount: 0,
-    createAt: new Date(),
+    createdAt: new Date(),
   },
 });
 

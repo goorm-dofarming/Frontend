@@ -33,6 +33,7 @@ interface EntireChatListProps {
   myChatQuery: QueryObserverResult<Chat[], Error>;
   refetchChatList: () => void;
   joinMessage: (roomId: number) => void;
+  searchInput: string;
 }
 
 const EntireChatList: React.FC<EntireChatListProps> = ({
@@ -40,6 +41,7 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
   myChatQuery,
   refetchChatList,
   joinMessage,
+  searchInput,
 }) => {
   const { data: myChats = [] } = myChatQuery;
   const { data: mainChats = [], error, isLoading } = mainQuery;
@@ -102,10 +104,18 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
     if (fetchLoading || chatsRef.current.length === 0 || !hasMore) return;
     setFetchLoading(true);
 
-    const params = {
-      roomId: chatsRef.current[chatsRef.current.length - 1].roomId,
-      createdAt: chatsRef.current[chatsRef.current.length - 1].createAt,
-    };
+    const params = {} as { [key: string]: any };
+
+    if (search) {
+      params.roomId = chatsRef.current[chatsRef.current.length - 1].roomId;
+      params.createdAt =
+        chatsRef.current[chatsRef.current.length - 1].createdAt;
+      params.condition = searchInput;
+    } else {
+      params.roomId = chatsRef.current[chatsRef.current.length - 1].roomId;
+      params.createdAt =
+        chatsRef.current[chatsRef.current.length - 1].createdAt;
+    }
 
     try {
       console.log('params: ', params);
@@ -126,7 +136,11 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
     } finally {
       setFetchLoading(false);
     }
-  }, [fetchLoading, hasMore]);
+  }, [fetchLoading, hasMore, search, searchInput]);
+
+  useEffect(() => {
+    setHasMore(true);
+  }, [search]);
 
   useEffect(() => {
     let isMounted = true;
@@ -136,7 +150,7 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
       if (currentScrollRef) {
         const { scrollTop, scrollHeight, clientHeight } = currentScrollRef;
         if (scrollTop + clientHeight >= scrollHeight - 1) {
-          if (isMounted && !fetchLoading && hasMore && !search) {
+          if (isMounted && !fetchLoading && hasMore) {
             fetchMoreChats();
           }
         }
@@ -153,7 +167,7 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
       }
       isMounted = false;
     };
-  }, [fetchLoading, hasMore, fetchMoreChats, search]);
+  }, [fetchLoading, hasMore, fetchMoreChats]);
 
   if (isLoading) {
     return (
@@ -199,7 +213,7 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
                 <div className={styles.title}>{chat.title}</div>
                 <span className={styles.count}>{chat.participantCount}</span>
               </div>
-              <div className={cx(styles.overview, styles.reverse)}>
+              <div className={styles.overview}>
                 {chat.tags.map((tag, index) => (
                   <div
                     key={index}

@@ -29,6 +29,10 @@ import { Chat } from '@/src/types/aboutChat';
 import { useRecoilState } from 'recoil';
 import { searchState } from '@/src/atom/stats';
 
+// 알림
+// headers Accept랑 connection
+// request params userId
+
 interface ChatListProps {
   myChatQuery: QueryObserverResult<Chat[], Error>;
   entireChatQuery: QueryObserverResult<Chat[], Error>;
@@ -66,8 +70,8 @@ const ChatList: React.FC<ChatListProps> = ({
 
     try {
       const response = await createChatRoom(body);
-      joinMessage(response.data);
       refetchChatList();
+      joinMessage(response.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Axios error:', error.response?.data);
@@ -153,6 +157,7 @@ const ChatList: React.FC<ChatListProps> = ({
           myChatQuery={myChatQuery}
           refetchChatList={refetchChatList}
           joinMessage={joinMessage}
+          searchInput={searchInput}
         />
       )}
       <Modal openModal={openModal} modal={modal} width="35rem" height="40rem">

@@ -24,7 +24,7 @@ export const handlers = [
             { name: '#맛집', color: '#007bff' },
           ],
           participantCount: 12,
-          createAt: Date.now(),
+          createdAt: Date.now(),
         },
         {
           roomId: 2,
@@ -33,7 +33,7 @@ export const handlers = [
           regionImageUrl: '',
           tags: [{ name: '#느림', color: '#007bff' }],
           participantCount: 5,
-          createAt: Date.now(),
+          createdAt: Date.now(),
         },
         {
           roomId: 3,
@@ -45,7 +45,7 @@ export const handlers = [
             { name: '#밀락더수변', color: '#007bff' },
           ],
           participantCount: 20,
-          createAt: Date.now(),
+          createdAt: Date.now(),
         },
       ],
     });
@@ -64,7 +64,7 @@ export const handlers = [
             { name: '#맛집', color: '#007bff' },
           ],
           participantCount: 12,
-          createAt: Date.now(),
+          createdAt: Date.now(),
         },
         {
           roomId: 2,
@@ -73,7 +73,7 @@ export const handlers = [
           regionImageUrl: '',
           tags: [{ name: '#느림', color: '#007bff' }],
           participantCount: 5,
-          createAt: Date.now(),
+          createdAt: Date.now(),
         },
       ],
     });
