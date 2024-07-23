@@ -29,6 +29,9 @@ import { inputDataType } from '@/src/types/aboutMain';
 import useKaKaoLogin from '@/src/hooks/Home/useKaKaoLogin';
 import useNaverLogin from '@/src/hooks/Home/useNaverLogin';
 
+// apis
+import { getGoogleUserData, login, signupSocialLogin } from '@/pages/api/auth';
+
 interface LoginType {
   inputData: inputDataType;
   pwdShow: boolean;
@@ -45,7 +48,7 @@ const Login = ({
   handleComponent,
   openModal,
 }: LoginType) => {
-  const [cookies, setCookies] = useCookies(['token']);
+  const [, setCookies] = useCookies(['token']);
   // 구글 로그인 토큰
   const [gToken, setGToken] = useState<string>('');
   const { email, password } = inputData;
@@ -58,10 +61,7 @@ const Login = ({
         password,
       };
 
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/login`,
-        body
-      );
+      const response = await login(body);
 
       console.log('login success: ', response);
 
@@ -93,15 +93,10 @@ const Login = ({
   const googleLogin = useMutation({
     mutationKey: ['googleLogin'],
     mutationFn: async () => {
-      const userResponse = await axios.get(
-        'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
-        {
-          headers: {
-            Authorization: `Bearer ${gToken}`,
-          },
-        }
-      );
-
+      const headers = {
+        Authorization: `Bearer ${gToken}`,
+      };
+      const userResponse = await getGoogleUserData(headers);
       console.log('userResponse:', userResponse);
 
       const body = {
@@ -109,14 +104,13 @@ const Login = ({
         data: userResponse.data,
       };
 
-      const signupGoogle = await axios.post(
-        `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/oauth`,
-        body
-      );
+      const signupGoogle = await signupSocialLogin(body);
+      console.log('signupGoogle: ', signupGoogle);
 
-      console.log('signupKakao: ', signupGoogle);
-
-      return signupGoogle;
+      if (signupGoogle.status === 200) {
+        openModal();
+      }
+      return signupGoogle.data;
     },
     onError: (error) => {
       console.error('Error fetching access token:', error);

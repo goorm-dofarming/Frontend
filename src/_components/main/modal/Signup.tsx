@@ -28,6 +28,9 @@ import { useMutation } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { inputDataType } from '@/src/types/aboutMain';
 
+// apis
+import { checkEmail, sendEmail, signUp } from '@/pages/api/auth';
+
 interface SignupType {
   inputData: inputDataType;
   pwdShow: boolean;
@@ -74,6 +77,7 @@ const Signup = ({
       };
     }
   }, [timeLeft]);
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(
     2,
@@ -90,17 +94,12 @@ const Signup = ({
         confirmPassword,
       };
 
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/signup`,
-        body
-      );
-
+      const response = await signUp(body);
       console.log('create user success: ', response);
-      console.log(response.status);
+
       if (response.status === 201) {
         setPageState(false);
       }
-
       return response;
     },
     onError: (e) => {
@@ -115,12 +114,9 @@ const Signup = ({
         email,
       };
 
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/email/send`,
-        body
-      );
-
+      const response = await sendEmail(body);
       console.log('email certification: ', response);
+
       if (response.status === 204) {
         setIsCertificate(true);
         setTimeLeft((prev) => prev - 3 * INTERVAL);
@@ -139,10 +135,7 @@ const Signup = ({
         emailNumber: authentication,
       };
 
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/email/check`,
-        body
-      );
+      const response = await checkEmail(body);
 
       console.log('email certification: ', response);
       if (response.status === 204) {
