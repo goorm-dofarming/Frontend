@@ -3,15 +3,8 @@ import styled from "styled-components";
 import Image from "next/image";
 import { IoHeartSharp } from "react-icons/io5"; //꽉찬하트
 import { IoHeartOutline } from "react-icons/io5"; //빈하트
+import { Recommend } from "@/src/types/aboutMap";
 
-type Card = {
-  id: number;
-  imgUrl: string;
-  name: string;
-  type: string;
-  location: string;
-  phone: string;
-};
 const Container = styled.div`
   padding: 4px;
   width: 300px;
@@ -71,7 +64,7 @@ const Title = styled.div`
     }
   }
 `;
-const Card = ({ id, imgUrl, name, type, location, phone }: Card) => {
+const Card = ({ id, image, title, dataType, addr, tel }: Recommend) => {
   // TODO: heart animation
   const [hover, setHover] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
@@ -81,11 +74,11 @@ const Card = ({ id, imgUrl, name, type, location, phone }: Card) => {
   return (
     <Container>
       <LocationImage>
-        <Image width={280} height={240} src={imgUrl} alt={name} />
+        <Image width={280} height={240} src={image} alt={title} />
       </LocationImage>
       <Description>
         <Title>
-          <span>{name}</span>
+          <span>{title}</span>
           <span className="likes">
             {/* <IoHeartSharp fill={"#FE0B62"} fontSize={26} /> */}
             <IoHeartOutline
@@ -110,9 +103,9 @@ const Card = ({ id, imgUrl, name, type, location, phone }: Card) => {
             <div className="likesNumber">14K</div>
           </span>
         </Title>
-        <div>{type}</div>
-        <div>{location}</div>
-        <div className="phone">{phone}</div>
+        <div>{dataType}</div>
+        <div>{addr}</div>
+        <div className="phone">{tel}</div>
       </Description>
     </Container>
   );

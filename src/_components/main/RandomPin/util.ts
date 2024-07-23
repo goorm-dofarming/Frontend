@@ -224,3 +224,35 @@ const KoreaCoordinate = [
     lng: 124.972107,
   },
 ];
+
+export function decimalToDMS(latitude: number, longitude: number) {
+  // 소수점 좌표를 도, 분, 초 형식으로 변환하는 함수
+  function convert(coordinate: number) {
+    const degrees = Math.floor(coordinate);
+    const minutesFull = (coordinate - degrees) * 60;
+    const minutes = Math.floor(minutesFull);
+    const seconds = (minutesFull - minutes) * 60;
+    return {
+      degrees,
+      minutes,
+      seconds,
+    };
+  }
+
+  // 위도 변환
+  const lat = convert(Math.abs(latitude));
+  const latDirection = latitude >= 0 ? "N" : "S";
+
+  // 경도 변환
+  const lng = convert(Math.abs(longitude));
+  const lngDirection = longitude >= 0 ? "E" : "W";
+
+  // 변환된 결과 문자열 생성
+  const latDMS = `${lat.degrees}˚${lat.minutes}'${lat.seconds.toFixed(2)}"${latDirection}`;
+  const lngDMS = `${lng.degrees}˚${lng.minutes}'${lng.seconds.toFixed(2)}"${lngDirection}`;
+
+  return {
+    latDMS: latDMS,
+    lngDMS: lngDMS,
+  };
+}
