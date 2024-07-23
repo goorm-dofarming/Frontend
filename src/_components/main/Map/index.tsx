@@ -98,56 +98,6 @@ const Map = () => {
             infowindow.close();
           });
         }
-        // marker.setMap(map);
-        // geocoder.addressSearch(
-        //   "제주특별자치도 제주시 첨단로 242",
-        //   function (
-        //     result: kakao.maps.services.GeocoderResult[],
-        //     status: kakao.maps.services.Status
-        //   ) {
-        //     // 정상적으로 검색이 완료됐으면
-        //     if (status === window.kakao.maps.services.Status.OK) {
-        //       const coords = new window.kakao.maps.LatLng(
-        //         result[0].y,
-        //         result[0].x
-        //       );
-
-        //       const imageSrc =
-        //         "http://54.180.126.49/images/pin/pin_location.png";
-        //       // "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png";
-        //       // "http://localhost:4000/app/_assets/main/map/pin_location.png";
-        //       // 마커이미지의 주소입니다
-        //       const imageSize = new window.kakao.maps.Size(60, 80); // 마커이미지의 크기입니다
-        //       const imageOption = {
-        //         offset: new window.kakao.maps.Point(27, 69),
-        //       }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-
-        //       const markerImage = new window.kakao.maps.MarkerImage(
-        //         imageSrc,
-        //         imageSize,
-        //         imageOption
-        //       );
-        //       // const markerPosition = new kakao.maps.LatLng(37.54699, 127.09598); // 마커가 표시될 위치입니다
-        //       // 결과값으로 받은 위치를 마커로 표시합니다
-        //       const marker = new window.kakao.maps.Marker({
-        //         map: map,
-        //         position: coords,
-        //         image: markerImage,
-        //         //image: markerImage //마커이미지설정
-        //       });
-
-        //       // 인포윈도우로 장소에 대한 설명을 표시합니다
-        //       const infowindow = new window.kakao.maps.InfoWindow({
-        //         content:
-        //           '<div style="width:150px;text-align:center;padding:6px 0;">우리회사</div>',
-        //       });
-        //       infowindow.open(map, marker);
-
-        //       // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-        //       map.setCenter(coords);
-        //     }
-        //   }
-        // );
       });
     };
   }, [randomPin.lat, randomPin.lng, randomPin.recommends]);

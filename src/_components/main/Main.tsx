@@ -61,12 +61,9 @@ const Main = ({ pin }: { pin: string }) => {
     }));
   };
 
-  useEffect(() => {
-    console.log(showFog);
-  }, [showFog]);
-  useEffect(() => {
-    console.log("inputData: ", inputData);
-  }, [inputData]);
+  // useEffect(() => {
+  //   console.log("inputData: ", inputData);
+  // }, [inputData]);
 
   useEffect(() => {
     const pinElement = pinRef.current;
@@ -76,7 +73,7 @@ const Main = ({ pin }: { pin: string }) => {
       };
       pinElement.addEventListener("animationend", handleAnimationEnd);
       return () => {
-        pinElement.removeEventListener("animationend", handleAnimationEnd);
+        // pinElement.removeEventListener("animationend", handleAnimationEnd);
         setShowFog(false);
       };
     }

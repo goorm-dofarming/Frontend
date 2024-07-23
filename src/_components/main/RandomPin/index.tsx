@@ -25,12 +25,9 @@ const RandomPin = ({
   setPage: React.Dispatch<React.SetStateAction<string>>;
   setPin: React.Dispatch<React.SetStateAction<string>>;
 }) => {
-  // const [theme, setTheme] = useState("random");
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   const getResponse = async (theme: Theme) => {
     try {
-      // const { lat, lng } = getRandomCoord();
-      // const { latDMS, lngDMS } = decimalToDMS(lat, lng);
       let response: any;
       if (theme.id === "ocean") {
         response = await getOceanRecommends(theme.themes);
@@ -49,8 +46,8 @@ const RandomPin = ({
           recommends: [...recommendList],
         }));
       } else {
-          const { lat, lng } = getRandomCoord();
-      const { latDMS, lngDMS } = decimalToDMS(lat, lng);
+        const { lat, lng } = getRandomCoord();
+        const { latDMS, lngDMS } = decimalToDMS(lat, lng);
         if (theme.id === "random") {
           response = await getRandomRecommends(lng, lat);
         } else {
@@ -68,7 +65,7 @@ const RandomPin = ({
         }));
       }
 
-      console.log(response.data);
+      // console.log(response.data);
     } catch (e: any) {
       console.log(e.message);
     }
@@ -119,9 +116,7 @@ const RandomPin = ({
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
   };
-  useEffect(() => {
-    console.log(randomPin);
-  }, [randomPin]);
+
   return (
     <div className={styles.container}>
       <Slider {...settings}>
