@@ -64,9 +64,10 @@ const Main = ({ pin }: { pin: string }) => {
   useEffect(() => {
     console.log(showFog);
   }, [showFog]);
-  useEffect(() => {
-    console.log('inputData: ', inputData);
-  }, [inputData]);
+
+  // useEffect(() => {
+  //   console.log('inputData: ', inputData);
+  // }, [inputData]);
 
   useEffect(() => {
     const pinElement = pinRef.current;
