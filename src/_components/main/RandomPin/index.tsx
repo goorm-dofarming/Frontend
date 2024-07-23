@@ -29,27 +29,43 @@ const RandomPin = ({
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   const getResponse = async (theme: Theme) => {
     try {
-      const { lat, lng } = getRandomCoord();
-      const { latDMS, lngDMS } = decimalToDMS(lat, lng);
+      // const { lat, lng } = getRandomCoord();
+      // const { latDMS, lngDMS } = decimalToDMS(lat, lng);
       let response: any;
       if (theme.id === "ocean") {
         response = await getOceanRecommends(theme.themes);
+        const location = { ...response.data[0] };
+        const lat = location.mapY;
+        const lng = location.mapX;
+        const { latDMS, lngDMS } = decimalToDMS(lat, lng);
+        const recommendList = response.data.slice(1);
+        setRandomPin((prev: RandomPinType) => ({
+          ...prev,
+          lat: location.mapY,
+          lng: location.mapX,
+          latDMS: latDMS,
+          lngDMS: lngDMS,
+          theme: theme,
+          recommends: [...recommendList],
+        }));
       } else {
+          const { lat, lng } = getRandomCoord();
+      const { latDMS, lngDMS } = decimalToDMS(lat, lng);
         if (theme.id === "random") {
           response = await getRandomRecommends(lng, lat);
-          const recommendList = response.data;
-          setRandomPin((prev: RandomPinType) => ({
-            ...prev,
-            lat: lat,
-            lng: lng,
-            latDMS: latDMS,
-            lngDMS: lngDMS,
-            theme: theme,
-            recommends: [...recommendList],
-          }));
         } else {
           response = await getThemeRecommends(lng, lat, theme.themes);
         }
+        const recommendList = response.data;
+        setRandomPin((prev: RandomPinType) => ({
+          ...prev,
+          lat: lat,
+          lng: lng,
+          latDMS: latDMS,
+          lngDMS: lngDMS,
+          theme: theme,
+          recommends: [...recommendList],
+        }));
       }
 
       console.log(response.data);

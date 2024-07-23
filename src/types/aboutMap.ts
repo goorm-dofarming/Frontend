@@ -4,7 +4,9 @@ import pin_cafe from "@/src/_assets/main/map/pin_cafe.svg";
 import pin_tour from "@/src/_assets/main/map/pin_tour.svg";
 import pin_mountain from "@/src/_assets/main/map/pin_mountain.svg";
 import pin_ocean from "@/src/_assets/main/map/pin_ocean.png";
+import pin_activity from "@/src/_assets/main/map/pin_activity.svg";
 // import config from "@/src/_config";
+
 const imgSrc = "http://54.180.126.49";
 
 export const themes: Theme[] = [
@@ -17,6 +19,7 @@ export const themes: Theme[] = [
   },
   { id: "restaurant", img: pin_food, title: "식도락", themes: [5] },
   { id: "cafe", img: pin_cafe, title: "카페 투어", themes: [6] },
+  { id: "activity", img: pin_activity, title: "액티비티", themes: [3] },
   { id: "tour", img: pin_tour, title: "관광지", themes: [4] },
   { id: "ocean", img: pin_ocean, title: "바다", themes: [3, 4, 5, 6] },
   { id: "mountain", img: pin_mountain, title: "산", themes: [2] },
