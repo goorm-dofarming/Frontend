@@ -1,4 +1,4 @@
-import { Chat } from '@/src/types/aboutChat';
+import { Chat, Message } from '@/src/types/aboutChat';
 import apiClient from '../apiClient';
 
 // 오픈 채팅방 검색
@@ -10,6 +10,7 @@ export const getChatRoomList = async (params: {}): Promise<Chat[]> => {
   return data;
 };
 
+// 채팅방 무한스크롤
 export const getNextChatList = async ({
   pageParam = { lastId: 0, lastCreatedAt: new Date() },
 }): Promise<Chat[]> => {
@@ -59,8 +60,10 @@ export const getEntireChatRooms = async (): Promise<Chat[]> => {
 //   return apiClient.delete(`/chatroom/${roomId}`);
 // };
 
-//NOTE:message
-
-export const getMessage = () => {
-  return apiClient.get('/message');
+// 채팅방 메세지 가져오기
+export const getMessage = async (params: {}): Promise<Message[]> => {
+  const response = await apiClient.get('/message', { params });
+  const data = response.data;
+  console.log('message : ', data);
+  return data;
 };

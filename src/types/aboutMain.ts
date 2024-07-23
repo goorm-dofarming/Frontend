@@ -16,3 +16,11 @@ export interface kakaoLoginDataType {
   refresh_token: string;
   refresh_token_expires_in: number;
 }
+
+export interface User {
+  userId: number;
+  email: string;
+  nickname: string;
+  imageUrl: string;
+  role: string;
+}

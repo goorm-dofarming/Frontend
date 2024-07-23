@@ -1,4 +1,3 @@
-'use client';
 import React, { useState } from 'react';
 
 // style
@@ -34,12 +33,14 @@ interface ChatListProps {
   myChatQuery: QueryObserverResult<Chat[], Error>;
   entireChatQuery: QueryObserverResult<Chat[], Error>;
   refetchChatList: () => void;
+  joinMessage: (roomId: number) => void;
 }
 
 const ChatList: React.FC<ChatListProps> = ({
   myChatQuery,
   entireChatQuery,
   refetchChatList,
+  joinMessage,
 }) => {
   // true => 내 채팅 , false => 오픈 채팅
   const [activeTab, setActiveTab] = useState(true);
@@ -65,6 +66,7 @@ const ChatList: React.FC<ChatListProps> = ({
 
     try {
       const response = await createChatRoom(body);
+      joinMessage(response.data);
       refetchChatList();
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -150,6 +152,7 @@ const ChatList: React.FC<ChatListProps> = ({
           mainQuery={search ? searchQuery : entireChatQuery}
           myChatQuery={myChatQuery}
           refetchChatList={refetchChatList}
+          joinMessage={joinMessage}
         />
       )}
       <Modal openModal={openModal} modal={modal} width="35rem" height="40rem">
