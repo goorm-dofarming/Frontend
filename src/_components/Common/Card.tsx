@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { SetStateAction, Dispatch, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { IoHeartSharp } from "react-icons/io5"; //꽉찬하트
@@ -19,6 +19,7 @@ const Container = styled.div`
   border-radius: 8px;
   filter: drop-shadow(0 20px 13px rgb(0 0 0 / 0.03))
     drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
+  cursor: pointer;
 `;
 const LocationImage = styled.div`
   width: 96%;
@@ -44,9 +45,17 @@ const Description = styled.div`
     font-weight: 500;
   }
   .address {
+    width: 100%;
     white-space: nowrap;
-    overflow: hidden;
+    overflow-y: hidden;
     text-overflow: ellipsis;
+    display: block;
+    /* transition: all 3s ease-in-out; */
+    &:hover {
+      text-overflow: initial;
+      white-space: nowrap;
+      overflow: visible;
+    }
   }
   .phone {
     font-weight: 200;
@@ -74,15 +83,22 @@ const Title = styled.div`
     }
   }
 `;
-const Card = ({ id, image, title, dataType, addr, tel }: Recommend) => {
+const Card = ({
+  recommend,
+  onClick,
+}: {
+  recommend: Recommend;
+  onClick: Dispatch<SetStateAction<Recommend | null >>;
+}) => {
   // TODO: heart animation
+  const { id, image, title, dataType, addr, tel } = recommend;
   const [hover, setHover] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const onClickLike = () => {
     setIsLiked(!isLiked);
   };
   return (
-    <Container>
+    <Container onClick={() => onClick(recommend)}>
       <LocationImage>
         <Image width={280} height={240} src={image || main_logo} alt={title} />
       </LocationImage>

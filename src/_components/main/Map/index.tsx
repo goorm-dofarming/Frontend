@@ -4,7 +4,7 @@ import styles from "./map.module.scss";
 import { useEffect, useRef, useState } from "react";
 import { randomPinState } from "@/src/atom/stats";
 import { useRecoilState } from "recoil";
-import { DataType } from "@/src/types/aboutMap";
+import { DataType, Recommend } from "@/src/types/aboutMap";
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=cf2b17f421b6bb8091a506fb2e0a675c&autoload=false&libraries=services`;
 // const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services`;
 
@@ -12,7 +12,7 @@ const Map = () => {
   // const { markerPositions, size } = props;
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   const [kakaoMap, setKakaoMap] = useState<kakao.maps.Map | null>(null);
-  // const [focusPin, setFocusPin] = useState()
+  const [focusPin, setFocusPin] = useState<Recommend | null>(null);
   const container = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const script = document.createElement("script");
@@ -170,17 +170,34 @@ const Map = () => {
     // restore
     kakaoMap.setCenter(center);
   }, [kakaoMap]);
+  useEffect(() => {
+    if (kakaoMap === null) {
+      return;
+    }
+    let center;
+    if (focusPin !== null) {
+      center = new window.kakao.maps.LatLng(focusPin?.mapY, focusPin?.mapX);
+    } else {
+      center = new window.kakao.maps.LatLng(randomPin.lat, randomPin.lng);
+    }
+    kakaoMap.relayout();
+    kakaoMap.setCenter(center);
+  }, [focusPin]);
   return (
     <main className={styles.main}>
       <section id="container" ref={container} className={styles.map}>
-        <div className={styles.info}>
+        <div className={styles.info} onClick={() => setFocusPin(null)}>
           <p>{randomPin?.address}</p>
           <span> {`${randomPin?.latDMS} ${randomPin?.lngDMS}`}</span>
         </div>
       </section>
       <div className={styles.locations}>
-        {randomPin.recommends.map((location, index) => (
-          <Card key={location.id} {...location} />
+        {randomPin.recommends.map((recommend, index) => (
+          <Card
+            key={recommend.id}
+            recommend={recommend}
+            onClick={setFocusPin}
+          />
         ))}
       </div>
     </main>
