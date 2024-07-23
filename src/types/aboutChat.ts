@@ -12,3 +12,11 @@ export interface Chat {
   participantCount: number;
   createAt: Date;
 }
+
+export interface Message {
+  roomId: number;
+  userId: number;
+  nickname: string;
+  messageType: string;
+  content: string;
+}

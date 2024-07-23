@@ -94,6 +94,8 @@
   }
 
   .chatRoom {
+    display: flex;
+    flex-direction: column-reverse;
     flex: 1;
     justify-content: flex-start;
     width: 100%;
@@ -165,6 +167,21 @@
           border-radius: 10px 0 10px 10px;
           background-color: c.$C_TERTIARY;
         }
+      }
+    }
+
+    .lineStyle {
+      @include m.flex(center, center, row);
+      width: 100%;
+      padding: 1rem;
+
+      hr {
+        flex: 1;
+      }
+
+      .lineText {
+        font-size: 0.9rem;
+        padding: 0 0.5rem;
       }
     }
   }
