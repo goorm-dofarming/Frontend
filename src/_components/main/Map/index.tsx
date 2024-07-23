@@ -12,6 +12,7 @@ const Map = () => {
   // const { markerPositions, size } = props;
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   const [kakaoMap, setKakaoMap] = useState<kakao.maps.Map | null>(null);
+  // const [focusPin, setFocusPin] = useState()
   const container = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const script = document.createElement("script");
@@ -73,8 +74,9 @@ const Map = () => {
         // infowindow.open(map, marker);
         for (let i = 0; i < randomPin.recommends.length; i++) {
           const curr = randomPin.recommends[i];
+          const pinSize = new window.kakao.maps.Size(48, 60); // 마커이미지의
           const pinImg = DataType[curr.dataType].img;
-          const newMarkerImg = new kakao.maps.MarkerImage(pinImg, imageSize);
+          const newMarkerImg = new kakao.maps.MarkerImage(pinImg, pinSize);
           const latlng = new kakao.maps.LatLng(curr.mapY, curr.mapX);
           // 마커를 생성합니다
           const pin = new kakao.maps.Marker({
