@@ -4,24 +4,9 @@ import styles from "./map.module.scss";
 import { useEffect, useRef, useState } from "react";
 import { randomPinState } from "@/src/atom/stats";
 import { useRecoilState } from "recoil";
-
+import { DataType } from "@/src/types/aboutMap";
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=cf2b17f421b6bb8091a506fb2e0a675c&autoload=false&libraries=services`;
 // const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services`;
-const data = {
-  id: 1,
-  imgUrl: "",
-  name: "용용선생 선릉점",
-  type: "음식점",
-  location: "서울특별시 성동구 마조로3가길 15",
-  phone: "02-1234-5678",
-  // likes:
-};
-const recommend = [
-  data,
-  { ...data, id: 2 },
-  { ...data, id: 3 },
-  { ...data, id: 4 },
-];
 
 const Map = () => {
   // const { markerPositions, size } = props;
@@ -84,6 +69,33 @@ const Map = () => {
           position: center,
           image: markerImage,
         });
+
+        // infowindow.open(map, marker);
+        for (let i = 0; i < randomPin.recommends.length; i++) {
+          const curr = randomPin.recommends[i];
+          const pinImg = DataType[curr.dataType].img;
+          const newMarkerImg = new kakao.maps.MarkerImage(pinImg, imageSize);
+          const latlng = new kakao.maps.LatLng(curr.mapY, curr.mapX);
+          // 마커를 생성합니다
+          const pin = new kakao.maps.Marker({
+            map: map, // 마커를 표시할 지도
+            position: latlng, // 마커를 표시할 위치
+            image: newMarkerImg, // 마커 이미지
+          });
+          const infowindow = new window.kakao.maps.InfoWindow({
+            content: `<div style="width:150px;text-align:center;padding:6px 0;">${curr.title}</div>`,
+          });
+          // 마커에 마우스오버 이벤트를 등록합니다
+          window.kakao.maps.event.addListener(pin, "mouseover", function () {
+            // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
+            infowindow.open(map, pin);
+          });
+
+          window.kakao.maps.event.addListener(pin, "mouseout", function () {
+            // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
+            infowindow.close();
+          });
+        }
         // marker.setMap(map);
         // geocoder.addressSearch(
         //   "제주특별자치도 제주시 첨단로 242",
@@ -136,7 +148,7 @@ const Map = () => {
         // );
       });
     };
-  }, [randomPin.lat, randomPin.lng]);
+  }, [randomPin.lat, randomPin.lng, randomPin.recommends]);
 
   useEffect(() => {
     if (kakaoMap === null) {

@@ -4,6 +4,8 @@ import pin_cafe from "@/src/_assets/main/map/pin_cafe.svg";
 import pin_tour from "@/src/_assets/main/map/pin_tour.svg";
 import pin_mountain from "@/src/_assets/main/map/pin_mountain.svg";
 import pin_ocean from "@/src/_assets/main/map/pin_ocean.png";
+// import config from "@/src/_config";
+const imgSrc = "http://54.180.126.49";
 
 export const themes: Theme[] = [
   {
@@ -27,14 +29,22 @@ export type Theme = {
   themes: number[] | null;
 };
 
-export type DataType = {
-  ocean: 1;
-  mountain: 2;
-  activity: 3;
-  tour: 4;
-  restaurant: 5;
-  cafe: 6;
+type pin = {
+  type: string;
+  img: string;
 };
+interface DataTypeMap {
+  [key: number]: pin;
+}
+export const DataType: DataTypeMap = {
+  1: { type: "Ocean", img: `${imgSrc}/images/pin/pin_ocean.png` },
+  2: { type: "Mountain", img: `${imgSrc}/images/pin/pin_mountain.png` },
+  3: { type: "Activity", img: `${imgSrc}/images/pin/pin_activity.png` },
+  4: { type: "Tour", img: `${imgSrc}/images/pin/pin_tour.png` },
+  5: { type: "Restaurant", img: `${imgSrc}/images/pin/pin_food.png` },
+  6: { type: "Cafe", img: `${imgSrc}/images/pin/pin_cafe.png` },
+};
+
 export type Recommend = {
   id: number;
   title: string;
@@ -50,8 +60,8 @@ export interface RandomPinType {
   address: string;
   lat: number;
   lng: number;
-  latDMS:string;
-  lngDMS:string;
+  latDMS: string;
+  lngDMS: string;
   theme: Theme | null;
   recommends: Recommend[];
 }
