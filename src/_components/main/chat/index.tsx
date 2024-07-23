@@ -45,7 +45,7 @@ const Chat = () => {
     queryFn: getMe,
   });
 
-  console.log('user : ', user);
+  // console.log('user : ', user);
 
   const {
     data: messages = [],
@@ -58,7 +58,7 @@ const Chat = () => {
   });
 
   useEffect(() => {
-    if (!selectedChat) return;
+    if (selectedChat.title === '') return;
 
     // SockJS 클라이언트 생성
     const socket = new SockJS(

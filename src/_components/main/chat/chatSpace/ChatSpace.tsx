@@ -54,7 +54,7 @@ const ChatSpace: React.FC<{
         regionImageUrl: '',
         tags: [],
         participantCount: 0,
-        createAt: new Date(),
+        createdAt: new Date(),
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {
