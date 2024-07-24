@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
-import { Client, Stomp } from '@stomp/stompjs';
+import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { Client, Stomp } from "@stomp/stompjs";
 
 // icon
 import logo from "@/src/_assets/icons/main_logo.png";
@@ -21,10 +21,10 @@ import LeaveChat from "../../modal/chat/LeaveChat";
 import useToggle from "@/src/hooks/Home/useToggle";
 
 // api
-import axios from 'axios';
-import { leaveChatRoom } from '@/pages/api/chat';
-import { Message } from '@/src/types/aboutChat';
-import { User } from '@/src/types/aboutMain';
+import axios from "axios";
+import { leaveChatRoom } from "@/pages/api/chat";
+import { Message } from "@/src/types/aboutChat";
+import { User } from "@/src/types/aboutMain";
 
 const ChatSpace: React.FC<{
   refetchChatList: () => void;
@@ -34,7 +34,7 @@ const ChatSpace: React.FC<{
   leaveMessage: (roomId: number) => void;
 }> = ({ refetchChatList, messages, user, stompClientRef, leaveMessage }) => {
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
-  const [input, setInput] = useState<string>('');
+  const [input, setInput] = useState<string>("");
 
   // 채팅방 퇴장 모달
   const [modal, setModal] = useState<boolean>(false);
@@ -54,7 +54,7 @@ const ChatSpace: React.FC<{
         regionImageUrl: "",
         tags: [],
         participantCount: 0,
-        createAt: new Date(),
+        createdAt: new Date(),
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -65,30 +65,28 @@ const ChatSpace: React.FC<{
     }
   };
 
-
-
   const sendMessage = () => {
-    if (input === '') return;
+    if (input === "") return;
 
     const messageObject = {
       roomId: selectedChat.roomId,
       userId: user?.userId,
       nickname: user?.nickname,
-      messageType: 'SEND',
+      messageType: "SEND",
       content: input,
     };
 
-    if (stompClientRef.current && input.trim() !== '') {
+    if (stompClientRef.current && input.trim() !== "") {
       stompClientRef.current.publish({
-        destination: '/chat/sendMessage',
+        destination: "/chat/sendMessage",
         body: JSON.stringify(messageObject),
       });
 
-      setInput('');
+      setInput("");
     }
   };
 
-  if (selectedChat.title === '') {
+  if (selectedChat.title === "") {
     return (
       <div className="chatSpace">
         <div className={styles.logoImage}>
