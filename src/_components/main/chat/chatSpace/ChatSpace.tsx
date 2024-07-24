@@ -1,40 +1,42 @@
-import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { Client, Stomp } from "@stomp/stompjs";
+import React, { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+import { Client, Stomp } from '@stomp/stompjs';
 
 // icon
-import logo from "@/src/_assets/icons/main_logo.png";
+import logo from '@/src/_assets/icons/main_logo.png';
 
 // styles
-import styles from "./chatspace.module.scss";
+import styles from './chatspace.module.scss';
 
 // atom
-import { useRecoilState } from "recoil";
-import { selectedChatState } from "@/src/atom/stats";
+import { useRecoilState } from 'recoil';
+import { selectedChatState, userState } from '@/src/atom/stats';
 
 // components
-import ChatRoom from "./ChatRoom";
-import Modal from "@/src/_components/Common/Modal";
-import LeaveChat from "../../modal/chat/LeaveChat";
+import ChatRoom from './ChatRoom';
+import Modal from '@/src/_components/Common/Modal';
+import LeaveChat from '../../modal/chat/LeaveChat';
+// import Landing from '@/src/_components/Common/Landing';
 
 // hooks
-import useToggle from "@/src/hooks/Home/useToggle";
+import useToggle from '@/src/hooks/Home/useToggle';
 
 // api
-import axios from "axios";
-import { leaveChatRoom } from "@/pages/api/chat";
-import { Message } from "@/src/types/aboutChat";
-import { User } from "@/src/types/aboutMain";
+import axios from 'axios';
+import { leaveChatRoom } from '@/pages/api/chat';
+
+// types
+import { Message } from '@/src/types/aboutChat';
 
 const ChatSpace: React.FC<{
   refetchChatList: () => void;
   messages: Message[];
-  user: User | undefined;
   stompClientRef: React.MutableRefObject<Client | null>;
   leaveMessage: (roomId: number) => void;
-}> = ({ refetchChatList, messages, user, stompClientRef, leaveMessage }) => {
+}> = ({ refetchChatList, messages, stompClientRef, leaveMessage }) => {
+  const [user] = useRecoilState(userState);
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
-  const [input, setInput] = useState<string>("");
+  const [input, setInput] = useState<string>('');
 
   // 채팅방 퇴장 모달
   const [modal, setModal] = useState<boolean>(false);
@@ -45,57 +47,58 @@ const ChatSpace: React.FC<{
     try {
       await leaveChatRoom(roomId);
       leaveMessage(roomId);
-      refetchChatList();
       // 선택된 채팅 초기화
       setSelectedChat({
         roomId: 0,
-        title: "",
-        regionName: "",
-        regionImageUrl: "",
+        title: '',
+        regionName: '',
+        regionImageUrl: '',
         tags: [],
         participantCount: 0,
         createdAt: new Date(),
       });
+      refetchChatList();
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error("Axios error:", error.response?.data);
+        console.error('Axios error:', error.response?.data);
       } else {
-        console.error("Unexpected error:", error);
+        console.error('Unexpected error:', error);
       }
     }
   };
 
   const sendMessage = () => {
-    if (input === "") return;
+    if (input === '') return;
 
     const messageObject = {
       roomId: selectedChat.roomId,
       userId: user?.userId,
       nickname: user?.nickname,
-      messageType: "SEND",
+      messageType: 'SEND',
       content: input,
     };
 
-    if (stompClientRef.current && input.trim() !== "") {
+    if (stompClientRef.current && input.trim() !== '') {
       stompClientRef.current.publish({
-        destination: "/chat/sendMessage",
+        destination: '/chat/sendMessage',
         body: JSON.stringify(messageObject),
       });
 
-      setInput("");
+      setInput('');
     }
   };
 
-  if (selectedChat.title === "") {
+  if (selectedChat.title === '') {
     return (
       <div className="chatSpace">
         <div className={styles.logoImage}>
+          {/* <Landing /> */}
           <Image
             src={logo}
             alt="logo"
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
-            style={{ objectFit: "contain" }}
+            style={{ objectFit: 'contain' }}
           />
         </div>
       </div>
@@ -115,7 +118,7 @@ const ChatSpace: React.FC<{
                   alt={`Region ${selectedChat.regionName}`}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  style={{ objectFit: "contain" }}
+                  style={{ objectFit: 'contain' }}
                 />
               </div>
               <div className={styles.region}>{selectedChat.regionName}</div>
@@ -140,7 +143,7 @@ const ChatSpace: React.FC<{
               </div>
             </div>
           </div>
-          <ChatRoom messages={messages} user={user} />
+          <ChatRoom messages={messages} />
           <div className={styles.inputArea}>
             <textarea
               className={styles.input}

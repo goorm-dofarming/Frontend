@@ -9,19 +9,19 @@ import styles from './chatspace.module.scss';
 import { FaCircleUser } from 'react-icons/fa6';
 
 // atom
-import { useRecoilValue } from 'recoil';
-import { selectedChatState } from '@/src/atom/stats';
+import { useRecoilState } from 'recoil';
+import { userState } from '@/src/atom/stats';
+
+// types
 import { Message } from '@/src/types/aboutChat';
-import { User } from '@/src/types/aboutMain';
 
 // 메세지 검색해서 가져오고 웹 소켓 연결하고 룸 구독
 // room/{roomId}
 // chat/sendmessage
 
-const ChatRoom: React.FC<{ messages: Message[]; user: User | undefined }> = ({
-  messages,
-  user,
-}) => {
+const ChatRoom: React.FC<{ messages: Message[] }> = ({ messages }) => {
+  const [user] = useRecoilState(userState);
+
   return (
     <div className={styles.chatRoom}>
       {messages.length > 0 &&

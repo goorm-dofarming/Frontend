@@ -1,16 +1,23 @@
-import styles from "@/src/home.module.scss";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import styles from '@/src/home.module.scss';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
+import { useCookies } from 'react-cookie';
 
 // components
-import NavBar from "@/src/_components/main/NavBar";
-import { Map, Log, Likes, Chat } from "@/src/_components/main";
-import Main from "@/src/_components/main/Main";
-import RandomPin from "@/src/_components/main/RandomPin";
-import ProfileDropdown from "@/src/_components/main/ProfileDropdown";
-import { pageState } from "@/src/atom/stats";
-import { useRecoilState } from "recoil";
+import NavBar from '@/src/_components/main/NavBar';
+import { Map, Log, Likes, Chat } from '@/src/_components/main';
+import Main from '@/src/_components/main/Main';
+import RandomPin from '@/src/_components/main/RandomPin';
+import ProfileDropdown from '@/src/_components/main/ProfileDropdown';
 
-import { useCookies } from "react-cookie";
+// api
+import { useQuery } from '@tanstack/react-query';
+import { getMe } from './api/user';
+
+// atoms
+import { useRecoilState } from 'recoil';
+import { alarmState, userState } from '@/src/atom/stats';
+import { pageState } from '@/src/atom/stats';
 
 const menu: { [key: string]: JSX.Element | null } = {
   home: <div></div>,
@@ -21,15 +28,70 @@ const menu: { [key: string]: JSX.Element | null } = {
 };
 
 const Home = () => {
-  const [cookies, setCookies] = useCookies(["token"]);
+  const [user, setUser] = useRecoilState(userState);
+  const [cookies, setCookies] = useCookies(['token']);
   const [fold, setFold] = useState<boolean>(false);
   const [page, setPage] = useRecoilState(pageState);
   const [element, setElement] = useState<React.JSX.Element | null>(menu[page]);
-  const [pin, setPin] = useState<string>("pin_hide");
+  const [pin, setPin] = useState<string>('pin_hide');
+  const [alarm, setAlarm] = useRecoilState(alarmState);
 
   useEffect(() => {
     setElement(menu[page]);
+    console.log('page', page);
   }, [page]);
+
+  const { data: userInfo } = useQuery({
+    queryKey: ['me'],
+    queryFn: getMe,
+    enabled: cookies.token !== null,
+  });
+
+  useEffect(() => {
+    if (userInfo) {
+      setUser(userInfo);
+    }
+  }, [userInfo]);
+
+  // SSE 연결
+  useEffect(() => {
+    if (user === undefined) return;
+    console.log('user: ', user);
+    const EventSource = EventSourcePolyfill || NativeEventSource;
+    const userId = user.userId;
+
+    const eventSource = new EventSource(
+      `${process.env.NEXT_PUBLIC_DEPLOY_SSE_ADDRESS}?userId=${userId}`,
+      {
+        headers: {
+          Connection: 'keep-alive',
+          Accept: 'text/event-stream',
+        },
+        heartbeatTimeout: 86400000, // 24시간
+      }
+    );
+
+    if (!alarm) {
+      eventSource.onmessage = (event) => {
+        const { data: receivedData } = event;
+        if (receivedData === 'alarm') {
+          setAlarm(true);
+          console.log('alarm on', page);
+        }
+      };
+    }
+
+    return () => {
+      eventSource.close();
+      console.log('SSE CLOSED');
+    };
+  }, [user]);
+
+  useEffect(() => {
+    if (page === 'chat') {
+      setAlarm(false);
+    }
+  }, [page, alarm]);
 
   return (
     <main className={styles.main}>
