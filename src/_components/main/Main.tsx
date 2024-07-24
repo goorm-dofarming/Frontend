@@ -4,7 +4,6 @@ import Image from "next/image";
 import { HomeContainer } from "@/src/_styles/main/mainStyles";
 
 // constants
-import { homeDropdown } from "@/src/constatns/icons";
 import { LoginButton } from "@/src/_styles/common/buttons";
 
 // components
@@ -13,7 +12,6 @@ import Login from "@/src/_components/main/modal/Login";
 import Signup from "@/src/_components/main/modal/Signup";
 
 // img
-import Profile from "@/src/_assets/main/userProfile.svg";
 import ColorMap from "@/src/_assets/main/colored_Map.svg";
 import Logo from "@/src/_assets/main/logo.svg";
 import pin_location from "@/src/_assets/main/map/pin_location.png";
@@ -24,8 +22,6 @@ import { inputDataType } from "@/src/types/aboutMain";
 // hooks
 import useToggle from "@/src/hooks/Home/useToggle";
 import { useCookies } from "react-cookie";
-import { colorTheme } from "@/src/_styles/common/commonColorStyles";
-import axios from "axios";
 
 const Main = ({ pin }: { pin: string }) => {
   // cookie
@@ -49,7 +45,6 @@ const Main = ({ pin }: { pin: string }) => {
 
   const pinRef = useRef<HTMLImageElement>(null); // 핀 요소에 대한 ref
 
-  const showDropdown = useToggle(dropdown, setDropdown);
   const handlePwd = useToggle(pwdShow, setPwdShow);
   const handleComponent = useToggle(pageState, setPageState);
   const openModal = useToggle(modal, setModal);
@@ -80,41 +75,8 @@ const Main = ({ pin }: { pin: string }) => {
   }, []);
 
   return (
-    <HomeContainer dropdown={dropdown.toString()} modal={modal.toString()}>
+    <HomeContainer modal={modal.toString()}>
       <div className={`fog ${showFog ? "fog_show" : ""}`}></div>
-      <header>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Image
-            src={Profile}
-            alt="유저 프로필"
-            width={35}
-            height={35}
-            onClick={showDropdown}
-            className="icons"
-          />
-          <div className="iconCol">
-            {homeDropdown.map((item, i) => {
-              const IconComponent = item.img; // 각 아이콘 컴포넌트를 변수에 저장
-              return (
-                <div key={i} className="iconBg">
-                  <IconComponent
-                    className="icons"
-                    size={25}
-                    color={colorTheme.primary}
-                  />
-                  {/* 아이콘 컴포넌트를 직접 렌더링 */}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </header>
       <main className="mainSection">
         <Image className="colorMap" src={ColorMap} alt="맵" width={360} />
         <div className="logoContainer">

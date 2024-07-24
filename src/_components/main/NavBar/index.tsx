@@ -18,16 +18,16 @@ const NavBar = ({
   className,
   setPage,
   setInitial,
+  active,
 }: {
   className: string;
   setPage: React.Dispatch<React.SetStateAction<string>>;
   setInitial: React.Dispatch<React.SetStateAction<boolean>>;
+  active: string;
 }) => {
-  const [active, setActive] = useState("map");
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const id = event.currentTarget.id;
     setPage(id);
-    setActive(id);
   };
   return (
     <nav className={cx(styles.nav, className)}>

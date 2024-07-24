@@ -6,6 +6,7 @@ import NavBar from "@/src/_components/main/NavBar";
 import { Map, Log, Likes, Chat } from "@/src/_components/main";
 import Main from "@/src/_components/main/Main";
 import RandomPin from "@/src/_components/main/RandomPin";
+import ProfileDropdown from "@/src/_components/main/ProfileDropdown";
 
 const menu: { [key: string]: JSX.Element } = {
   map: <Map />,
@@ -27,9 +28,11 @@ const Home = () => {
   return (
     <main className={styles.main}>
       <div id="modal-container"></div>
+      <ProfileDropdown setFold={setFold} setPage={setPage} />
       <section className={fold ? styles.navBar : styles.pinSection}>
         {fold ? (
           <NavBar
+            active={page}
             setPage={setPage}
             className={styles.navbar}
             setInitial={setFold}
