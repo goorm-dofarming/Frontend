@@ -19,11 +19,12 @@ import { Client, Stomp } from '@stomp/stompjs';
 
 // atoms
 import { useRecoilState } from 'recoil';
-import { selectedChatState } from '@/src/atom/stats';
+import { selectedChatState, userState } from '@/src/atom/stats';
 
 const Chat = () => {
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
   const stompClientRef = useRef<Client | null>(null);
+  const [user] = useRecoilState(userState);
 
   const myChatQuery = useQuery({
     queryKey: ['myChats'],
@@ -40,13 +41,6 @@ const Chat = () => {
     entireChatQuery.refetch();
   };
 
-  const { data: user } = useQuery({
-    queryKey: ['me'],
-    queryFn: getMe,
-  });
-
-  // console.log('user : ', user);
-
   const {
     data: messages = [],
     error,
@@ -58,8 +52,6 @@ const Chat = () => {
   });
 
   useEffect(() => {
-    if (selectedChat.title === '') return;
-
     // SockJS 클라이언트 생성
     const socket = new SockJS(
       `${process.env.NEXT_PUBLIC_DEPLOY_WEBSOCKET_ADDRESS}`
@@ -68,7 +60,7 @@ const Chat = () => {
       webSocketFactory: () => socket,
       reconnectDelay: 5000,
       debug: (str) => {
-        console.log(str);
+        // console.log(str);
       },
       onConnect: (frame) => {
         console.log('Connected: ' + frame);
@@ -77,7 +69,7 @@ const Chat = () => {
           `/room/${selectedChat.roomId}`,
           (messageOutput) => {
             const message = JSON.parse(messageOutput.body);
-            console.log('Subscribe: ', message);
+            // console.log('Subscribe: ', message);
             refetchMessages();
           }
         );
@@ -149,7 +141,6 @@ const Chat = () => {
       <ChatSpace
         refetchChatList={refetchChatList}
         messages={messages}
-        user={user}
         stompClientRef={stompClientRef}
         leaveMessage={leaveMessage}
       />
