@@ -7,6 +7,8 @@ import { FaMapMarkedAlt, FaRegClock } from "react-icons/fa";
 import logo from "@/src/_assets/icons/logo.png";
 import cx from "classnames";
 import { MouseEvent, useState } from "react";
+import { pageState } from "@/src/atom/stats";
+import { useRecoilState } from "recoil";
 
 const menu = [
   { page: "map", icon: <FaMapMarkedAlt fill="white" /> },
@@ -16,23 +18,26 @@ const menu = [
 ];
 const NavBar = ({
   className,
-  setPage,
   setInitial,
 }: {
   className: string;
-  setPage: React.Dispatch<React.SetStateAction<string>>;
   setInitial: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const [active, setActive] = useState("map");
+  const [active, setPage] = useRecoilState(pageState);
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const id = event.currentTarget.id;
     setPage(id);
-    setActive(id);
   };
   return (
     <nav className={cx(styles.nav, className)}>
       <div className={styles.menu}>
-        <button className={styles.logo} onClick={() => setInitial(false)}>
+        <button
+          className={styles.logo}
+          onClick={() => {
+            setInitial(false);
+            setPage("home");
+          }}
+        >
           <Image src={logo} width={68} height={60} alt="logo" />
         </button>
 

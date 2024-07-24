@@ -9,16 +9,16 @@ export const homeDropdown = [
     img: FaMapMarkedAlt,
   },
   {
-    id: "logs",
+    id: "log",
     img: FaRegClock,
+  },
+  {
+    id: "likes",
+    img: IoHeartSharp,
   },
   {
     id: "chat",
     img: IoChatbubbleEllipsesSharp,
-  },
-  {
-    id: "hearts",
-    img: IoHeartSharp,
   },
   {
     id: "settings",

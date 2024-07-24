@@ -6,8 +6,14 @@ import NavBar from "@/src/_components/main/NavBar";
 import { Map, Log, Likes, Chat } from "@/src/_components/main";
 import Main from "@/src/_components/main/Main";
 import RandomPin from "@/src/_components/main/RandomPin";
+import ProfileDropdown from "@/src/_components/main/ProfileDropdown";
+import { pageState } from "@/src/atom/stats";
+import { useRecoilState } from "recoil";
 
-const menu: { [key: string]: JSX.Element } = {
+import { useCookies } from "react-cookie";
+
+const menu: { [key: string]: JSX.Element | null } = {
+  home: <div></div>,
   map: <Map />,
   log: <Log />,
   likes: <Likes />,
@@ -15,9 +21,10 @@ const menu: { [key: string]: JSX.Element } = {
 };
 
 const Home = () => {
+  const [cookies, setCookies] = useCookies(["token"]);
   const [fold, setFold] = useState<boolean>(false);
-  const [page, setPage] = useState<string>("map");
-  const [element, setElement] = useState<React.JSX.Element>(menu["map"]);
+  const [page, setPage] = useRecoilState(pageState);
+  const [element, setElement] = useState<React.JSX.Element | null>(menu[page]);
   const [pin, setPin] = useState<string>("pin_hide");
 
   useEffect(() => {
@@ -27,13 +34,10 @@ const Home = () => {
   return (
     <main className={styles.main}>
       <div id="modal-container"></div>
+      {cookies.token && <ProfileDropdown setFold={setFold} setPage={setPage} />}
       <section className={fold ? styles.navBar : styles.pinSection}>
         {fold ? (
-          <NavBar
-            setPage={setPage}
-            className={styles.navbar}
-            setInitial={setFold}
-          />
+          <NavBar className={styles.navbar} setInitial={setFold} />
         ) : (
           <div className={styles.sliderSection}>
             <div className={styles.slider}>

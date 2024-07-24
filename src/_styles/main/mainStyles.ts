@@ -2,18 +2,17 @@ import styled, { css } from "styled-components";
 import { hideHomeIcons, showHomeIcons } from "../keyframes";
 
 export const HomeContainer = styled.div<{
-  dropdown: string;
   modal: string;
 }>`
   width: 100%;
   height: 100%;
-  header {
+  /* header {
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     padding: 1.5rem;
-  }
+  } */
   main {
     width: 100%;
     height: 80vh;
@@ -47,36 +46,7 @@ export const HomeContainer = styled.div<{
     flex-direction: column;
     align-items: center;
   }
-  .iconCol {
-    position: absolute;
-    top: 8%;
-    height: 30vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: cen4ter;
-    animation: ${({ dropdown }) =>
-      dropdown === "true"
-        ? css`0.5s ${showHomeIcons} ease-in-out`
-        : css`0.5s ${hideHomeIcons} ease-in-out`};
-    transition: 0.3s visibility;
-    visibility: ${({ dropdown }) =>
-      dropdown === "true" ? "visible" : "hidden"};
-  }
-  .iconBg {
-    width: 3vw;
-    height: 5vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    &:hover {
-      background-color: #efefef;
-      border-radius: 20%;
-    }
-  }
-  .icons {
-    cursor: pointer;
-  }
+
   .modal {
     position: absolute;
     width: 35vw;
@@ -89,6 +59,8 @@ export const HomeContainer = styled.div<{
     visibility: ${({ modal }) => (modal === "true" ? "visible" : "hidden")};
   }
   .mainSection {
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
