@@ -29,6 +29,11 @@ const LocationImage = styled.div`
     width: 100%;
     height: 100%;
   }
+  .logo {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 const Description = styled.div`
@@ -88,7 +93,7 @@ const Card = ({
   onClick,
 }: {
   recommend: Recommend;
-  onClick: Dispatch<SetStateAction<Recommend | null >>;
+  onClick?: (recommend: Recommend) => void;
 }) => {
   // TODO: heart animation
   const { id, image, title, dataType, addr, tel } = recommend;
@@ -98,9 +103,19 @@ const Card = ({
     setIsLiked(!isLiked);
   };
   return (
-    <Container onClick={() => onClick(recommend)}>
+    <Container onClick={() => onClick && onClick(recommend)}>
       <LocationImage>
-        <Image width={280} height={240} src={image || main_logo} alt={title} />
+        {image ? (
+          <Image width={280} height={240} src={image} alt={title} />
+        ) : (
+          <Image
+            width={280}
+            height={240}
+            className="logo"
+            src={main_logo}
+            alt={title}
+          />
+        )}
       </LocationImage>
       <Description>
         <Title>

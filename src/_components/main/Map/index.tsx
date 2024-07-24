@@ -100,7 +100,7 @@ const Map = () => {
         }
       });
     };
-  }, [randomPin.lat, randomPin.lng, randomPin.recommends]);
+  }, [randomPin.lng, randomPin.lat, randomPin.recommends]);
 
   useEffect(() => {
     if (kakaoMap === null) {
