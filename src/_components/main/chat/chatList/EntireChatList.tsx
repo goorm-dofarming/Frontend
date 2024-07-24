@@ -1,4 +1,3 @@
-'use client';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { QueryObserverResult } from '@tanstack/react-query';
@@ -17,6 +16,7 @@ import { selectedChatState, searchState } from '@/src/atom/stats';
 // components
 import Modal from '@/src/_components/Common/Modal';
 import EnterChat from '../../modal/chat/EnterChat';
+import ChatLoader from '@/src/_components/Common/ChatLoader';
 
 // icons
 import { FaRegFaceSadCry } from 'react-icons/fa6';
@@ -32,12 +32,16 @@ interface EntireChatListProps {
   mainQuery: QueryObserverResult<Chat[], Error>;
   myChatQuery: QueryObserverResult<Chat[], Error>;
   refetchChatList: () => void;
+  joinMessage: (roomId: number) => void;
+  searchInput: string;
 }
 
 const EntireChatList: React.FC<EntireChatListProps> = ({
   mainQuery,
   myChatQuery,
   refetchChatList,
+  joinMessage,
+  searchInput,
 }) => {
   const { data: myChats = [] } = myChatQuery;
   const { data: mainChats = [], error, isLoading } = mainQuery;
@@ -45,7 +49,7 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
-  const [selectedRoomId, setSelectedRoomId] = useState<number>(0);
+  const [clickedChat, setClickedChat] = useState<Chat | null>(null);
   const search = useRecoilValue(searchState);
 
   const [chats, setChats] = useState<Chat[]>([]);
@@ -75,16 +79,18 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
     return myChats.some((chat) => chat.roomId === chatId);
   };
 
-  const onClickEnterBtn = (roomId: number) => {
-    setSelectedRoomId(roomId);
+  const onClickEnterBtn = (chat: Chat) => {
+    setClickedChat(chat);
     openModal();
   };
 
-  const handleEnterChat = async (data: { roomId: number }) => {
-    const { roomId } = data;
+  const handleEnterChat = async (data: { chat: Chat }) => {
+    const { chat } = data;
     try {
-      await joinChatRoom(roomId);
+      await joinChatRoom(chat.roomId);
+      joinMessage(chat.roomId);
       refetchChatList();
+      setSelectedChat(chat);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Axios error:', error.response?.data);
@@ -98,10 +104,18 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
     if (fetchLoading || chatsRef.current.length === 0 || !hasMore) return;
     setFetchLoading(true);
 
-    const params = {
-      roomId: chatsRef.current[chatsRef.current.length - 1].roomId,
-      createdAt: chatsRef.current[chatsRef.current.length - 1].createAt,
-    };
+    const params = {} as { [key: string]: any };
+
+    if (search) {
+      params.roomId = chatsRef.current[chatsRef.current.length - 1].roomId;
+      params.createdAt =
+        chatsRef.current[chatsRef.current.length - 1].createdAt;
+      params.condition = searchInput;
+    } else {
+      params.roomId = chatsRef.current[chatsRef.current.length - 1].roomId;
+      params.createdAt =
+        chatsRef.current[chatsRef.current.length - 1].createdAt;
+    }
 
     try {
       console.log('params: ', params);
@@ -122,7 +136,11 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
     } finally {
       setFetchLoading(false);
     }
-  }, [fetchLoading, hasMore]);
+  }, [fetchLoading, hasMore, search, searchInput]);
+
+  useEffect(() => {
+    setHasMore(true);
+  }, [search]);
 
   useEffect(() => {
     let isMounted = true;
@@ -132,7 +150,7 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
       if (currentScrollRef) {
         const { scrollTop, scrollHeight, clientHeight } = currentScrollRef;
         if (scrollTop + clientHeight >= scrollHeight - 1) {
-          if (isMounted && !fetchLoading && hasMore && !search) {
+          if (isMounted && !fetchLoading && hasMore) {
             fetchMoreChats();
           }
         }
@@ -149,12 +167,12 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
       }
       isMounted = false;
     };
-  }, [fetchLoading, hasMore, fetchMoreChats, search]);
+  }, [fetchLoading, hasMore, fetchMoreChats]);
 
   if (isLoading) {
     return (
       <div className={styles.container}>
-        <span className={styles.loader}></span>
+        <ChatLoader />
       </div>
     );
   }
@@ -210,7 +228,7 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
             {!isInMyChats(chat.roomId) && (
               <div
                 className={styles.enterBtn}
-                onClick={() => onClickEnterBtn(chat.roomId)}
+                onClick={() => onClickEnterBtn(chat)}
               >
                 입장
               </div>
@@ -233,14 +251,14 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
         </div>
       )}
       {fetchLoading && (
-        <div className={styles.container}>
-          <span className={styles.loader}></span>
+        <div className={styles.overContainer}>
+          <ChatLoader />
         </div>
       )}
       <Modal openModal={openModal} modal={modal} width="20rem" height="15rem">
         <EnterChat
           openModal={openModal}
-          roomId={selectedRoomId}
+          chat={clickedChat}
           onEnterChat={handleEnterChat}
         />
       </Modal>

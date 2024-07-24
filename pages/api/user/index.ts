@@ -1,20 +1,22 @@
-import apiClient from "../apiClient";
+import { User } from '@/src/types/aboutMain';
+import apiClient from '../apiClient';
 
-
-export const getMe = ()=>{
-    return apiClient.get(`/me`);
-}
+export const getMe = async (): Promise<User> => {
+  const response = await apiClient.get(`/me`);
+  const data = response.data;
+  return data;
+};
 
 //NOTE:body { "multipartFile": "string","userModifyRequest": {"nickname": "usernickname",    "password": "userpassword"}}
 
-export const modifyUser = (body:{})=>{
-    return apiClient.put(`/users`,body);
-}
+export const modifyUser = (body: {}) => {
+  return apiClient.put(`/users`, body);
+};
 
-export const getUser = (userId:number)=>{
-    return apiClient.get(`/users/${userId}`);
-}
+export const getUser = (userId: number) => {
+  return apiClient.get(`/users/${userId}`);
+};
 
-export const deleteUser = (userId:number)=>{
-    return apiClient.delete(`/users/${userId}`);
-}
+export const deleteUser = (userId: number) => {
+  return apiClient.delete(`/users/${userId}`);
+};

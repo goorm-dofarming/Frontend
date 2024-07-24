@@ -29,6 +29,24 @@ jobs:
           version: 9.5.0
           run_install: false
 
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            node_modules
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Cache Next.js build
+        uses: actions/cache@v3
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-cache-${{ hashFiles('**/package.json') }}-${{ hashFiles('**/next.config.js') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-cache-${{ hashFiles('**/package.json') }}
+
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
@@ -43,12 +61,10 @@ jobs:
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
-
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
-
       - name: Upload to S3
         run: |
           aws s3 cp --region ap-northeast-2 ./til-dev.zip s3://$S3_BUCKET_NAME/til-dev.zip

@@ -1,4 +1,3 @@
-'use client';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { QueryObserverResult } from '@tanstack/react-query';
@@ -16,6 +15,7 @@ import { searchState, selectedChatState } from '@/src/atom/stats';
 
 // icons
 import { FaRegFaceSadCry } from 'react-icons/fa6';
+import ChatLoader from '@/src/_components/Common/ChatLoader';
 
 interface MyChatListProps {
   myChatQuery: QueryObserverResult<Chat[], Error>;
@@ -61,7 +61,7 @@ const MyChatList: React.FC<MyChatListProps> = ({
   if (loading) {
     return (
       <div className={styles.container}>
-        <span className={styles.loader}></span>
+        <ChatLoader />
       </div>
     );
   }

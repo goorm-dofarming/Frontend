@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useEffect } from 'react';
-
+import { useRouter } from 'next/navigation';
 // img
 import Logo from '@/src/_assets/main/logo.svg';
 
@@ -10,9 +10,12 @@ import { SocialLoginContainer } from '@/src/_styles/kakaoLogin/kakaoLoginStyles'
 // libraries
 import { useCookies } from 'react-cookie';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+
+// apis
+import { getNaverUserData, signupSocialLogin } from '@/pages/api/auth';
 
 const Page = () => {
+  const router = useRouter();
   const [, setCookies] = useCookies(['token']);
 
   const getAccesstoken = useMutation({
@@ -28,7 +31,7 @@ const Page = () => {
         state: state,
       };
 
-      const response = await axios.get('/api/callback', { params });
+      const response = await getNaverUserData(params);
 
       console.log(response);
 
@@ -37,14 +40,16 @@ const Page = () => {
         data: response.data,
       };
 
-      const signupNaver = await axios.post(
-        `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/oauth`,
-        body2
-      );
+      const signupNaver = await signupSocialLogin(body2);
 
       console.log('signupNaver: ', signupNaver);
 
-      return response.data;
+      if (signupNaver.status === 200) {
+        setTimeout(() => {
+          router.push('/');
+        }, 1500);
+      }
+      return signupNaver.data;
     },
     onSuccess: (data) => {
       setCookies('token', data.access_token, { path: '/' });
@@ -53,10 +58,11 @@ const Page = () => {
       console.error('Error fetching access token:', error);
     },
   });
-
+  /* eslint-enable react-hooks/exhaustive-deps */
   useEffect(() => {
     getAccesstoken.mutate();
-  }, [getAccesstoken]);
+  }, []);
+  /* eslint-enable react-hooks/exhaustive-deps */
   return (
     <SocialLoginContainer>
       <Image src={Logo} alt="로고" />

@@ -1,4 +1,3 @@
-'use client';
 import React, { useState } from 'react';
 
 // style
@@ -30,16 +29,22 @@ import { Chat } from '@/src/types/aboutChat';
 import { useRecoilState } from 'recoil';
 import { searchState } from '@/src/atom/stats';
 
+// 알림
+// headers Accept랑 connection
+// request params userId
+
 interface ChatListProps {
   myChatQuery: QueryObserverResult<Chat[], Error>;
   entireChatQuery: QueryObserverResult<Chat[], Error>;
   refetchChatList: () => void;
+  joinMessage: (roomId: number) => void;
 }
 
 const ChatList: React.FC<ChatListProps> = ({
   myChatQuery,
   entireChatQuery,
   refetchChatList,
+  joinMessage,
 }) => {
   // true => 내 채팅 , false => 오픈 채팅
   const [activeTab, setActiveTab] = useState(true);
@@ -66,6 +71,7 @@ const ChatList: React.FC<ChatListProps> = ({
     try {
       const response = await createChatRoom(body);
       refetchChatList();
+      joinMessage(response.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Axios error:', error.response?.data);
@@ -150,6 +156,8 @@ const ChatList: React.FC<ChatListProps> = ({
           mainQuery={search ? searchQuery : entireChatQuery}
           myChatQuery={myChatQuery}
           refetchChatList={refetchChatList}
+          joinMessage={joinMessage}
+          searchInput={searchInput}
         />
       )}
       <Modal openModal={openModal} modal={modal} width="35rem" height="40rem">

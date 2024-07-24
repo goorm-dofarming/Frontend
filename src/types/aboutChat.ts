@@ -10,5 +10,13 @@ export interface Chat {
   regionImageUrl: string;
   tags: Tag[];
   participantCount: number;
-  createAt: Date;
+  createdAt: Date;
+}
+
+export interface Message {
+  roomId: number;
+  userId: number;
+  nickname: string;
+  messageType: string;
+  content: string;
 }

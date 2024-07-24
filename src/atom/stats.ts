@@ -1,6 +1,7 @@
 import { atom } from "recoil";
 
 // types
+
 import { Chat } from "@/src/types/aboutChat";
 import { RandomPinType } from "@/src/types/aboutMap";
 
@@ -13,9 +14,10 @@ export const selectedChatState = atom<Chat>({
     regionImageUrl: "",
     tags: [],
     participantCount: 0,
-    createAt: new Date(),
+    createdAt: new Date(),
   },
 });
+
 
 export const randomPinState = atom<RandomPinType>({
   key: "randomPinState",
@@ -29,6 +31,7 @@ export const randomPinState = atom<RandomPinType>({
     recommends: [],
   },
 });
+
 
 export const searchState = atom<boolean>({
   key: "searchState",

@@ -157,6 +157,7 @@ const Log = () => {
         ))}
       </div>
       <div className="logContent">
+        1
         <Map
           mapboxAccessToken={process.env.NEXT_PUBLIC_REACT_MAP_GL_ACCESS_TOKEN}
           initialViewState={{

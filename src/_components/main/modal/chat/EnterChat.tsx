@@ -1,19 +1,24 @@
 import React from 'react';
 import styles from '@/src/_components/main/modal/chat/smallmodal.module.scss';
 
+// types
+import { Chat } from '@/src/types/aboutChat';
+
 interface EnterChatProps {
   openModal: () => void;
-  roomId: number;
-  onEnterChat: (data: { roomId: number }) => void;
+  chat: Chat | null;
+  onEnterChat: (data: { chat: Chat }) => void;
 }
 
 const EnterChat: React.FC<EnterChatProps> = ({
   openModal,
-  roomId,
+  chat,
   onEnterChat,
 }) => {
   const handleEnterChat = () => {
-    onEnterChat({ roomId });
+    if (chat) {
+      onEnterChat({ chat });
+    }
     openModal();
   };
   return (

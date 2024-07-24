@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 // img
 import Logo from '@/src/_assets/main/logo.svg';
@@ -11,7 +12,13 @@ import { SocialLoginContainer } from '@/src/_styles/kakaoLogin/kakaoLoginStyles'
 import axios from 'axios';
 import { useMutation } from '@tanstack/react-query';
 import { useCookies } from 'react-cookie';
-import { useRouter } from 'next/navigation';
+
+// apis
+import {
+  getKakaoAccessToken,
+  getKaKaoUserData,
+  signupSocialLogin,
+} from '@/pages/api/auth';
 
 const Page = () => {
   const router = useRouter();
@@ -28,39 +35,31 @@ const Page = () => {
         redirect_uri: process.env.NEXT_PUBLIC_KAKAO_REDIREDCT_URI,
         code: kakaoCode,
       };
-      const token = await axios.post(
-        `https://kauth.kakao.com/oauth/token`,
-        body,
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }
-      );
+
+      const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      };
+
+      const token = await getKakaoAccessToken(body, headers);
 
       console.log('get token:', token.data);
       const { access_token } = token.data;
 
-      const userData = await axios.get(`https://kapi.kakao.com/v2/user/me`, {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      });
+      const userDataHeader = {
+        Authorization: `Bearer ${access_token}`,
+      };
 
+      const userData = await getKaKaoUserData(userDataHeader);
       console.log('user data:', userData.data);
 
-      const body2 = {
+      const signupKakaoBody = {
         socialType: 'KAKAO',
         data: userData.data,
       };
 
-      const signupKakao = await axios.post(
-        `${process.env.NEXT_PUBLIC_DEPLOY_API_ADDRESS}/oauth`,
-        body2
-      );
+      const signupKakao = await signupSocialLogin(signupKakaoBody);
 
       console.log('signupKakao: ', signupKakao);
-
       setCookies('token', signupKakao.data, { path: '/' });
 
       if (signupKakao.status === 200) {
@@ -68,13 +67,15 @@ const Page = () => {
           router.push('/');
         }, 1500);
       }
-      return signupKakao;
+      return token;
     },
   });
 
+  /* eslint-enable react-hooks/exhaustive-deps */
   useEffect(() => {
     getAccesstoken.mutate();
-  }, [getAccesstoken]);
+  }, []);
+  /* eslint-enable react-hooks/exhaustive-deps */
   return (
     <SocialLoginContainer>
       <div>
