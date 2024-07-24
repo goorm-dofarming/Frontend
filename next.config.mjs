@@ -4,7 +4,7 @@ const nextConfig = {
     styledComponents: true,
   },
   images: {
-    domains: ['tong.visitkorea.or.kr'],
+    unoptimized: true,
   },
   distDir: 'build',
   output: 'export',
