@@ -8,6 +8,8 @@ const nextConfig = {
   },
   assetPrefix:
     process.env.NODE_ENV === 'production' ? `${NEXT_PUBLIC_ADDRESS}` : '',
+  distDir: 'build',
+  output: 'export',
 };
 
 export default nextConfig;
