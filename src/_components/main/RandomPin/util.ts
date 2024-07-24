@@ -78,9 +78,9 @@ const regions = [
   {
     name: "부산",
     latMin: 35.058877,
-    latMax: 35.347441,
-    lonMin: 128.818951,
-    lonMax: 129.283478,
+    latMax: 35.204244, // 수정: 범위를 축소하여 바다 제거
+    lonMin: 128.956817, // 수정: 범위를 동쪽으로 조정
+    lonMax: 129.172479, // 수정: 범위를 동쪽으로 조정하여 바다 제거
   },
   {
     name: "대구",
@@ -93,7 +93,7 @@ const regions = [
     name: "인천",
     latMin: 37.375145,
     latMax: 37.619116,
-    lonMin: 126.416287,
+    lonMin: 126.624388, // 수정: 범위를 동쪽으로 조정하여 바다 제거
     lonMax: 126.855835,
   },
   {
@@ -113,30 +113,30 @@ const regions = [
   {
     name: "울산",
     latMin: 35.377433,
-    latMax: 35.660642,
-    lonMin: 129.095474,
-    lonMax: 129.408041,
+    latMax: 35.551617, // 수정: 범위를 축소하여 바다 제거
+    lonMin: 129.141148, // 수정: 범위를 서쪽으로 조정하여 바다 제거
+    lonMax: 129.330826, // 수정: 범위를 서쪽으로 조정
   },
   {
     name: "경기도",
     latMin: 36.966667,
     latMax: 38.291668,
-    lonMin: 126.195833,
+    lonMin: 126.626678, // 수정: 서쪽 경계를 조정하여 바다 제거
     lonMax: 127.862777,
   },
   {
     name: "강원도",
     latMin: 37.068828,
     latMax: 38.303202,
-    lonMin: 127.119292,
-    lonMax: 129.183855,
+    lonMin: 127.788858, // 수정: 동쪽 경계를 내륙 중심으로 조정
+    lonMax: 128.789051, // 수정: 동쪽 경계를 내륙 중심으로 조정하여 바다 제거
   },
   {
-    name: "충청북도",
-    latMin: 36.018762,
-    latMax: 37.27461,
-    lonMin: 127.192738,
-    lonMax: 128.089996,
+    name: "충청남도",
+    latMin: 36.109056,
+    latMax: 36.96107,
+    lonMin: 126.680133, // 수정: 서쪽 경계를 동쪽으로 조정하여 바다 제거
+    lonMax: 127.549065,
   },
   {
     name: "충청남도",
@@ -147,9 +147,9 @@ const regions = [
   },
   {
     name: "전라북도",
-    latMin: 35.389502,
+    latMin: 35.581078, // 수정: 남쪽 경계를 축소하여 바다 제거
     latMax: 36.272618,
-    lonMin: 126.448829,
+    lonMin: 126.705144, // 수정: 서쪽 경계를 동쪽으로 조정하여 바다 제거
     lonMax: 127.683582,
   },
   {
@@ -160,25 +160,32 @@ const regions = [
     lonMax: 127.88052,
   },
   {
+    name: "전라남도",
+    latMin: 34.626394, // 수정: 남쪽 경계를 북쪽으로 조정하여 바다 제거
+    latMax: 35.482293,
+    lonMin: 126.701122, // 수정: 서쪽 경계를 동쪽으로 조정하여 바다 제거
+    lonMax: 127.706107, // 수정: 서쪽 경계를 동쪽으로 조정하여 바다 제거
+  },
+  {
+    name: "경상남도",
+    latMin: 35.018438, // 수정: 남쪽 경계를 북쪽으로 조정하여 바다 제거
+    latMax: 35.732788,
+    lonMin: 127.799743, // 수정: 동쪽 경계를 서쪽으로 조정하여 바다 제거
+    lonMax: 129.064406, // 수정: 동쪽 경계를 서쪽으로 조정하여 바다 제거
+  },
+  {
+    name: "제주도",
+    latMin: 33.304844, // 수정: 남쪽 경계를 북쪽으로 조정하여 바다 제거
+    latMax: 33.550282,
+    lonMin: 126.352924, // 수정: 서쪽 경계를 동쪽으로 조정하여 바다 제거
+    lonMax: 126.737836, // 수정: 서쪽 경계를 동쪽으로 조정하여 바다 제거
+  },
+  {
     name: "경상북도",
     latMin: 35.429565,
     latMax: 36.993076,
     lonMin: 128.456166,
-    lonMax: 130.904471,
-  },
-  {
-    name: "경상남도",
-    latMin: 34.542581,
-    latMax: 35.732788,
-    lonMin: 127.425166,
-    lonMax: 129.34143,
-  },
-  {
-    name: "제주도",
-    latMin: 33.11585,
-    latMax: 33.550282,
-    lonMin: 126.145264,
-    lonMax: 126.987125,
+    lonMax: 129.230582, // 수정: 동쪽 경계를 서쪽으로 조정하여 바다 제거
   },
 ];
 const KoreaCoordinate = [
@@ -224,3 +231,35 @@ const KoreaCoordinate = [
     lng: 124.972107,
   },
 ];
+
+export function decimalToDMS(latitude: number, longitude: number) {
+  // 소수점 좌표를 도, 분, 초 형식으로 변환하는 함수
+  function convert(coordinate: number) {
+    const degrees = Math.floor(coordinate);
+    const minutesFull = (coordinate - degrees) * 60;
+    const minutes = Math.floor(minutesFull);
+    const seconds = (minutesFull - minutes) * 60;
+    return {
+      degrees,
+      minutes,
+      seconds,
+    };
+  }
+
+  // 위도 변환
+  const lat = convert(Math.abs(latitude));
+  const latDirection = latitude >= 0 ? "N" : "S";
+
+  // 경도 변환
+  const lng = convert(Math.abs(longitude));
+  const lngDirection = longitude >= 0 ? "E" : "W";
+
+  // 변환된 결과 문자열 생성
+  const latDMS = `${lat.degrees}˚${lat.minutes}'${lat.seconds.toFixed(2)}"${latDirection}`;
+  const lngDMS = `${lng.degrees}˚${lng.minutes}'${lng.seconds.toFixed(2)}"${lngDirection}`;
+
+  return {
+    latDMS: latDMS,
+    lngDMS: lngDMS,
+  };
+}

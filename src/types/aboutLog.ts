@@ -17,14 +17,22 @@ export interface logTestDataType {
 }
 
 interface recommendsType {
-  address: string;
+  // address: string;
+  // id: number;
+  // location: string;
+  // latitude: number;
+  // longitude: number;
+  // sorts: string;
+  // storeName: string;
+  // phone: string;
   id: number;
-  location: string;
-  latitude: number;
-  longitude: number;
-  sorts: string;
-  storeName: string;
-  phone: string;
+  title: string;
+  addr: string;
+  dataType: number;
+  tel: string;
+  image: string;
+  mapX: number;
+  mapY: number;
 }
 
 export interface locationType {

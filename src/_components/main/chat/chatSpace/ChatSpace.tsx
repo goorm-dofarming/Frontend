@@ -3,22 +3,22 @@ import Image from 'next/image';
 import { Client, Stomp } from '@stomp/stompjs';
 
 // icon
-import logo from '@/src/_assets/icons/main_logo.png';
+import logo from "@/src/_assets/icons/main_logo.png";
 
 // styles
-import styles from './chatspace.module.scss';
+import styles from "./chatspace.module.scss";
 
 // atom
-import { useRecoilState } from 'recoil';
-import { selectedChatState } from '@/src/atom/stats';
+import { useRecoilState } from "recoil";
+import { selectedChatState } from "@/src/atom/stats";
 
 // components
-import ChatRoom from './ChatRoom';
-import Modal from '@/src/_components/Common/Modal';
-import LeaveChat from '../../modal/chat/LeaveChat';
+import ChatRoom from "./ChatRoom";
+import Modal from "@/src/_components/Common/Modal";
+import LeaveChat from "../../modal/chat/LeaveChat";
 
 // hooks
-import useToggle from '@/src/hooks/Home/useToggle';
+import useToggle from "@/src/hooks/Home/useToggle";
 
 // api
 import axios from 'axios';
@@ -49,21 +49,23 @@ const ChatSpace: React.FC<{
       // 선택된 채팅 초기화
       setSelectedChat({
         roomId: 0,
-        title: '',
-        regionName: '',
-        regionImageUrl: '',
+        title: "",
+        regionName: "",
+        regionImageUrl: "",
         tags: [],
         participantCount: 0,
-        createdAt: new Date(),
+        createAt: new Date(),
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error('Axios error:', error.response?.data);
+        console.error("Axios error:", error.response?.data);
       } else {
-        console.error('Unexpected error:', error);
+        console.error("Unexpected error:", error);
       }
     }
   };
+
+
 
   const sendMessage = () => {
     if (input === '') return;
@@ -95,7 +97,7 @@ const ChatSpace: React.FC<{
             alt="logo"
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
-            style={{ objectFit: 'contain' }}
+            style={{ objectFit: "contain" }}
           />
         </div>
       </div>
@@ -115,7 +117,7 @@ const ChatSpace: React.FC<{
                   alt={`Region ${selectedChat.regionName}`}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  style={{ objectFit: 'contain' }}
+                  style={{ objectFit: "contain" }}
                 />
               </div>
               <div className={styles.region}>{selectedChat.regionName}</div>

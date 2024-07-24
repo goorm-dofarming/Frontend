@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
 
 // styles
-import { LogContainer } from '@/src/_styles/main/logStyles';
+import { LogContainer } from "@/src/_styles/main/logStyles";
 
 // libraries
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import Map, { Marker } from 'react-map-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import Map, { Marker } from "react-map-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 // types
 import {
   locationType,
   logDataType,
   logTestDataType,
-} from '@/src/types/aboutLog';
+} from "@/src/types/aboutLog";
 
 // img
-import Profile from '@/src/_assets/main/userProfile.svg';
-import Card from '../Common/Card';
-import Pin from '@/src/_assets/main/map/pin_location.svg';
+import Profile from "@/src/_assets/main/userProfile.svg";
+import Card from "../Common/Card";
+import Pin from "@/src/_assets/main/map/pin_location.svg";
 
 // constants
-import { pinData } from '@/src/constatns/pinEamplet';
+import { pinData } from "@/src/constatns/pinEamplet";
 
 const Log = () => {
   const [location, setLocation] = useState<locationType>({
@@ -37,60 +37,76 @@ const Log = () => {
     {
       logId: 0,
       userId: 0,
-      theme: '',
-      address: '',
-      latitude: '',
-      longitude: '',
-      createAt: '',
+      theme: "",
+      address: "",
+      latitude: "",
+      longitude: "",
+      createAt: "",
       status: false,
     },
   ]);
   // 테스트 전체 로그 데이터
   const [testLogData, setTestLogData] = useState<logTestDataType[]>([
     {
-      address: '',
-      createAt: '',
+      address: "",
+      createAt: "",
       recommends: [
         {
-          address: '',
+          // address: "",
+          // id: 0,
+          // location: "",
+          // latitude: 0,
+          // longitude: 0,
+          // sorts: "",
+          // storeName: "",
+          // phone: "",
           id: 0,
-          location: '',
-          latitude: 0,
-          longitude: 0,
-          sorts: '',
-          storeName: '',
-          phone: '',
+          title: "",
+          addr: "",
+          dataType: 1,
+          tel: "",
+          image: "",
+          mapX: 0,
+          mapY: 0,
         },
       ],
-      theme: '',
+      theme: "",
     },
   ]);
 
   // test log data
   const [selectedLogData, setSelectedLogData] = useState<logTestDataType>({
-    address: '',
-    createAt: '',
+    address: "",
+    createAt: "",
     recommends: [
       {
-        address: '',
+        // address: "",
+        // id: 0,
+        // location: "",
+        // latitude: 0,
+        // longitude: 0,
+        // sorts: "",
+        // storeName: "",
+        // phone: "",
         id: 0,
-        location: '',
-        latitude: 0,
-        longitude: 0,
-        sorts: '',
-        storeName: '',
-        phone: '',
+        title: "",
+        addr: "",
+        dataType: 1,
+        tel: "",
+        image: "",
+        mapX: 0,
+        mapY: 0,
       },
     ],
-    theme: '',
+    theme: "",
   });
 
   const getLogs = useQuery({
-    queryKey: ['getLogs'],
+    queryKey: ["getLogs"],
     queryFn: async () => {
-      const response = await axios.get('/logs');
+      const response = await axios.get("/logs");
 
-      console.log('get logs', response);
+      console.log("get logs", response);
 
       if (response.status === 200) {
         setTestLogData(response.data);
@@ -104,8 +120,8 @@ const Log = () => {
       {selectedLogData.recommends.map((data, i) => (
         <Marker
           key={i}
-          latitude={data.latitude}
-          longitude={data.longitude}
+          latitude={data.mapY}
+          longitude={data.mapX}
           anchor="bottom"
           onClick={() => console.log(data)}
         >
@@ -116,7 +132,7 @@ const Log = () => {
   );
 
   useEffect(() => {
-    console.log('selected log data: ', selectedLogData);
+    console.log("selected log data: ", selectedLogData);
   }, [selectedLogData]);
 
   return (
@@ -128,7 +144,7 @@ const Log = () => {
         {testLogData.map((data, i) => (
           <div
             key={i}
-            style={{ marginBottom: '0.4rem' }}
+            style={{ marginBottom: "0.4rem" }}
             onClick={() => setSelectedLogData(data)}
           >
             <div className="log">
@@ -151,7 +167,7 @@ const Log = () => {
           }}
           style={{ width: 400, height: 400 }}
           mapStyle="mapbox://styles/mapbox/light-v9"
-          interactiveLayerIds={['data']}
+          interactiveLayerIds={["data"]}
         >
           <Pins />
         </Map>
@@ -167,12 +183,13 @@ const Log = () => {
             selectedLogData.recommends.map((recommend, i) => (
               <div key={i} className="Container">
                 <Card
-                  id={recommend.id}
-                  imgUrl={require('@/src/_assets/main/log/log_img.svg')}
-                  name={recommend.storeName}
-                  type={recommend.sorts}
-                  location={recommend.address}
-                  phone={recommend.phone}
+                  // id={recommend.id}
+                  // imgUrl={require('@/src/_assets/main/log/log_img.svg')}
+                  // name={recommend.storeName}
+                  // type={recommend.sorts}
+                  // location={recommend.address}
+                  // phone={recommend.phone}
+                  recommend={recommend}
                 />
               </div>
             ))}

@@ -1,28 +1,27 @@
-import { FaRegClock } from 'react-icons/fa';
-import { IoChatbubbleEllipsesSharp } from 'react-icons/io5';
-import { FaHeart } from 'react-icons/fa';
-import { IoMdSettings } from 'react-icons/io';
-import { FaMapMarkedAlt } from 'react-icons/fa';
+import { FaRegClock } from "react-icons/fa";
+import { IoChatbubbleEllipsesSharp, IoHeartSharp } from "react-icons/io5";
+import { IoMdSettings } from "react-icons/io";
+import { FaMapMarkedAlt } from "react-icons/fa";
 
 export const homeDropdown = [
   {
-    id: 'map',
+    id: "map",
     img: FaMapMarkedAlt,
   },
   {
-    id: 'logs',
+    id: "logs",
     img: FaRegClock,
   },
   {
-    id: 'chat',
+    id: "chat",
     img: IoChatbubbleEllipsesSharp,
   },
   {
-    id: 'hearts',
-    img: FaHeart,
+    id: "hearts",
+    img: IoHeartSharp,
   },
   {
-    id: 'settings',
+    id: "settings",
     img: IoMdSettings,
   },
 ];

@@ -1,51 +1,67 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import Image from 'next/image';
-import { IoHeartSharp } from 'react-icons/io5'; //꽉찬하트
-import { IoHeartOutline } from 'react-icons/io5'; //빈하트
+import React, { SetStateAction, Dispatch, useState } from "react";
+import styled from "styled-components";
+import Image from "next/image";
+import { IoHeartSharp } from "react-icons/io5"; //꽉찬하트
+import { IoHeartOutline } from "react-icons/io5"; //빈하트
+import { Recommend, DataType } from "@/src/types/aboutMap";
+import main_logo from "@/src/_assets/icons/main_logo.png";
 
-type Card = {
-  id: number;
-  imgUrl: string;
-  name: string;
-  type: string;
-  location: string;
-  phone: string;
-};
 const Container = styled.div`
-  padding: 4px;
+  padding: 8px 4px;
   width: 300px;
-  height: 260px;
+  height: 300px;
   background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
   border-radius: 8px;
   filter: drop-shadow(0 20px 13px rgb(0 0 0 / 0.03))
     drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
-  margin-bottom: 0.6rem;
+  cursor: pointer;
 `;
 const LocationImage = styled.div`
-  width: 92%;
+  width: 96%;
   height: 160px;
   > img {
-    object-fit: cover;
+    object-fit: fill;
+    width: 100%;
+    height: 100%;
+  }
+  .logo {
+    object-fit: contain;
     width: 100%;
     height: 100%;
   }
 `;
 
 const Description = styled.div`
-  width: 92%;
+  width: 96%;
   border-top: 1px solid #cacaca;
+  padding: 4px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  font-size: 12px;
+  font-size: 14px;
   gap: 4px;
+  .type {
+    font-weight: 500;
+  }
+  .address {
+    width: 100%;
+    white-space: nowrap;
+    overflow-y: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    /* transition: all 3s ease-in-out; */
+    &:hover {
+      text-overflow: initial;
+      white-space: nowrap;
+      overflow: visible;
+    }
+  }
   .phone {
     font-weight: 200;
   }
@@ -72,21 +88,38 @@ const Title = styled.div`
     }
   }
 `;
-const Card = ({ id, imgUrl, name, type, location, phone }: Card) => {
+const Card = ({
+  recommend,
+  onClick,
+}: {
+  recommend: Recommend;
+  onClick?: (recommend: Recommend) => void;
+}) => {
   // TODO: heart animation
+  const { id, image, title, dataType, addr, tel } = recommend;
   const [hover, setHover] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const onClickLike = () => {
     setIsLiked(!isLiked);
   };
   return (
-    <Container>
+    <Container onClick={() => onClick && onClick(recommend)}>
       <LocationImage>
-        <Image width={280} height={240} src={imgUrl} alt={name} />
+        {image ? (
+          <Image width={280} height={240} src={image} alt={title} />
+        ) : (
+          <Image
+            width={280}
+            height={240}
+            className="logo"
+            src={main_logo}
+            alt={title}
+          />
+        )}
       </LocationImage>
       <Description>
         <Title>
-          <span>{name}</span>
+          <span>{title}</span>
           <span className="likes">
             {/* <IoHeartSharp fill={"#FE0B62"} fontSize={26} /> */}
             <IoHeartOutline
@@ -111,9 +144,9 @@ const Card = ({ id, imgUrl, name, type, location, phone }: Card) => {
             <div className="likesNumber">14K</div>
           </span>
         </Title>
-        <div>{type}</div>
-        <div>{location}</div>
-        <div className="phone">{phone}</div>
+        <div className="type">{DataType[dataType].type}</div>
+        <div className="address">{addr}</div>
+        <div className="phone">{`☎️: ${tel || "준비중"} `}</div>
       </Description>
     </Container>
   );
