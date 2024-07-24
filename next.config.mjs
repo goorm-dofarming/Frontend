@@ -6,6 +6,7 @@ const nextConfig = {
   images: {
     domains: ['tong.visitkorea.or.kr'],
   },
+  assetPrefix: '.',
 };
 
 export default nextConfig;
