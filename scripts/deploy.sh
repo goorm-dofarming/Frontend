@@ -19,4 +19,4 @@ fi
 sudo pnpm install
 
 # Start or restart the application
-sudo pm2 start npm --name "dofarming" -- start -- -p 4000
+sudo pm2 start npm --name "Frontend" -- start -- -p 4000
