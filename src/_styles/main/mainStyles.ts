@@ -59,6 +59,8 @@ export const HomeContainer = styled.div<{
     visibility: ${({ modal }) => (modal === "true" ? "visible" : "hidden")};
   }
   .mainSection {
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;

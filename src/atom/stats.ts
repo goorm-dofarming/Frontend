@@ -18,7 +18,6 @@ export const selectedChatState = atom<Chat>({
   },
 });
 
-
 export const randomPinState = atom<RandomPinType>({
   key: "randomPinState",
   default: {
@@ -32,8 +31,12 @@ export const randomPinState = atom<RandomPinType>({
   },
 });
 
-
 export const searchState = atom<boolean>({
   key: "searchState",
   default: false,
+});
+
+export const pageState = atom<string>({
+  key: "pageState",
+  default: "home",
 });

@@ -2,7 +2,7 @@ import Card from "@/src/_components/Common/Card";
 import styles from "./map.module.scss";
 // import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
-import { randomPinState } from "@/src/atom/stats";
+import { pageState, randomPinState } from "@/src/atom/stats";
 import { useRecoilState } from "recoil";
 import { DataType, Recommend } from "@/src/types/aboutMap";
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=cf2b17f421b6bb8091a506fb2e0a675c&autoload=false&libraries=services`;
@@ -10,6 +10,7 @@ const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=cf2b17f421b6bb8091
 
 const Map = () => {
   // const { markerPositions, size } = props;
+  const [page, setPage] = useRecoilState(pageState);
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   const [kakaoMap, setKakaoMap] = useState<kakao.maps.Map | null>(null);
   const [focusPin, setFocusPin] = useState<Recommend | null>(null);
@@ -100,7 +101,7 @@ const Map = () => {
         }
       });
     };
-  }, [randomPin.lng, randomPin.lat, randomPin.recommends]);
+  }, [randomPin.lng, randomPin.lat, randomPin.recommends, page]);
 
   useEffect(() => {
     if (kakaoMap === null) {

@@ -30,8 +30,6 @@ const Main = ({ pin }: { pin: string }) => {
   const [modal, setModal] = useState<boolean>(false);
   // 로그인 회원가입 페이지 컨트롤
   const [pageState, setPageState] = useState(false);
-  // dropdown 클릭 컨트롤
-  const [dropdown, setDropdown] = useState<boolean>(false);
   // 비밀번호 show
   const [pwdShow, setPwdShow] = useState<boolean>(false);
   // input data
