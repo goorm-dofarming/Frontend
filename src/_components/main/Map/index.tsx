@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { pageState, randomPinState } from "@/src/atom/stats";
 import { useRecoilState } from "recoil";
 import { DataType, Recommend } from "@/src/types/aboutMap";
-const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=cf2b17f421b6bb8091a506fb2e0a675c&autoload=false&libraries=services`;
-// const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services`;
+// const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=cf2b17f421b6bb8091a506fb2e0a675c&autoload=false&libraries=services`;
+const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services`;
 
 const Map = () => {
   // const { markerPositions, size } = props;
@@ -14,7 +14,7 @@ const Map = () => {
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   const [kakaoMap, setKakaoMap] = useState<kakao.maps.Map | null>(null);
   const [focusPin, setFocusPin] = useState<Recommend | null>(null);
-  const container = useRef<HTMLDivElement>(null);
+  const container = useRef<HTMLElement>(null);
   useEffect(() => {
     const script = document.createElement("script");
     script.src = KAKAO_SDK_URL;
@@ -32,7 +32,7 @@ const Map = () => {
         };
         const map = new window.kakao.maps.Map(container.current, options);
         // setMapCenter(center);
-        setKakaoMap(map);
+
         const geocoder = new window.kakao.maps.services.Geocoder();
         geocoder.coord2RegionCode(
           center.getLng(),
@@ -57,7 +57,7 @@ const Map = () => {
         const imageSrc = "http://54.180.126.49/images/pin/pin_location.png";
         const imageSize = new window.kakao.maps.Size(60, 80); // 마커이미지의 크기입니다
         const imageOption = {
-          offset: new window.kakao.maps.Point(27, 69),
+          offset: new window.kakao.maps.Point(20, 20),
         }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
         const markerImage = new window.kakao.maps.MarkerImage(
@@ -73,9 +73,12 @@ const Map = () => {
         });
 
         // infowindow.open(map, marker);
-        for (let i = 0; i < randomPin.recommends.length; i++) {
+        // randomPin.recommends.length
+        const length =
+          randomPin.recommends.length < 8 ? randomPin.recommends.length : 8;
+        for (let i = 0; i < length; i++) {
           const curr = randomPin.recommends[i];
-          const pinSize = new window.kakao.maps.Size(48, 60); // 마커이미지의
+          const pinSize = new window.kakao.maps.Size(48, 60);
           const pinImg = DataType[curr.dataType].img;
           const newMarkerImg = new kakao.maps.MarkerImage(pinImg, pinSize);
           const latlng = new kakao.maps.LatLng(curr.mapY, curr.mapX);
@@ -99,23 +102,17 @@ const Map = () => {
             infowindow.close();
           });
         }
+        setKakaoMap(map);
       });
     };
-  }, [randomPin.lng, randomPin.lat, randomPin.recommends, page]);
+  }, [randomPin.lng, randomPin.lat, randomPin.recommends]);
 
   useEffect(() => {
     if (kakaoMap === null) {
       return;
     }
-
     // save center position
     const center = kakaoMap.getCenter();
-
-    // change viewport size
-    // const [width, height] = size;
-    // container.current.style.width = `100%`;
-    // container.current.style.height = `100%`;
-
     // relayout and...
     kakaoMap.relayout();
     // restore
@@ -123,6 +120,17 @@ const Map = () => {
   }, [kakaoMap]);
   useEffect(() => {
     if (kakaoMap === null) {
+      return;
+    }
+    // save center position
+    const center = kakaoMap.getCenter();
+    // relayout and...
+    kakaoMap.relayout();
+    // restore
+    kakaoMap.setCenter(center);
+  }, [page]);
+  useEffect(() => {
+    if (kakaoMap === null || container.current === null) {
       return;
     }
     let center;
@@ -145,7 +153,7 @@ const Map = () => {
       <div className={styles.locations}>
         {randomPin.recommends.map((recommend, index) => (
           <Card
-            key={recommend.id}
+            key={recommend.id + index}
             recommend={recommend}
             onClick={setFocusPin}
           />

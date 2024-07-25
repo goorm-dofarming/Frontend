@@ -1,8 +1,7 @@
-"use client";
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, { MouseEventHandler, useState } from "react";
 import Image from "next/image";
 import styles from "./randomPin.module.scss";
-import Slider, { Settings } from "react-slick";
+import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
@@ -16,6 +15,9 @@ import { themes, Theme } from "@/src/types/aboutMap";
 import { useRecoilState } from "recoil";
 import { randomPinState } from "@/src/atom/stats";
 import { RandomPinType } from "@/src/types/aboutMap";
+import { useCookies } from "react-cookie";
+import cx from "classnames";
+
 const RandomPin = ({
   setFold,
   setPage,
@@ -25,7 +27,20 @@ const RandomPin = ({
   setPage: React.Dispatch<React.SetStateAction<string>>;
   setPin: React.Dispatch<React.SetStateAction<string>>;
 }) => {
+  const [cookies] = useCookies(["token"]);
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
+  const [showMsg, setShowMsg] = useState(false);
+
+  const onClickBtn: MouseEventHandler<HTMLElement> = (e) => {
+    e.stopPropagation();
+    setShowMsg(true);
+    console.log("slider Btn");
+    console.log("showMsg:", showMsg);
+    setTimeout(() => {
+      setShowMsg(false);
+    }, 4000);
+  };
+
   const getResponse = async (theme: Theme) => {
     try {
       let response: any;
@@ -64,15 +79,15 @@ const RandomPin = ({
           recommends: [...recommendList],
         }));
       }
-
-      // console.log(response.data);
     } catch (e: any) {
       console.log(e.message);
     }
   };
-  const onClick = (theme: Theme) => {
-    //랜덤핀 클릭시 api
 
+  const onClick = (e: React.MouseEvent<HTMLElement>, theme: Theme) => {
+    e.stopPropagation();
+    console.log("핀");
+    console.log("showMsg:", showMsg);
     setPin("pin_show");
     setPage("map");
     setTimeout(() => {
@@ -87,26 +102,38 @@ const RandomPin = ({
   const NextArrow = (props: any) => {
     const { className, style, onClick } = props;
     return (
-      <BsFillCaretRightFill
-        className={className}
-        style={{ ...style, width: "40px", height: "40px" }}
-        fontSize={"40px"}
-        fill="white"
-        onClick={onClick}
-      />
+      <>
+        <BsFillCaretRightFill
+          className={className}
+          style={{ ...style, width: "40px", height: "40px", zIndex: "1" }}
+          fontSize={"40px"}
+          fill="white"
+          onClick={cookies.token ? onClick : onClickBtn}
+        />
+        {!cookies.token && (
+          <span className={cx(styles.msg, { [styles.showMsg]: showMsg })}>
+            {`로그인하여 더 많은 \n테마를 이용해 보세요~!`}
+          </span>
+        )}
+      </>
     );
   };
+
   const PrevArrow = (props: any) => {
     const { className, style, onClick } = props;
     return (
-      <BsFillCaretLeftFill
-        className={className}
-        style={{ ...style, width: "40px", height: "40px" }}
-        fill="white"
-        onClick={onClick}
-      />
+      <>
+        <BsFillCaretLeftFill
+          className={className}
+          style={{ ...style, width: "40px", height: "40px" }}
+          fontSize={"40px"}
+          fill="white"
+          onClick={cookies.token ? onClick : onClickBtn}
+        />
+      </>
     );
   };
+
   const settings = {
     dots: false,
     infinite: true,
@@ -124,11 +151,11 @@ const RandomPin = ({
           <button key={theme.id} className={styles.pin}>
             <span>{theme.title}</span>
             <Image
-              onClick={() => onClick(theme)}
               src={theme.img}
               alt={theme.id}
               width={148}
               height={214}
+              onClick={(e) => onClick(e, theme)}
             />
           </button>
         ))}

@@ -30,23 +30,44 @@
     }
     animation: pin 1s ease-in-out infinite;
     cursor: pointer;
-    // &:hover {
-    //   animation: pinMove 1s ease-in-out infinite;
-    //   cursor: pointer;
-    // }
+  }
+}
 
-    &:focus {
-      > img {
-        // position: absolute;
-        // z-index: 1000;
-        // transform: translateX(-50%) translateY(-100%) rotate(45deg);
-        // animation: throwDart 1s ease-out forwards;
-        // animation: pinMove 3s ease-in;
-        // animation: rotate 0.5s ease-in-out infinite;
-      }
+.msg {
+  width: 180px;
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: 70%;
+  padding: 4px;
+  white-space: pre-line;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+}
+.showMsg {
+  animation: fadein ease-in-out 3s;
+  @keyframes fadein {
+    0% {
+      opacity: 0;
+    }
+    30% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 1;
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
     }
   }
 }
+// button {
+//   margin: 60px;
+// }
+
 @keyframes pin {
   0% {
     transform: translateY(-12px);

@@ -27,12 +27,12 @@ const LocationImage = styled.div`
   > img {
     object-fit: fill;
     width: 100%;
-    height: 100%;
+    height: 160px;
   }
   .logo {
     object-fit: contain;
     width: 100%;
-    height: 100%;
+    height: 160px;
   }
 `;
 
