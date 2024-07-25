@@ -59,8 +59,8 @@ const Page = () => {
 
       const signupKakao = await signupSocialLogin(signupKakaoBody);
 
-      console.log('signupKakao: ', signupKakao);
       setCookies('token', signupKakao.data, { path: '/' });
+      console.log('signupKakao: ', signupKakao);
 
       if (signupKakao.status === 200) {
         setTimeout(() => {

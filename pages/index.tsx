@@ -41,21 +41,28 @@ const Home = () => {
     console.log('page', page);
   }, [page]);
 
-  const { data: userInfo } = useQuery({
+  const { data: userInfo, refetch: refetchUser } = useQuery({
     queryKey: ['me'],
     queryFn: getMe,
-    enabled: cookies.token !== null,
+    enabled: false,
   });
 
   useEffect(() => {
     if (userInfo) {
       setUser(userInfo);
+      console.log('set user', userInfo);
     }
-  }, [userInfo]);
+  }, [userInfo, refetchUser]);
+
+  useEffect(() => {
+    if (cookies.token) {
+      refetchUser();
+    }
+  }, [cookies]);
 
   // SSE 연결
   useEffect(() => {
-    if (user === undefined) return;
+    if (user === undefined || user.email === '') return;
     console.log('user: ', user);
     const EventSource = EventSourcePolyfill || NativeEventSource;
     const userId = user.userId;
@@ -71,15 +78,17 @@ const Home = () => {
       }
     );
 
-    if (!alarm) {
-      eventSource.onmessage = (event) => {
-        const { data: receivedData } = event;
-        if (receivedData === 'alarm') {
-          setAlarm(true);
-          console.log('alarm on', page);
-        }
-      };
-    }
+    // if (!alarm) {
+    eventSource.onmessage = (event) => {
+      const { data: receivedData } = event;
+      console.log('ReceivedData: ', receivedData);
+      console.log('event: ', event);
+      if (receivedData === 'alarm') {
+        setAlarm(true);
+        console.log('alarm on', page);
+      }
+    };
+    // }
 
     return () => {
       eventSource.close();
@@ -96,7 +105,13 @@ const Home = () => {
   return (
     <main className={styles.main}>
       <div id="modal-container"></div>
-      {cookies.token && <ProfileDropdown setFold={setFold} setPage={setPage} />}
+      {cookies.token && (
+        <ProfileDropdown
+          setFold={setFold}
+          setPage={setPage}
+          refetchUser={refetchUser}
+        />
+      )}
       <section className={fold ? styles.navBar : styles.pinSection}>
         {fold ? (
           <NavBar className={styles.navbar} setInitial={setFold} />

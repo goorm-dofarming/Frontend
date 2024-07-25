@@ -9,8 +9,8 @@ export const getMe = async (): Promise<User> => {
 
 //NOTE:body { "multipartFile": "string","userModifyRequest": {"nickname": "usernickname",    "password": "userpassword"}}
 
-export const modifyUser = (body: {}) => {
-  return apiClient.put(`/users`, body);
+export const modifyUser = async (body: {}) => {
+  return await apiClient.put(`/users`, body);
 };
 
 export const getUser = (userId: number) => {
