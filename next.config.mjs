@@ -4,7 +4,12 @@ const nextConfig = {
     styledComponents: true,
   },
   images: {
-    domains: ['tong.visitkorea.or.kr'],
+    domains: [
+      'tong.visitkorea.or.kr',
+      'k.kakaocdn.net',
+      'lh3.googleusercontent.com',
+      `${process.env.NEXT_PUBLIC_DEPLOY}`,
+    ],
   },
 };
 

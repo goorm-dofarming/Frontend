@@ -18,13 +18,13 @@ import SockJS from 'sockjs-client';
 import { Client, Stomp } from '@stomp/stompjs';
 
 // atoms
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { selectedChatState, userState } from '@/src/atom/stats';
 
 const Chat = () => {
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
   const stompClientRef = useRef<Client | null>(null);
-  const [user] = useRecoilState(userState);
+  const user = useRecoilValue(userState);
 
   const myChatQuery = useQuery({
     queryKey: ['myChats'],
@@ -40,6 +40,10 @@ const Chat = () => {
     myChatQuery.refetch();
     entireChatQuery.refetch();
   };
+
+  useEffect(() => {
+    refetchChatList();
+  }, [user]);
 
   const {
     data: messages = [],

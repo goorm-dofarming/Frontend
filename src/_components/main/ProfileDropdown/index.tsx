@@ -1,20 +1,54 @@
-import { homeDropdown } from '@/src/constatns/icons';
 import Image from 'next/image';
-import Profile from '@/src/_assets/main/userProfile.svg';
 import { useState } from 'react';
+import axios from 'axios';
+
+// hooks
 import useToggle from '@/src/hooks/Home/useToggle';
-import { colorTheme } from '@/src/_styles/common/commonColorStyles';
+
+// icons
+import { homeDropdown } from '@/src/constatns/icons';
+import Profile from '@/src/_assets/main/userProfile.svg';
+
+// style
 import styled, { css } from 'styled-components';
+import { colorTheme } from '@/src/_styles/common/commonColorStyles';
 import { hideHomeIcons, showHomeIcons } from '@/src/_styles/keyframes';
-import { useRecoilState } from 'recoil';
-import { alarmState } from '@/src/atom/stats';
+
+// atoms
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { alarmState, userState, pageState } from '@/src/atom/stats';
+
+// components
+import Modal from '../../Common/Modal';
+import EditUser from '../modal/EditUser';
+
+// api
+import { modifyUser } from '@/pages/api/user';
+
 const IconContainer = styled.div<{
   dropdown: string;
 }>`
-  z-index: 500;
+  z-index: 10;
   position: absolute;
   top: 2%;
-  right: 0;
+  right: 2%;
+
+  .userProfile {
+    width: 3rem;
+    height: 3rem;
+    position: relative;
+  }
+
+  .profile {
+    border-radius: 50%;
+    border: 2px solid ${colorTheme.secondary};
+  }
+
+  .icons {
+    cursor: pointer;
+    position: relative;
+  }
+
   .iconCol {
     height: 30vh;
     display: flex;
@@ -41,9 +75,6 @@ const IconContainer = styled.div<{
       border-radius: 20%;
     }
   }
-  .icons {
-    cursor: pointer;
-  }
 
   .alarm {
     width: 10px;
@@ -58,19 +89,76 @@ const IconContainer = styled.div<{
 const ProfileDropdown = ({
   setFold,
   setPage,
+  refetchUser,
 }: {
   setFold: React.Dispatch<React.SetStateAction<boolean>>;
   setPage: React.Dispatch<React.SetStateAction<string>>;
+  refetchUser: () => void;
 }) => {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const showDropdown = useToggle(dropdown, setDropdown);
   const [alarm, setAlarm] = useRecoilState(alarmState);
+  const user = useRecoilValue(userState);
+  const page = useRecoilValue(pageState);
+
+  // 프로필 수정 모달
+  const [modal, setModal] = useState<boolean>(false);
+  const openModal = useToggle(modal, setModal);
+
   const onClick = (id: string) => {
-    setPage(id);
-    setTimeout(() => {
-      setFold(true);
-    }, 500);
+    if (id === 'settings') {
+      openModal();
+    } else {
+      setPage(id);
+      setTimeout(() => {
+        showDropdown();
+        setFold(true);
+      }, 500);
+    }
   };
+
+  const getImageUrl = (url: string) => {
+    if (url && !url.startsWith('http') && !url.startsWith('https')) {
+      return `${process.env.NEXT_PUBLIC_DEPLOY_PROFILE_IMAGE_ADDRESS}/${url}`;
+    }
+    return url;
+  };
+
+  // 화원 정보 수정
+  const handleUpdateUser = async (
+    image: File | null,
+    changeImg: boolean,
+    nickname: string,
+    password: string
+  ) => {
+    const formData = new FormData();
+    if (image) {
+      formData.append('multipartFile', image);
+    } else if (changeImg) {
+      const emptyFile = new File([''], '', { type: 'text/plain' });
+      formData.append('multipartFile', emptyFile);
+    }
+
+    const userModifyRequest: { nickname: string; password?: string } = {
+      nickname: nickname,
+    };
+    if (password !== '') {
+      userModifyRequest.password = password;
+    }
+    formData.append('userModifyRequest', JSON.stringify(userModifyRequest));
+
+    try {
+      await modifyUser(formData);
+      refetchUser();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error:', error);
+      } else {
+        console.error('Unexpected error:', error);
+      }
+    }
+  };
+
   return (
     <IconContainer
       dropdown={dropdown.toString()}
@@ -80,14 +168,17 @@ const ProfileDropdown = ({
         alignItems: 'center',
       }}
     >
-      <Image
-        src={Profile}
-        alt="유저 프로필"
-        width={35}
-        height={35}
-        onClick={showDropdown}
-        className="icons"
-      />
+      <div className="userProfile">
+        <Image
+          src={user.imageUrl ? getImageUrl(user.imageUrl) : Profile}
+          alt="유저 프로필"
+          onClick={page === 'home' ? showDropdown : openModal}
+          className="icons profile"
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
+          style={{ objectFit: 'cover' }}
+        />
+      </div>
       <div className="iconCol">
         {homeDropdown.map((item, i) => {
           const IconComponent = item.img;
@@ -104,6 +195,13 @@ const ProfileDropdown = ({
           );
         })}
       </div>
+      <Modal openModal={openModal} modal={modal} width="35rem" height="40rem">
+        <EditUser
+          openModal={openModal}
+          onEditUser={handleUpdateUser}
+          getImageUrl={getImageUrl}
+        />
+      </Modal>
     </IconContainer>
   );
 };

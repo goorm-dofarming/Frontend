@@ -1,0 +1,150 @@
+@use '@/src/_styles/constants/color' as c;
+@use '@/src/_styles/mixins/' as m;
+
+.container {
+  @include m.flex(space-around, center, column);
+  width: 100%;
+  height: 90%;
+
+  .header {
+    width: 95%;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: c.$C_SECONDARY;
+    padding: 0 1.5rem 1.5rem;
+    margin: 0 0.2rem 1rem;
+    border-bottom: 2px solid c.$C_SECONDARY;
+  }
+
+  .editImage {
+    @include m.flex(center, center, column);
+
+    .fake {
+      display: none;
+    }
+
+    .imageContainer {
+      width: 8rem;
+      height: 8rem;
+      border: 2px solid c.$C_SECONDARY;
+      border-radius: 50%;
+      overflow: hidden;
+      position: relative;
+
+      .image {
+        object-fit: cover;
+      }
+
+      .noImage {
+        width: 100%;
+        height: 100%;
+        background-color: c.$C_BORDER_GRAY;
+      }
+    }
+
+    .labelContainer {
+      @include m.flex(center, center, row);
+      .imageBtn {
+        cursor: pointer;
+        width: 8rem;
+        padding: 0.2rem 0;
+        margin: 1rem;
+        font-size: 0.9rem;
+        color: c.$C_SECONDARY;
+        border: 2px solid c.$C_SECONDARY;
+        border-radius: 5px;
+        text-align: center;
+      }
+    }
+    .imageBtn {
+      cursor: pointer;
+      width: 8rem;
+      padding: 0.2rem 0;
+      margin: 1rem;
+      font-size: 0.9rem;
+      color: c.$C_SECONDARY;
+      border: 2px solid c.$C_SECONDARY;
+      border-radius: 5px;
+      text-align: center;
+    }
+  }
+
+  .editArea {
+    @include m.flex(center, center, row);
+    width: 80%;
+    height: 4rem;
+    padding: 0.8rem 0;
+
+    .text {
+      width: 30%;
+      font-size: 0.9rem;
+      text-align: center;
+      color: c.$C_SECONDARY;
+    }
+
+    .textInput {
+      width: 70%;
+      height: 100%;
+      padding: 0.4rem;
+      border: 1px solid c.$C_BORDER_INPUT;
+      border-radius: 10px;
+      @include m.flex(space-between, center, row);
+
+      &.focused,
+      &:focus {
+        outline: none;
+        border: 1px solid c.$C_SECONDARY;
+      }
+
+      .input {
+        flex: 1;
+        height: 100%;
+        border: none;
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+
+  .show,
+  .hide {
+    @include m.flex(center, center, column);
+    width: 100%;
+  }
+
+  .show {
+    opacity: 1;
+  }
+
+  .hide {
+    opacity: 0.5;
+  }
+
+  .warningMsg {
+    visibility: hidden;
+    opacity: 0;
+    width: 80%;
+    text-align: end;
+    font-size: 0.8rem;
+    color: c.$C_PRIMARY;
+    font-weight: 900;
+    transition: opacity 0.5s ease-in-out;
+
+    &.visible {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  .yesBtn {
+    cursor: pointer;
+    width: 7rem;
+    padding: 0.5rem;
+    margin-top: 2rem;
+    color: c.$C_WHITE;
+    background-color: c.$C_SECONDARY;
+    border: none;
+    border-radius: 5px;
+  }
+}
