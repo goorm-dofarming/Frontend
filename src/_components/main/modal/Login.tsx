@@ -84,7 +84,7 @@ const Login = ({
   const gLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       console.log('토큰 발급 성공: ', tokenResponse);
-      setCookies('token', tokenResponse.access_token, { path: '/' });
+
       setGToken(tokenResponse.access_token);
     },
     onError: (errorResponse) => console.log('Error: ', errorResponse),
@@ -105,6 +105,7 @@ const Login = ({
       };
 
       const signupGoogle = await signupSocialLogin(body);
+      setCookies('token', signupGoogle.data, { path: '/' });
       console.log('signupGoogle: ', signupGoogle);
 
       if (signupGoogle.status === 200) {
