@@ -10,7 +10,9 @@ const nextConfig = {
       'lh3.googleusercontent.com',
       `${process.env.NEXT_PUBLIC_DEPLOY}`,
     ],
+    unoptimized: true,
   },
+  output: 'export',
 };
 
 export default nextConfig;
