@@ -1,28 +1,36 @@
 import apiClient from "../apiClient";
 import basicClient from "../basicClient";
 import testClient from "../testClient";
-
+import { Cookies } from "react-cookie";
+const cookies = new Cookies();
+export const downloadTour = () => {
+  return basicClient.get(`/apiCall/download/TourAttraction`);
+};
 export const getRandomRecommends = (
   mapX: number,
   mapY: number
   // themes: number[]
 ) => {
-  return testClient.get(`/recommend/withoutTheme?mapX=${mapX}&mapY=${mapY}`);
+  if (cookies.get("token")) {
+    return apiClient.get(`/recommend/random?mapX=${mapX}&mapY=${mapY}`);
+  } else {
+    return basicClient.get(`/recommend/random?mapX=${mapX}&mapY=${mapY}`);
+  }
 };
 export const getThemeRecommends = (
   mapX: number,
   mapY: number,
-  themes: number[] | null
+  themeId: number | null
 ) => {
-  return testClient.get(
-    `/recommend/withoutOcean?themes=${themes?.join(",")}&mapX=${mapX}&mapY=${mapY}`
+  return apiClient.get(
+    `/recommend/theme?theme=${themeId}&mapX=${mapX}&mapY=${mapY}`
   );
 };
-export const getOceanRecommends = (themes: number[] | null) => {
-  return testClient.get(`/recommend/withOcean?themes=${themes?.join(",")}`);
+export const getOceanRecommends = () => {
+  return apiClient.get(`/recommend/ocean`);
 };
 //MEMO: body { mapX, mapY, contentTypeIds}
 
-// export const getMountain = (body: {}) => {
-//   return apiClient.get(`/apiCall/mountains`, body);
-// };
+export const getMountainRecommends = () => {
+  return apiClient.get(`/recommend/mountain`);
+};

@@ -1,12 +1,4 @@
 export const getRandomCoord = () => {
-  //   //한국의 위도 범위
-  //   const latMin = 33.0;
-  //   const latMax = 38.6;
-
-  //   //한국의 경도 범위
-  //   const lonMin = 124.6;
-  //   const lonMax = 131.9;
-
   // 임의의 지역 선택
   const region = regions[Math.floor(Math.random() * regions.length)];
   let latitude, longitude;
