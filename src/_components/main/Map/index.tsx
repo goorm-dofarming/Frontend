@@ -20,57 +20,37 @@ const Map = () => {
   const [kakaoMap, setKakaoMap] = useState<kakao.maps.Map | null>(null);
   const [focusPin, setFocusPin] = useState<Recommend | null>(null);
   const container = useRef<HTMLElement>(null);
-
-  const CustomOverlay = styled.div`
-    width: 200px;
-    height: 200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: ${colorTheme.customOverlay};
-    color: white;
-    .top {
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      > img {
-        width: 50%;
-        object-fit: fill;
-      }
-    }
-  `;
-  const mapCustomOverlay = () => {
-    return (
-      <div className={styles.customOverlay}>
-        <div className={styles.top}>
-          <img
-            src={randomPin.recommends[0].image}
-            alt={randomPin.recommends[0].title}
-          />
-          <img
-            src={randomPin.recommends[1].image}
-            alt={randomPin.recommends[1].title}
-          />
-          <img
-            src={randomPin.recommends[2].image}
-            alt={randomPin.recommends[2].title}
-          />
-          <img
-            src={randomPin.recommends[3].image}
-            alt={randomPin.recommends[3].title}
-          />
-        </div>
-        <div className="bottom">
-          <div className="description">
-            <p>{randomPin?.address}</p>
-            <p>{randomPin?.theme?.id}</p>
-          </div>
-          <div className="buttons"></div>
-        </div>
-      </div>
-    );
-  };
+  // const mapCustomOverlay = () => {
+  //   return (
+  //     <div className={styles.customOverlay}>
+  //       <div className={styles.top}>
+  //         <img
+  //           src={randomPin.recommends[0].image}
+  //           alt={randomPin.recommends[0].title}
+  //         />
+  //         <img
+  //           src={randomPin.recommends[1].image}
+  //           alt={randomPin.recommends[1].title}
+  //         />
+  //         <img
+  //           src={randomPin.recommends[2].image}
+  //           alt={randomPin.recommends[2].title}
+  //         />
+  //         <img
+  //           src={randomPin.recommends[3].image}
+  //           alt={randomPin.recommends[3].title}
+  //         />
+  //       </div>
+  //       <div className="bottom">
+  //         <div className="description">
+  //           <p>{randomPin?.address}</p>
+  //           <p>{randomPin?.theme?.id}</p>
+  //         </div>
+  //         <div className="buttons"></div>
+  //       </div>
+  //     </div>
+  //   );
+  // };
   useEffect(() => {
     const script = document.createElement("script");
     script.src = KAKAO_SDK_URL;
