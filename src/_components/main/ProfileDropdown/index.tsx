@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 // hooks
@@ -123,6 +123,12 @@ const ProfileDropdown = ({
     }
     return url;
   };
+
+  useEffect(() => {
+    if (page !== 'home') {
+      setDropdown(false);
+    }
+  }, [page]);
 
   // 화원 정보 수정
   const handleUpdateUser = async (
