@@ -1,17 +1,12 @@
-import Card from "@/src/_components/Common/Card";
-import styles from "./map.module.scss";
+import Card from '@/src/_components/Common/Card';
+import styles from './map.module.scss';
 // import Script from "next/script";
-import { useEffect, useRef, useState } from "react";
-import { pageState, randomPinState } from "@/src/atom/stats";
-import { useRecoilState } from "recoil";
-import { DataType, Recommend } from "@/src/types/aboutMap";
-import styled from "styled-components";
-import { colorTheme } from "@/src/_styles/common/commonColorStyles";
-import Image from "next/image";
-import main_logo from "@/src/_assets/icons/main_logo.png";
-
-// const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=cf2b17f421b6bb8091a506fb2e0a675c&autoload=false&libraries=services`;
-const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services`;
+import { useEffect, useRef, useState } from 'react';
+import { pageState, randomPinState } from '@/src/atom/stats';
+import { useRecoilState } from 'recoil';
+import { DataType, Recommend } from '@/src/types/aboutMap';
+const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=cf2b17f421b6bb8091a506fb2e0a675c&autoload=false&libraries=services`;
+// const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services`;
 
 const Map = () => {
   // const { markerPositions, size } = props;
@@ -52,7 +47,7 @@ const Map = () => {
   //   );
   // };
   useEffect(() => {
-    const script = document.createElement("script");
+    const script = document.createElement('script');
     script.src = KAKAO_SDK_URL;
     document.head.appendChild(script);
 
@@ -77,7 +72,7 @@ const Map = () => {
             if (status === kakao.maps.services.Status.OK) {
               for (let i = 0; i < result.length; i++) {
                 // 행정동의 region_type 값은 'H' 이므로
-                if (result[i].region_type === "H") {
+                if (result[i].region_type === 'H') {
                   setRandomPin((prev) => ({
                     ...prev,
                     address: result[i].address_name,
@@ -86,11 +81,11 @@ const Map = () => {
                 }
               }
             } else {
-              console.log("error");
+              console.log('error');
             }
           }
         );
-        const imageSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/pin/pin_location.png`;
+        const imageSrc = 'http://54.180.126.49/images/pin/pin_location.png';
         const imageSize = new window.kakao.maps.Size(60, 80); // 마커이미지의 크기입니다
         const imageOption = {
           offset: new window.kakao.maps.Point(0, 0),
@@ -241,12 +236,12 @@ const Map = () => {
             content: `<div style="width:150px;text-align:center;padding:6px 0;">${curr.title}</div>`,
           });
           // 마커에 마우스오버 이벤트를 등록합니다
-          window.kakao.maps.event.addListener(pin, "mouseover", function () {
+          window.kakao.maps.event.addListener(pin, 'mouseover', function () {
             // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
             infowindow.open(map, pin);
           });
 
-          window.kakao.maps.event.addListener(pin, "mouseout", function () {
+          window.kakao.maps.event.addListener(pin, 'mouseout', function () {
             // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
             infowindow.close();
           });

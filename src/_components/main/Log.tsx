@@ -5,8 +5,7 @@ import Image from 'next/image';
 import { LogContainer } from '@/src/_styles/main/logStyles';
 
 // libraries
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import Map, { Marker } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -15,16 +14,17 @@ import {
   locationType,
   logDataType,
   logTestDataType,
+  recommendsType,
 } from '@/src/types/aboutLog';
 
 // img
-import Profile from '@/src/_assets/main/userProfile.svg';
 import Card from '../Common/Card';
 import Pin from '@/src/_assets/main/map/pin_location.svg';
 
-// constants
-import { pinData } from '@/src/constatns/pinEamplet';
+// apis
+import { getLog, getLogData } from '@/pages/api/log';
 
+// constants
 const Log = () => {
   const [location, setLocation] = useState<locationType>({
     latitude: 0,
@@ -41,83 +41,53 @@ const Log = () => {
       address: '',
       latitude: '',
       longitude: '',
-      createAt: '',
+      createdAt: '',
       status: false,
-    },
-  ]);
-  // 테스트 전체 로그 데이터
-  const [testLogData, setTestLogData] = useState<logTestDataType[]>([
-    {
-      address: '',
-      createAt: '',
-      recommends: [
-        {
-          // address: "",
-          // id: 0,
-          // location: "",
-          // latitude: 0,
-          // longitude: 0,
-          // sorts: "",
-          // storeName: "",
-          // phone: "",
-          id: 0,
-          title: '',
-          addr: '',
-          dataType: 1,
-          tel: '',
-          image: '',
-          mapX: 0,
-          mapY: 0,
-        },
-      ],
-      theme: '',
     },
   ]);
 
   // test log data
-  const [selectedLogData, setSelectedLogData] = useState<logTestDataType>({
-    address: '',
-    createAt: '',
-    recommends: [
-      {
-        // address: "",
-        // id: 0,
-        // location: "",
-        // latitude: 0,
-        // longitude: 0,
-        // sorts: "",
-        // storeName: "",
-        // phone: "",
-        id: 0,
-        title: '',
-        addr: '',
-        dataType: 1,
-        tel: '',
-        image: '',
-        mapX: 0,
-        mapY: 0,
-      },
-    ],
-    theme: '',
-  });
+  const [selectedLogData, setSelectedLogData] = useState<recommendsType[]>([
+    {
+      id: 0,
+      title: '',
+      addr: '',
+      dataType: 1,
+      tel: '',
+      image: '',
+      mapX: 0,
+      mapY: 0,
+    },
+  ]);
 
   const getLogs = useQuery({
     queryKey: ['getLogs'],
     queryFn: async () => {
-      const response = await axios.get('/logs');
+      const response = await getLog();
 
-      console.log('get logs', response);
+      console.log('get logs', response.data);
 
       if (response.status === 200) {
-        setTestLogData(response.data);
+        setLogData(response.data);
       }
       return response.data;
     },
   });
 
+  const getLogSubData = useMutation({
+    mutationFn: async (logId: number) => {
+      const response = await getLogData(logId);
+      console.log('get log data', response.data);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      setSelectedLogData(data);
+    },
+  });
+
   const Pins = () => (
     <>
-      {selectedLogData.recommends.map((data, i) => (
+      {selectedLogData.map((data, i) => (
         <Marker
           key={i}
           latitude={data.mapY}
@@ -141,15 +111,22 @@ const Log = () => {
         <h3>
           <span>전체 기록</span>
         </h3>
-        {testLogData.map((data, i) => (
+        {logData.map((data, i) => (
           <div
             key={i}
             style={{ marginBottom: '0.4rem' }}
-            onClick={() => setSelectedLogData(data)}
+            onClick={() => {
+              console.log(data);
+              getLogSubData.mutate(data.logId);
+              setLocation({
+                latitude: Number(data.latitude),
+                longitude: Number(data.longitude),
+              });
+            }}
           >
             <div className="log">
-              <div className="logDate">{data.createAt}</div>
-              <div className="logAddress">{data.address}</div>
+              <div className="logDate">{data.createdAt}</div>
+              <div className="logAddress">주소</div>
               <div className="logTheme">{data.theme}</div>
             </div>
             <div className="divider"></div>
@@ -157,7 +134,6 @@ const Log = () => {
         ))}
       </div>
       <div className="logContent">
-        12
         <Map
           mapboxAccessToken={process.env.NEXT_PUBLIC_REACT_MAP_GL_ACCESS_TOKEN}
           initialViewState={{
@@ -173,14 +149,10 @@ const Log = () => {
         </Map>
       </div>
       <div className="logSideContent">
-        <header>
-          <div className="logoContainer">
-            <Image src={Profile} alt="프로필" width={35} height={35} />
-          </div>
-        </header>
+        <header></header>
         <main>
-          {selectedLogData.recommends.length > 0 &&
-            selectedLogData.recommends.map((recommend, i) => (
+          {selectedLogData.length > 0 &&
+            selectedLogData.map((recommend, i) => (
               <div key={i} className="Container">
                 <Card
                   // id={recommend.id}
