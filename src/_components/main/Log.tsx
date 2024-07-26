@@ -11,13 +11,13 @@ import Map, {
   MapRef,
   Marker,
   NavigationControl,
-  Source,
 } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { useRecoilValue } from 'recoil';
+import { pageState } from '@/src/atom/stats';
 
 // types
 import {
-  locationType,
   logDataType,
   onSelectCityType,
   recommendsType,
@@ -32,21 +32,10 @@ import { getLog, getLogData } from '@/pages/api/log';
 
 // constants
 const Log = () => {
+  // 페이지 이동 감지
+  const page = useRecoilValue(pageState);
   // Map DOM 컨트롤
   const mapRef = useRef<MapRef>(null);
-
-  // 변경된 위치
-  const [location, setLocation] = useState<locationType>({
-    latitude: 0,
-    longitude: 0,
-  });
-
-  // 초기 상태
-  const [viewState, setViewState] = useState({
-    latitude: 36.34,
-    longitude: 127.77,
-    zoom: 5,
-  });
 
   // 전체 로그 데이터
   const [logData, setLogData] = useState<logDataType[]>([
@@ -133,8 +122,11 @@ const Log = () => {
   useEffect(() => {
     console.log('selected log data: ', selectedLogData);
     console.log('logData : ', logData);
-    console.log('viewState : ', viewState);
-  }, [selectedLogData, logData, viewState]);
+  }, [selectedLogData, logData]);
+
+  useEffect(() => {
+    getLogs.refetch();
+  }, [page]);
 
   return (
     <LogContainer>
@@ -155,7 +147,7 @@ const Log = () => {
             }}
           >
             <div className="log">
-              <div className="logDate">{data.createdAt}</div>
+              <div className="logDate">{data.createdAt.split('T')[0]}</div>
               <div className="logAddress">주소</div>
               <div className="logTheme">{data.theme}</div>
             </div>
@@ -168,13 +160,12 @@ const Log = () => {
           ref={mapRef}
           mapboxAccessToken={process.env.NEXT_PUBLIC_REACT_MAP_GL_ACCESS_TOKEN}
           initialViewState={{
-            longitude: viewState.longitude,
-            latitude: viewState.latitude,
-            zoom: viewState.zoom,
+            latitude: 36.34,
+            longitude: 127.77,
+            zoom: 5,
           }}
-          style={{ width: 600, height: 600 }}
+          style={{ width: '100%', height: '100%' }}
           mapStyle="mapbox://styles/mapbox/light-v9"
-          interactiveLayerIds={['data']}
         >
           <GeolocateControl position="top-left" />
           <NavigationControl position="top-left" />
@@ -187,15 +178,7 @@ const Log = () => {
           {selectedLogData.length > 0 &&
             selectedLogData.map((recommend, i) => (
               <div key={i} className="Container">
-                <Card
-                  // id={recommend.id}
-                  // imgUrl={require('@/src/_assets/main/log/log_img.svg')}
-                  // name={recommend.storeName}
-                  // type={recommend.sorts}
-                  // location={recommend.address}
-                  // phone={recommend.phone}
-                  recommend={recommend}
-                />
+                <Card recommend={recommend} />
               </div>
             ))}
         </main>
