@@ -7,22 +7,22 @@ import pin_ocean from "@/src/_assets/main/map/pin_ocean.png";
 import pin_activity from "@/src/_assets/main/map/pin_activity.svg";
 // import config from "@/src/_config";
 
-const imgSrc = "http://54.180.126.49";
+const imgSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}`;
 
 export const themes: Theme[] = [
   {
-    id: "random",
+    id: "Random",
     img: pin_random,
     title: "랜덤",
     // contentTypeIds: [],
     themeId: null,
   },
-  { id: "restaurant", img: pin_food, title: "식도락", themeId: 5 },
-  { id: "cafe", img: pin_cafe, title: "카페 투어", themeId: 6 },
-  { id: "activity", img: pin_activity, title: "액티비티", themeId: 3 },
-  { id: "tour", img: pin_tour, title: "관광지", themeId: 4 },
-  { id: "ocean", img: pin_ocean, title: "바다", themeId: null },
-  { id: "mountain", img: pin_mountain, title: "산", themeId: null },
+  { id: "Restaurant", img: pin_food, title: "식도락", themeId: 5 },
+  { id: "Cafe", img: pin_cafe, title: "카페 투어", themeId: 6 },
+  { id: "Activity", img: pin_activity, title: "액티비티", themeId: 3 },
+  { id: "Tour", img: pin_tour, title: "관광지", themeId: 4 },
+  { id: "Ocean", img: pin_ocean, title: "바다", themeId: null },
+  { id: "Mountain", img: pin_mountain, title: "산", themeId: null },
 ];
 
 export type Theme = {
