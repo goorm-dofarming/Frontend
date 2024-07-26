@@ -5,26 +5,19 @@ export interface logDataType {
   address: string;
   latitude: string;
   longitude: string;
-  createAt: string;
+  createdAt: string;
   status: boolean;
 }
 
 export interface logTestDataType {
-  address: string;
-  createAt: string;
-  recommends: recommendsType[];
+  createdAt: string;
+  latitude: number;
+  logId: number;
+  longitude: number;
   theme: string;
 }
 
-interface recommendsType {
-  // address: string;
-  // id: number;
-  // location: string;
-  // latitude: number;
-  // longitude: number;
-  // sorts: string;
-  // storeName: string;
-  // phone: string;
+export interface recommendsType {
   id: number;
   title: string;
   addr: string;
@@ -38,4 +31,9 @@ interface recommendsType {
 export interface locationType {
   latitude: number;
   longitude: number;
+}
+
+export interface onSelectCityType {
+  longitude: number;
+  latitude: number;
 }

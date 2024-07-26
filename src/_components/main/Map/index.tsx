@@ -1,6 +1,5 @@
-import Card from "@/src/_components/Common/Card";
-import styles from "./map.module.scss";
-// import Script from "next/script";
+import Card from '@/src/_components/Common/Card';
+import styles from './map.module.scss';
 import { useEffect, useRef, useState } from "react";
 import { pageState, randomPinState } from "@/src/atom/stats";
 import { useRecoilState } from "recoil";
@@ -61,11 +60,11 @@ const Map = () => {
                 }
               }
             } else {
-              console.log("error");
+              console.log('error');
             }
           }
         );
-        const imageSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/pin/pin_location.png`;
+        const imageSrc = 'http://54.180.126.49/images/pin/pin_location.png';
         const imageSize = new window.kakao.maps.Size(60, 80); // 마커이미지의 크기입니다
         const imageOption = {
           offset: new window.kakao.maps.Point(0, 0),
@@ -114,12 +113,12 @@ const Map = () => {
             content: `<div style="width:150px;text-align:center;padding:6px 0;">${curr.title}</div>`,
           });
           // 마커에 마우스오버 이벤트를 등록합니다
-          window.kakao.maps.event.addListener(pin, "mouseover", function () {
+          window.kakao.maps.event.addListener(pin, 'mouseover', function () {
             // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
             infowindow.open(map, pin);
           });
 
-          window.kakao.maps.event.addListener(pin, "mouseout", function () {
+          window.kakao.maps.event.addListener(pin, 'mouseout', function () {
             // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
             infowindow.close();
           });

@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { colorTheme } from "../common/commonColorStyles";
+import styled from 'styled-components';
+import { colorTheme } from '../common/commonColorStyles';
 
 export const LogContainer = styled.div`
   flex: 1;
@@ -51,7 +51,7 @@ export const LogContainer = styled.div`
     font-size: 1rem;
     font-weight: 400;
     width: 100%;
-    font-family: "RedHatDisplay_Variable";
+    font-family: 'RedHatDisplay_Variable';
   }
   .logAddress {
     width: 100%;

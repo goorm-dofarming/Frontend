@@ -1,37 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 // styles
 import { LogContainer } from '@/src/_styles/main/logStyles';
 
 // libraries
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import Map, { Marker } from 'react-map-gl';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import Map, {
+  GeolocateControl,
+  MapRef,
+  Marker,
+  NavigationControl,
+} from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { useRecoilValue } from 'recoil';
+import { pageState } from '@/src/atom/stats';
 
 // types
 import {
-  locationType,
   logDataType,
-  logTestDataType,
+  onSelectCityType,
+  recommendsType,
 } from '@/src/types/aboutLog';
 
 // img
-import Profile from '@/src/_assets/main/userProfile.svg';
 import Card from '../Common/Card';
 import Pin from '@/src/_assets/main/map/pin_location.svg';
 
+// apis
+import { getLog, getLogData } from '@/pages/api/log';
+
 // constants
-import { pinData } from '@/src/constatns/pinEamplet';
-
 const Log = () => {
-  const [location, setLocation] = useState<locationType>({
-    latitude: 0,
-    longitude: 0,
-  });
+  // 페이지 이동 감지
+  const page = useRecoilValue(pageState);
+  // Map DOM 컨트롤
+  const mapRef = useRef<MapRef>(null);
 
-  const { latitude, longitude } = location;
   // 전체 로그 데이터
   const [logData, setLogData] = useState<logDataType[]>([
     {
@@ -41,83 +46,54 @@ const Log = () => {
       address: '',
       latitude: '',
       longitude: '',
-      createAt: '',
+      createdAt: '',
       status: false,
-    },
-  ]);
-  // 테스트 전체 로그 데이터
-  const [testLogData, setTestLogData] = useState<logTestDataType[]>([
-    {
-      address: '',
-      createAt: '',
-      recommends: [
-        {
-          // address: "",
-          // id: 0,
-          // location: "",
-          // latitude: 0,
-          // longitude: 0,
-          // sorts: "",
-          // storeName: "",
-          // phone: "",
-          id: 0,
-          title: '',
-          addr: '',
-          dataType: 1,
-          tel: '',
-          image: '',
-          mapX: 0,
-          mapY: 0,
-        },
-      ],
-      theme: '',
     },
   ]);
 
   // test log data
-  const [selectedLogData, setSelectedLogData] = useState<logTestDataType>({
-    address: '',
-    createAt: '',
-    recommends: [
-      {
-        // address: "",
-        // id: 0,
-        // location: "",
-        // latitude: 0,
-        // longitude: 0,
-        // sorts: "",
-        // storeName: "",
-        // phone: "",
-        id: 0,
-        title: '',
-        addr: '',
-        dataType: 1,
-        tel: '',
-        image: '',
-        mapX: 0,
-        mapY: 0,
-      },
-    ],
-    theme: '',
-  });
+  const [selectedLogData, setSelectedLogData] = useState<recommendsType[]>([
+    {
+      id: 0,
+      title: '',
+      addr: '',
+      dataType: 1,
+      tel: '',
+      image: '',
+      mapX: 0,
+      mapY: 0,
+    },
+  ]);
 
   const getLogs = useQuery({
     queryKey: ['getLogs'],
     queryFn: async () => {
-      const response = await axios.get('/logs');
+      const response = await getLog();
 
-      console.log('get logs', response);
+      // console.log('get logs', response.data);
 
       if (response.status === 200) {
-        setTestLogData(response.data);
+        setLogData(response.data);
       }
       return response.data;
     },
   });
 
+  const getLogSubData = useMutation({
+    mutationFn: async (logId: number) => {
+      const response = await getLogData(logId);
+      // console.log('get log data', response.data);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      setSelectedLogData(data);
+    },
+  });
+
+  // 지도 핀
   const Pins = () => (
     <>
-      {selectedLogData.recommends.map((data, i) => (
+      {selectedLogData.map((data, i) => (
         <Marker
           key={i}
           latitude={data.mapY}
@@ -131,9 +107,26 @@ const Log = () => {
     </>
   );
 
+  // 맵 위치 이동
+  const onSelectCity = useCallback(
+    ({ longitude, latitude }: onSelectCityType) => {
+      mapRef.current?.flyTo({
+        center: [longitude, latitude],
+        duration: 2000,
+        zoom: 9,
+      });
+    },
+    []
+  );
+
   useEffect(() => {
     console.log('selected log data: ', selectedLogData);
-  }, [selectedLogData]);
+    console.log('logData : ', logData);
+  }, [selectedLogData, logData]);
+
+  useEffect(() => {
+    getLogs.refetch();
+  }, [page]);
 
   return (
     <LogContainer>
@@ -141,15 +134,21 @@ const Log = () => {
         <h3>
           <span>전체 기록</span>
         </h3>
-        {testLogData.map((data, i) => (
+        {logData.map((data, i) => (
           <div
             key={i}
             style={{ marginBottom: '0.4rem' }}
-            onClick={() => setSelectedLogData(data)}
+            onClick={() => {
+              getLogSubData.mutate(data.logId);
+              onSelectCity({
+                latitude: Number(data.latitude),
+                longitude: Number(data.longitude),
+              });
+            }}
           >
             <div className="log">
-              <div className="logDate">{data.createAt}</div>
-              <div className="logAddress">{data.address}</div>
+              <div className="logDate">{data.createdAt.split('T')[0]}</div>
+              <div className="logAddress">주소</div>
               <div className="logTheme">{data.theme}</div>
             </div>
             <div className="divider"></div>
@@ -157,40 +156,29 @@ const Log = () => {
         ))}
       </div>
       <div className="logContent">
-        12
         <Map
+          ref={mapRef}
           mapboxAccessToken={process.env.NEXT_PUBLIC_REACT_MAP_GL_ACCESS_TOKEN}
           initialViewState={{
-            longitude: 127.77,
             latitude: 36.34,
+            longitude: 127.77,
             zoom: 5,
           }}
-          style={{ width: 400, height: 400 }}
+          style={{ width: '100%', height: '100%' }}
           mapStyle="mapbox://styles/mapbox/light-v9"
-          interactiveLayerIds={['data']}
         >
+          <GeolocateControl position="top-left" />
+          <NavigationControl position="top-left" />
           <Pins />
         </Map>
       </div>
       <div className="logSideContent">
-        <header>
-          <div className="logoContainer">
-            <Image src={Profile} alt="프로필" width={35} height={35} />
-          </div>
-        </header>
+        <header></header>
         <main>
-          {selectedLogData.recommends.length > 0 &&
-            selectedLogData.recommends.map((recommend, i) => (
+          {selectedLogData.length > 0 &&
+            selectedLogData.map((recommend, i) => (
               <div key={i} className="Container">
-                <Card
-                  // id={recommend.id}
-                  // imgUrl={require('@/src/_assets/main/log/log_img.svg')}
-                  // name={recommend.storeName}
-                  // type={recommend.sorts}
-                  // location={recommend.address}
-                  // phone={recommend.phone}
-                  recommend={recommend}
-                />
+                <Card recommend={recommend} />
               </div>
             ))}
         </main>
