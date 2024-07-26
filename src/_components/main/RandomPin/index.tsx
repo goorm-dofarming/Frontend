@@ -7,7 +7,6 @@ import "slick-carousel/slick/slick-theme.css";
 import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
 import { getRandomCoord, decimalToDMS } from "./util";
 import {
-  downloadTour,
   getMountainRecommends,
   getOceanRecommends,
   getRandomRecommends,
@@ -45,9 +44,9 @@ const RandomPin = ({
   const getResponse = async (theme: Theme) => {
     try {
       let response: any;
-      if (theme.id === "ocean" || theme.id === "mountain") {
+      if (theme.id === "Ocean" || theme.id === "Mountain") {
         response =
-          theme.id === "ocean"
+          theme.id === "Ocean"
             ? await getOceanRecommends()
             : await getMountainRecommends();
         const location = { ...response.data[0] };
@@ -67,15 +66,12 @@ const RandomPin = ({
       } else {
         const { lat, lng } = getRandomCoord();
         const { latDMS, lngDMS } = decimalToDMS(lat, lng);
-        if (theme.id === "random") {
+        if (theme.id === "Random") {
           response = await getRandomRecommends(lng, lat);
         } else {
           response = await getThemeRecommends(lng, lat, theme.themeId);
         }
         const recommendList = response.data;
-        console.log(response);
-        console.log(lat, lng);
-        console.log(response.data);
         setRandomPin((prev: RandomPinType) => ({
           ...prev,
           lat: lat,
@@ -93,8 +89,6 @@ const RandomPin = ({
 
   const onClick = (e: React.MouseEvent<HTMLElement>, theme: Theme) => {
     e.stopPropagation();
-    console.log("핀");
-    console.log("showMsg:", showMsg);
     setPin("pin_show");
     setPage("map");
     setTimeout(() => {
