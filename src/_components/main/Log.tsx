@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 // styles
@@ -6,14 +6,20 @@ import { LogContainer } from '@/src/_styles/main/logStyles';
 
 // libraries
 import { useMutation, useQuery } from '@tanstack/react-query';
-import Map, { Marker } from 'react-map-gl';
+import Map, {
+  GeolocateControl,
+  MapRef,
+  Marker,
+  NavigationControl,
+  Source,
+} from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 // types
 import {
   locationType,
   logDataType,
-  logTestDataType,
+  onSelectCityType,
   recommendsType,
 } from '@/src/types/aboutLog';
 
@@ -26,12 +32,22 @@ import { getLog, getLogData } from '@/pages/api/log';
 
 // constants
 const Log = () => {
+  // Map DOM 컨트롤
+  const mapRef = useRef<MapRef>(null);
+
+  // 변경된 위치
   const [location, setLocation] = useState<locationType>({
     latitude: 0,
     longitude: 0,
   });
 
-  const { latitude, longitude } = location;
+  // 초기 상태
+  const [viewState, setViewState] = useState({
+    latitude: 36.34,
+    longitude: 127.77,
+    zoom: 5,
+  });
+
   // 전체 로그 데이터
   const [logData, setLogData] = useState<logDataType[]>([
     {
@@ -65,7 +81,7 @@ const Log = () => {
     queryFn: async () => {
       const response = await getLog();
 
-      console.log('get logs', response.data);
+      // console.log('get logs', response.data);
 
       if (response.status === 200) {
         setLogData(response.data);
@@ -77,7 +93,7 @@ const Log = () => {
   const getLogSubData = useMutation({
     mutationFn: async (logId: number) => {
       const response = await getLogData(logId);
-      console.log('get log data', response.data);
+      // console.log('get log data', response.data);
       return response.data;
     },
     onSuccess: (data) => {
@@ -85,6 +101,7 @@ const Log = () => {
     },
   });
 
+  // 지도 핀
   const Pins = () => (
     <>
       {selectedLogData.map((data, i) => (
@@ -101,9 +118,23 @@ const Log = () => {
     </>
   );
 
+  // 맵 위치 이동
+  const onSelectCity = useCallback(
+    ({ longitude, latitude }: onSelectCityType) => {
+      mapRef.current?.flyTo({
+        center: [longitude, latitude],
+        duration: 2000,
+        zoom: 9,
+      });
+    },
+    []
+  );
+
   useEffect(() => {
     console.log('selected log data: ', selectedLogData);
-  }, [selectedLogData]);
+    console.log('logData : ', logData);
+    console.log('viewState : ', viewState);
+  }, [selectedLogData, logData, viewState]);
 
   return (
     <LogContainer>
@@ -116,9 +147,8 @@ const Log = () => {
             key={i}
             style={{ marginBottom: '0.4rem' }}
             onClick={() => {
-              console.log(data);
               getLogSubData.mutate(data.logId);
-              setLocation({
+              onSelectCity({
                 latitude: Number(data.latitude),
                 longitude: Number(data.longitude),
               });
@@ -135,16 +165,19 @@ const Log = () => {
       </div>
       <div className="logContent">
         <Map
+          ref={mapRef}
           mapboxAccessToken={process.env.NEXT_PUBLIC_REACT_MAP_GL_ACCESS_TOKEN}
           initialViewState={{
-            longitude: 127.77,
-            latitude: 36.34,
-            zoom: 5,
+            longitude: viewState.longitude,
+            latitude: viewState.latitude,
+            zoom: viewState.zoom,
           }}
-          style={{ width: 400, height: 400 }}
+          style={{ width: 600, height: 600 }}
           mapStyle="mapbox://styles/mapbox/light-v9"
           interactiveLayerIds={['data']}
         >
+          <GeolocateControl position="top-left" />
+          <NavigationControl position="top-left" />
           <Pins />
         </Map>
       </div>

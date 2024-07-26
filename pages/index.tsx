@@ -1,5 +1,5 @@
 import styles from '@/src/home.module.scss';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
 import { useCookies } from 'react-cookie';
 

@@ -32,3 +32,8 @@ export interface locationType {
   latitude: number;
   longitude: number;
 }
+
+export interface onSelectCityType {
+  longitude: number;
+  latitude: number;
+}
