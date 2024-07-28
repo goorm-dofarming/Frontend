@@ -16,11 +16,21 @@
     color: c.$C_DIVIDER;
     border-bottom: 2px solid c.$C_SECONDARY;
     border-radius: 5px 5px 0 0;
+    position: relative;
 
     &.active {
       color: c.$C_SECONDARY;
       border: 2px solid c.$C_SECONDARY;
       border-bottom: none;
+    }
+
+    .alarm {
+      width: 10px;
+      height: 10px;
+      background-color: c.$C_PRIMARY;
+      border-radius: 50%;
+      position: absolute;
+      top: 0.2rem;
     }
   }
 }
@@ -120,10 +130,6 @@
     border-bottom: 1px solid c.$C_DIVIDER;
     cursor: pointer;
 
-    &:hover {
-      background-color: c.$C_BUTTON_HOVER;
-    }
-
     &.active {
       width: 100.5%;
       background-color: c.$C_BUTTON_HOVER;
@@ -181,6 +187,12 @@
           color: c.$C_PRIMARY;
         }
       }
+
+      .preview {
+        padding-top: 0.3rem;
+        font-size: 0.7rem;
+        color: c.$C_SMALL_TEXT;
+      }
     }
 
     .enterBtn {
@@ -214,6 +226,12 @@
 
       color: c.$C_WHITE;
       background-color: c.$C_SECONDARY;
+    }
+  }
+
+  .hoverEffect {
+    &:hover {
+      background-color: c.$C_BUTTON_HOVER;
     }
   }
 
