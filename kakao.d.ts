@@ -17,6 +17,7 @@ declare namespace kakao {
     }
 
     class Marker {
+      title: string;
       constructor(options: MarkerOptions);
     }
 
