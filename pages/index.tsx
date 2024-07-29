@@ -15,9 +15,12 @@ import { useQuery } from '@tanstack/react-query';
 import { getMe } from './api/user';
 
 // atoms
-import { useRecoilState } from 'recoil';
-import { alarmState, userState } from '@/src/atom/stats';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { alarmState, messageAlarmState, userState } from '@/src/atom/stats';
 import { pageState } from '@/src/atom/stats';
+
+// types
+import { Alarm } from '@/src/types/aboutChat';
 
 const menu: { [key: string]: JSX.Element | null } = {
   home: <div></div>,
@@ -35,10 +38,10 @@ const Home = () => {
   const [element, setElement] = useState<React.JSX.Element | null>(menu[page]);
   const [pin, setPin] = useState<string>('pin_hide');
   const [alarm, setAlarm] = useRecoilState(alarmState);
+  const setMessageAlarm = useSetRecoilState(messageAlarmState);
 
   useEffect(() => {
     setElement(menu[page]);
-    console.log('page', page);
   }, [page]);
 
   const { data: userInfo, refetch: refetchUser } = useQuery({
@@ -50,7 +53,6 @@ const Home = () => {
   useEffect(() => {
     if (userInfo) {
       setUser(userInfo);
-      console.log('set user', userInfo);
     }
   }, [userInfo, refetchUser]);
 
@@ -63,7 +65,6 @@ const Home = () => {
   // SSE 연결
   useEffect(() => {
     if (user === undefined || user.email === '') return;
-    console.log('user: ', user);
     const EventSource = EventSourcePolyfill || NativeEventSource;
     const userId = user.userId;
 
@@ -78,17 +79,27 @@ const Home = () => {
       }
     );
 
-    // if (!alarm) {
-    eventSource.onmessage = (event) => {
-      const { data: receivedData } = event;
-      console.log('ReceivedData: ', receivedData);
-      console.log('event: ', event);
-      if (receivedData === 'alarm') {
-        setAlarm(true);
-        console.log('alarm on', page);
-      }
-    };
-    // }
+    if (!alarm) {
+      eventSource.onmessage = (event) => {
+        const { data: receivedData } = event;
+        // console.log('event: ', event);
+
+        if (
+          receivedData.includes('roomId') &&
+          receivedData.includes('content')
+        ) {
+          const alarmData: Alarm = JSON.parse(receivedData);
+          setMessageAlarm(alarmData);
+        }
+        if (
+          receivedData.includes('roomId') &&
+          receivedData.includes('content') &&
+          page !== 'chat'
+        ) {
+          setAlarm(true);
+        }
+      };
+    }
 
     return () => {
       eventSource.close();

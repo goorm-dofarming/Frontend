@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 
 // styles
 import { LogContainer } from '@/src/_styles/main/logStyles';
@@ -15,6 +15,7 @@ import Map, {
   NavigationControl,
   Source,
   MapMouseEvent,
+  Popup,
 } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useRecoilValue } from 'recoil';
@@ -41,6 +42,10 @@ import Pin from '@/src/_assets/main/map/pin_location.svg';
 import { getLog, getLogData } from '@/pages/api/log';
 
 // constants
+import { pinType } from '@/src/constatns/PinSort';
+
+const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services`;
+
 const Log = () => {
   // geoJson data
   const [geoJsonData, setGeoJsonData] = useState<GeoJsonData>({
@@ -72,6 +77,8 @@ const Log = () => {
   const page = useRecoilValue(pageState);
   // Map DOM 컨트롤
   const mapRef = useRef<MapRef>(null);
+  // kakao map dom 컨트롤
+  const containerRef = useRef<HTMLElement>(null);
 
   // 전체 로그 데이터
   const [logData, setLogData] = useState<logDataType[]>([
@@ -87,7 +94,7 @@ const Log = () => {
     },
   ]);
 
-  // test log data
+  // 선택된 로그 데이터들
   const [selectedLogData, setSelectedLogData] = useState<recommendsType[]>([
     {
       id: 0,
@@ -100,6 +107,9 @@ const Log = () => {
       mapY: 0,
     },
   ]);
+
+  // 선택된 로그 데이터
+  const [selectedPinData, setSelectedPinData] = useState<number>(0);
 
   // 전체 로그 데이터 불러오기
   const getLogs = useQuery({
@@ -128,6 +138,12 @@ const Log = () => {
     },
   });
 
+  // 종류에 따른 핀 설정
+  const sortingPins = (dataType: number): StaticImageData | string => {
+    const pin = pinType.find((type) => type.dataType === dataType);
+    return pin ? pin.img : 'null';
+  };
+
   // 지도 핀
   const Pins = () => (
     <>
@@ -137,9 +153,17 @@ const Log = () => {
           latitude={data.mapY}
           longitude={data.mapX}
           anchor="bottom"
-          onClick={() => console.log(data)}
+          onClick={() => {
+            console.log(data);
+            setSelectedPinData(data.id);
+          }}
         >
-          <Image src={Pin} alt="핀" width={20} height={20} />
+          <Image
+            src={sortingPins(data.dataType)}
+            alt="핀"
+            width={35}
+            height={35}
+          />
         </Marker>
       ))}
     </>
@@ -268,10 +292,68 @@ const Log = () => {
   };
 
   useEffect(() => {
+    document.cookie = 'username=dofarming; SameSite=Strict; Secure';
+    const script = document.createElement('script');
+    script.src = KAKAO_SDK_URL;
+    document.head.appendChild(script);
+
+    script.onload = () => {
+      window.kakao.maps.load(() => {
+        const center = new window.kakao.maps.LatLng(36.34, 127.77);
+        const options = {
+          center,
+          level: 13,
+        };
+        const map = new window.kakao.maps.Map(containerRef.current, options);
+
+        const imageSrc = 'http://54.180.126.49/images/pin/pin_location.png';
+        const imageSize = new window.kakao.maps.Size(60, 80); // 마커이미지의 크기입니다
+        const imageOption = {
+          offset: new window.kakao.maps.Point(0, 0),
+        }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+        const markerImage = new window.kakao.maps.MarkerImage(
+          imageSrc,
+          imageSize,
+          imageOption
+        );
+
+        // const marker = new window.kakao.maps.Marker({
+        //   map: map,
+        //   position: center,
+        //   image: markerImage,
+        // });
+
+        for (let i = 0; i < selectedLogData.length; i++) {
+          let imageSize = new kakao.maps.Size(24, 35);
+
+          // 마커 이미지를 생성합니다
+          let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+          // 마커를 생성합니다
+          let marker = new kakao.maps.Marker({
+            map: map, // 마커를 표시할 지도
+            position: new kakao.maps.LatLng(
+              selectedLogData[i].mapY,
+              selectedLogData[i].mapX
+            ), // 마커를 표시할 위치
+            title: selectedLogData[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+            image: markerImage, // 마커 이미지
+          });
+
+          const infowindow = new window.kakao.maps.InfoWindow({
+            content: `<div style="width:150px;text-align:center;padding:6px 0;">${selectedLogData[i].title}</div>`,
+          });
+        }
+      });
+    };
+  }, [selectedLogData]);
+
+  useEffect(() => {
+    // console.log('selected log data: ', selectedLogData);
     console.log('selected log data: ', selectedLogData);
     console.log('logData : ', logData);
-    console.log('geoJsonData : ', geoJsonData);
-  }, [selectedLogData, logData, geoJsonData]);
+  }, [logData, selectedLogData]);
 
   return (
     <LogContainer>
@@ -296,40 +378,13 @@ const Log = () => {
               <div className="logAddress">주소</div>
               <div className="logTheme">{data.theme}</div>
             </div>
+            {/* 색상 좀 연하게 + border-bottom로 변경 */}
             <div className="divider"></div>
           </div>
         ))}
       </div>
       <div className="logContent">
-        <Map
-          ref={mapRef}
-          mapboxAccessToken={process.env.NEXT_PUBLIC_REACT_MAP_GL_ACCESS_TOKEN}
-          initialViewState={{
-            latitude: 36.34,
-            longitude: 127.77,
-            zoom: 5,
-          }}
-          style={{ width: '100%', height: '100%' }}
-          mapStyle="mapbox://styles/mapbox/light-v9"
-          onClick={handleMapClick}
-        >
-          <GeolocateControl position="top-left" />
-          <NavigationControl position="top-left" />
-          <Source
-            id="earthquakes"
-            type="geojson"
-            data={geoJsonData}
-            cluster={true}
-            clusterMaxZoom={14}
-            clusterRadius={50}
-            style={{ cursor: 'pointer' }}
-          >
-            <Layer {...clusterLayer} />
-            <Layer {...clusterCountLayer} />
-            <Layer {...unclusteredPointLayer} />
-          </Source>
-          <Pins />
-        </Map>
+        <section id="container" ref={containerRef} className="kakaoMap" />
       </div>
       <div className="logSideContent">
         <header></header>

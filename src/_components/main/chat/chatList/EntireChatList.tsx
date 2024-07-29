@@ -3,7 +3,6 @@ import Image from 'next/image';
 import { QueryObserverResult } from '@tanstack/react-query';
 
 // styles
-import cx from 'classnames';
 import styles from './chatlist.module.scss';
 
 // types
@@ -30,7 +29,6 @@ import { getChatRoomList, joinChatRoom } from '@/pages/api/chat';
 
 interface EntireChatListProps {
   mainQuery: QueryObserverResult<Chat[], Error>;
-  myChatQuery: QueryObserverResult<Chat[], Error>;
   refetchChatList: () => void;
   joinMessage: (roomId: number) => void;
   searchInput: string;
@@ -38,47 +36,42 @@ interface EntireChatListProps {
 
 const EntireChatList: React.FC<EntireChatListProps> = ({
   mainQuery,
-  myChatQuery,
   refetchChatList,
   joinMessage,
   searchInput,
 }) => {
-  const { data: myChats = [] } = myChatQuery;
-  const { data: mainChats = [], error, isLoading } = mainQuery;
+  const {
+    data: mainChats = [],
+    error,
+    isLoading,
+    refetch: refetchMainChats,
+  } = mainQuery;
 
+  // 무한 스크롤 관련
   const scrollRef = useRef<HTMLDivElement>(null);
+  const chatsRef = useRef<Chat[]>([]);
+  const [fetchLoading, setFetchLoading] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+
+  const [chats, setChats] = useState<Chat[]>([]);
 
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
   const [clickedChat, setClickedChat] = useState<Chat | null>(null);
   const search = useRecoilValue(searchState);
 
-  const [chats, setChats] = useState<Chat[]>([]);
-  const chatsRef = useRef<Chat[]>([]);
-  const [fetchLoading, setFetchLoading] = useState<boolean>(false);
-  const [hasMore, setHasMore] = useState<boolean>(true);
+  // 채팅방 입장 모달
+  const [modal, setModal] = useState<boolean>(false);
+  const openModal = useToggle(modal, setModal);
 
+  // 채팅 리스트 세팅
   useEffect(() => {
     if (mainChats.length && mainChats !== chatsRef.current) {
       setChats(mainChats);
       chatsRef.current = mainChats;
     }
-    console.log('chats : ', chatsRef.current);
   }, [mainChats]);
 
-  // 채팅방 입장 모달
-  const [modal, setModal] = useState<boolean>(false);
-  const openModal = useToggle(modal, setModal);
-
-  const handleSelectedChat = (chat: Chat) => {
-    if (isInMyChats(chat.roomId)) {
-      setSelectedChat(chat);
-    }
-  };
-
-  const isInMyChats = (chatId: number) => {
-    return myChats.some((chat) => chat.roomId === chatId);
-  };
-
+  // 채팅방 입장
   const onClickEnterBtn = (chat: Chat) => {
     setClickedChat(chat);
     openModal();
@@ -100,6 +93,7 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
     }
   };
 
+  // 무한 스크롤
   const fetchMoreChats = useCallback(async () => {
     if (fetchLoading || chatsRef.current.length === 0 || !hasMore) return;
     setFetchLoading(true);
@@ -118,7 +112,6 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
     }
 
     try {
-      console.log('params: ', params);
       const [data] = await Promise.all([
         getChatRoomList(params),
         new Promise((resolve) => setTimeout(resolve, 1000)), // 최소 1초 지연
@@ -169,6 +162,20 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
     };
   }, [fetchLoading, hasMore, fetchMoreChats]);
 
+  // 10초동안 로딩 시 refetch
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isLoading) {
+      timer = setTimeout(() => {
+        if (isLoading) {
+          refetchMainChats();
+        }
+      }, 10000); // 5000ms = 5 seconds
+    }
+
+    return () => clearTimeout(timer);
+  }, [isLoading, refetchMainChats]);
+
   if (isLoading) {
     return (
       <div className={styles.container}>
@@ -189,13 +196,7 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
     <div className={styles.chats} ref={scrollRef}>
       {chats.length > 0 ? (
         chats.map((chat, index) => (
-          <div
-            key={index}
-            className={cx(styles.chat, {
-              [styles.active]: selectedChat?.roomId === chat.roomId,
-            })}
-            onClick={() => handleSelectedChat(chat)}
-          >
+          <div key={index} className={styles.chat}>
             <div className={styles.imageContainer}>
               <div className={styles.imageSize}>
                 <Image
@@ -225,14 +226,12 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
                 ))}
               </div>
             </div>
-            {!isInMyChats(chat.roomId) && (
-              <div
-                className={styles.enterBtn}
-                onClick={() => onClickEnterBtn(chat)}
-              >
-                입장
-              </div>
-            )}
+            <div
+              className={styles.enterBtn}
+              onClick={() => onClickEnterBtn(chat)}
+            >
+              입장
+            </div>
           </div>
         ))
       ) : search ? (
@@ -245,9 +244,7 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
         <div className={styles.noChat}>
           <FaRegFaceSadCry />
           <br />
-          생성된 채팅방이 없습니다.
-          <br />
-          채팅방을 만들어보세요 !
+          다른 사람들이 만든 채팅방이 없습니다.
         </div>
       )}
       {fetchLoading && (
