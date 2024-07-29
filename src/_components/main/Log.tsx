@@ -1,82 +1,34 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import Image, { StaticImageData } from 'next/image';
+import React, { useEffect, useRef, useState } from 'react';
 
 // styles
 import { LogContainer } from '@/src/_styles/main/logStyles';
 
 // libraries
 import { useMutation, useQuery } from '@tanstack/react-query';
-import Map, {
-  GeolocateControl,
-  Layer,
-  MapRef,
-  GeoJSONSource,
-  Marker,
-  NavigationControl,
-  Source,
-  MapMouseEvent,
-  Popup,
-} from 'react-map-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
 import { useRecoilValue } from 'recoil';
 import { pageState } from '@/src/atom/stats';
-import {
-  clusterCountLayer,
-  clusterLayer,
-  unclusteredPointLayer,
-} from './log/cluster';
 
 // types
-import {
-  GeoJsonData,
-  logDataType,
-  onSelectCityType,
-  recommendsType,
-} from '@/src/types/aboutLog';
+import { logDataType, recommendsType } from '@/src/types/aboutLog';
 
 // img
 import Card from '../Common/Card';
-import Pin from '@/src/_assets/main/map/pin_location.svg';
+import Logo from '@/src/_assets/icons/main_logo.jpg';
 
 // apis
 import { getLog, getLogData } from '@/pages/api/log';
 
-// constants
-import { pinType } from '@/src/constatns/PinSort';
-
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services`;
 
 const Log = () => {
-  // geoJson data
-  const [geoJsonData, setGeoJsonData] = useState<GeoJsonData>({
-    type: 'FeatureCollection',
-    crs: {
-      type: 'name',
-      properties: {
-        name: 'urn:ogc:def:crs:OGC:1.3:CRS84',
-      },
-    },
-    features: [
-      {
-        type: 'Feature',
-        properties: {
-          id: 0,
-          mag: 2.3,
-          time: '',
-          felt: null,
-          tsunami: 0,
-        },
-        geometry: {
-          type: 'Point',
-          coordinates: [0, 0],
-        },
-      },
-    ],
+  // 위치 이동
+  const [location, setLocation] = useState({
+    latitude: 36.34, // default latitude
+    longitude: 127.77, // default longitude
+    level: 13,
   });
   // 페이지 이동 감지
   const page = useRecoilValue(pageState);
-  // Map DOM 컨트롤
-  const mapRef = useRef<MapRef>(null);
   // kakao map dom 컨트롤
   const containerRef = useRef<HTMLElement>(null);
 
@@ -108,9 +60,6 @@ const Log = () => {
     },
   ]);
 
-  // 선택된 로그 데이터
-  const [selectedPinData, setSelectedPinData] = useState<number>(0);
-
   // 전체 로그 데이터 불러오기
   const getLogs = useQuery({
     queryKey: ['getLogs'],
@@ -138,158 +87,9 @@ const Log = () => {
     },
   });
 
-  // 종류에 따른 핀 설정
-  const sortingPins = (dataType: number): StaticImageData | string => {
-    const pin = pinType.find((type) => type.dataType === dataType);
-    return pin ? pin.img : 'null';
-  };
-
-  // 지도 핀
-  const Pins = () => (
-    <>
-      {selectedLogData.map((data, i) => (
-        <Marker
-          key={i}
-          latitude={data.mapY}
-          longitude={data.mapX}
-          anchor="bottom"
-          onClick={() => {
-            console.log(data);
-            setSelectedPinData(data.id);
-          }}
-        >
-          <Image
-            src={sortingPins(data.dataType)}
-            alt="핀"
-            width={35}
-            height={35}
-          />
-        </Marker>
-      ))}
-    </>
-  );
-
-  // 맵 위치 이동
-  const onSelectCity = useCallback(
-    ({ longitude, latitude }: onSelectCityType) => {
-      mapRef.current?.flyTo({
-        center: [longitude, latitude],
-        duration: 2000,
-        zoom: 9,
-      });
-    },
-    []
-  );
-
-  // 단일 개체 클릭 시 정보 불러오기
-  const showSingleCluster = (event: MapMouseEvent) => {
-    console.log('event: ', event);
-
-    if (!event.features) {
-      return;
-    }
-
-    const feature = event.features[0];
-    console.log('단일 개체 조회 성공: ', feature);
-
-    if (feature !== undefined) {
-      const clusterId = feature.properties?.id;
-      console.log('clusterId: ', clusterId);
-
-      if (!isNaN(clusterId)) {
-        getLogSubData.mutate(clusterId);
-      }
-    }
-  };
-
-  // 클러스터 줌인
-  const zoomInCluster = (event: MapMouseEvent) => {
-    console.log('event: ', event);
-
-    if (!event.features) {
-      return;
-    }
-
-    const feature = event.features[0];
-    if (feature.id !== undefined) {
-      console.log('feature: ', feature);
-
-      const clusterId = feature.properties?.cluster_id;
-
-      const mapboxSource = mapRef.current?.getSource(
-        'earthquakes'
-      ) as GeoJSONSource;
-
-      mapboxSource.getClusterExpansionZoom(clusterId, (err, zoom) => {
-        if (err || zoom === null) {
-          return;
-        }
-
-        if (!feature.geometry || !('coordinates' in feature.geometry)) {
-          return;
-        }
-
-        mapRef.current?.easeTo({
-          center: feature.geometry.coordinates as [number, number],
-          zoom,
-          duration: 500,
-        });
-      });
-    }
-  };
-
   useEffect(() => {
     getLogs.refetch();
   }, [page]);
-
-  // geoJson Data
-  useEffect(() => {
-    if (logData.length > 0) {
-      const geoJsonData = {
-        type: 'FeatureCollection',
-        crs: {
-          type: 'name',
-          properties: {
-            name: 'urn:ogc:def:crs:OGC:1.3:CRS84',
-          },
-        },
-        features: logData.map((data) => ({
-          type: 'Feature',
-          properties: {
-            id: data.logId,
-            time: data.createdAt,
-            mag: 0,
-            felt: null,
-            tsunami: 0,
-          },
-          geometry: {
-            type: 'Point',
-            coordinates: [Number(data.longitude), Number(data.latitude)],
-          },
-        })),
-      };
-      setGeoJsonData(geoJsonData);
-    }
-  }, [logData]);
-
-  // 현재 위치의 클러스터 아이디 get
-  const handleMapClick = (event: any) => {
-    const map = mapRef.current?.getMap();
-    const features = map?.queryRenderedFeatures(event.point, {
-      layers: ['clusters', 'unclustered-point'], // 클릭 이벤트를 처리할 레이어 ID
-    });
-
-    if (features && features[0]?.id !== undefined) {
-      console.log('여러 개체가 있을 때 클릭 이벤트: ', features);
-      zoomInCluster({ ...event, features });
-    } else {
-      const feature = map?.queryRenderedFeatures(event.point, {
-        layers: ['clusters', 'unclustered-point'],
-      });
-      console.log('단일 개체만 있을 때 클릭 이벤트: ', feature);
-      showSingleCluster({ ...event, features: feature });
-    }
-  };
 
   useEffect(() => {
     document.cookie = 'username=dofarming; SameSite=Strict; Secure';
@@ -299,10 +99,13 @@ const Log = () => {
 
     script.onload = () => {
       window.kakao.maps.load(() => {
-        const center = new window.kakao.maps.LatLng(36.34, 127.77);
+        const center = new window.kakao.maps.LatLng(
+          location.latitude,
+          location.longitude
+        );
         const options = {
           center,
-          level: 13,
+          level: location.level,
         };
         const map = new window.kakao.maps.Map(containerRef.current, options);
 
@@ -318,12 +121,6 @@ const Log = () => {
           imageOption
         );
 
-        // const marker = new window.kakao.maps.Marker({
-        //   map: map,
-        //   position: center,
-        //   image: markerImage,
-        // });
-
         for (let i = 0; i < selectedLogData.length; i++) {
           let imageSize = new kakao.maps.Size(24, 35);
 
@@ -337,15 +134,48 @@ const Log = () => {
               selectedLogData[i].mapY,
               selectedLogData[i].mapX
             ), // 마커를 표시할 위치
-            title: selectedLogData[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
             image: markerImage, // 마커 이미지
           });
 
+          // 마커 객체에 title 속성을 추가합니다
+          marker.title = selectedLogData[i].title;
+
+          const imageContent = selectedLogData[i].image
+            ? selectedLogData[i].image
+            : Logo;
+
           const infowindow = new window.kakao.maps.InfoWindow({
-            content: `<div style="width:150px;text-align:center;padding:6px 0;">${selectedLogData[i].title}</div>`,
+            content: `<div style="width:200px;height:200px;text-align:center;padding:6px 0;borderRadius:0.3rem;border:none;"><div>${selectedLogData[i].title.length > 15 ? selectedLogData[i].title.slice(0, 14) + '...' : selectedLogData[i].title}</div><div><img src=${imageContent} alt="사진" style="width:200px;height:190px;"/></div></div> `,
           });
+
+          window.kakao.maps.event.addListener(
+            marker,
+            'mouseover',
+            makeOverListener(map, marker, infowindow)
+          );
+          window.kakao.maps.event.addListener(
+            marker,
+            'mouseout',
+            makeOutListener(infowindow)
+          );
         }
       });
+
+      function makeOverListener(
+        map: kakao.maps.Map,
+        marker: kakao.maps.Marker,
+        infowindow: any
+      ) {
+        return function () {
+          infowindow.open(map, marker);
+        };
+      }
+
+      function makeOutListener(infowindow: any) {
+        return function () {
+          infowindow.close();
+        };
+      }
     };
   }, [selectedLogData]);
 
@@ -367,9 +197,10 @@ const Log = () => {
             style={{ marginBottom: '0.4rem' }}
             onClick={() => {
               getLogSubData.mutate(data.logId);
-              onSelectCity({
+              setLocation({
                 latitude: Number(data.latitude),
                 longitude: Number(data.longitude),
+                level: 8,
               });
             }}
           >
