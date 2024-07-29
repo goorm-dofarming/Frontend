@@ -3,9 +3,6 @@ import Image from 'next/image';
 import { Client, Stomp } from '@stomp/stompjs';
 import { QueryObserverResult } from '@tanstack/react-query';
 
-// icon
-import logo from '@/src/_assets/icons/main_logo.png';
-
 // styles
 import styles from './chatspace.module.scss';
 
@@ -28,7 +25,6 @@ import useToggle from '@/src/hooks/Home/useToggle';
 
 // api
 import axios from 'axios';
-import { leaveChatRoom } from '@/pages/api/chat';
 
 // types
 import { Message } from '@/src/types/aboutChat';
@@ -46,6 +42,11 @@ const ChatSpace: React.FC<{
   const [participantCount, setParticipantCount] = useState<number>(
     selectedChat.participantCount
   );
+  const [unreadMessageCount, setUnreadMessageCount] = useState<number>(0);
+
+  useEffect(() => {
+    setUnreadMessageCount(selectedChat.unreadMessageCount);
+  }, [selectedChat]);
 
   // 채팅방 퇴장 모달
   const [modal, setModal] = useState<boolean>(false);
@@ -65,7 +66,11 @@ const ChatSpace: React.FC<{
         participantCount: 0,
         createdAt: new Date(),
         unreadMessageCount: 0,
-        latestMessage: '',
+        latestMessage: {
+          messageType: '',
+          content: '',
+          nickname: '',
+        },
       });
       setTimeout(() => {
         refetchChatList();
@@ -122,7 +127,8 @@ const ChatSpace: React.FC<{
     if (messageAlarm.roomId === selectedChat.roomId) {
       switch (messageAlarm.messageType) {
         case 'JOIN':
-          setParticipantCount(participantCount + 1);
+          messageAlarm.senderId !== user.userId &&
+            setParticipantCount(participantCount + 1);
           break;
         case 'LEAVE':
           setParticipantCount(participantCount - 1);
@@ -175,7 +181,10 @@ const ChatSpace: React.FC<{
               </div>
             </div>
           </div>
-          <ChatRoom messageQuery={messageQuery} />
+          <ChatRoom
+            messageQuery={messageQuery}
+            unreadMessageCount={unreadMessageCount}
+          />
           <div className={styles.inputArea}>
             <textarea
               className={styles.input}
