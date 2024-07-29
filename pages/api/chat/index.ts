@@ -40,7 +40,7 @@ export const getMyChatRooms = async (params: {}): Promise<Chat[]> => {
 export const getMessage = async (params: {}): Promise<Message[]> => {
   const response = await apiClient.get('/message', { params });
   const data = response.data;
-  console.log('message : ', data);
+  // console.log('message : ', data);
   return data;
 };
 
