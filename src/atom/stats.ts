@@ -16,7 +16,11 @@ export const selectedChatState = atom<Chat>({
     participantCount: 0,
     createdAt: new Date(),
     unreadMessageCount: 0,
-    latestMessage: '',
+    latestMessage: {
+      messageType: '',
+      content: '',
+      nickname: '',
+    },
   },
 });
 
