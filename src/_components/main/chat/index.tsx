@@ -9,31 +9,34 @@ import ChatSpace from './chatSpace/ChatSpace';
 
 // api
 import { useQuery } from '@tanstack/react-query';
-import { getEntireChatRooms, getMyChatRooms } from '@/pages/api/chat';
+import {
+  getChatRoomList,
+  getMyChatRooms,
+  sendLastMessage,
+} from '@/pages/api/chat';
 import { getMessage } from '@/pages/api/chat';
-import { getMe } from '@/pages/api/user';
 
 // web-socket
 import SockJS from 'sockjs-client';
-import { Client, Stomp } from '@stomp/stompjs';
+import { Client } from '@stomp/stompjs';
 
 // atoms
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { selectedChatState, userState } from '@/src/atom/stats';
 
 const Chat = () => {
-  const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
+  const selectedChat = useRecoilValue(selectedChatState);
   const stompClientRef = useRef<Client | null>(null);
   const user = useRecoilValue(userState);
 
   const myChatQuery = useQuery({
     queryKey: ['myChats'],
-    queryFn: getMyChatRooms,
+    queryFn: () => getMyChatRooms({}),
   });
 
   const entireChatQuery = useQuery({
     queryKey: ['entireChats'],
-    queryFn: getEntireChatRooms,
+    queryFn: () => getChatRoomList({}),
   });
 
   const refetchChatList = () => {
@@ -45,14 +48,10 @@ const Chat = () => {
     refetchChatList();
   }, [user]);
 
-  const {
-    data: messages = [],
-    error,
-    isLoading,
-    refetch: refetchMessages,
-  } = useQuery({
+  const messageQuery = useQuery({
     queryKey: ['messages', selectedChat?.roomId],
     queryFn: () => getMessage({ roomId: selectedChat.roomId }),
+    enabled: false,
   });
 
   useEffect(() => {
@@ -67,16 +66,20 @@ const Chat = () => {
         // console.log(str);
       },
       onConnect: (frame) => {
-        console.log('Connected: ' + frame);
+        console.log('roomId: ', selectedChat.roomId, '\nConnected: ' + frame);
 
         stompClient.subscribe(
           `/room/${selectedChat.roomId}`,
           (messageOutput) => {
             const message = JSON.parse(messageOutput.body);
-            // console.log('Subscribe: ', message);
-            refetchMessages();
+            if (selectedChat.roomId > 0) {
+              messageQuery.refetch();
+            }
           }
         );
+        if (selectedChat.roomId > 0) {
+          messageQuery.refetch();
+        }
       },
       onStompError: (frame) => {
         console.error('Broker reported error: ' + frame.headers['message']);
@@ -94,7 +97,7 @@ const Chat = () => {
         console.log('Disconnected from STOMP broker.');
       }
     };
-  }, [selectedChat, refetchMessages]);
+  }, [selectedChat]);
 
   // 채팅방 입장 메세지
   const joinMessage = async (roomId: number) => {
@@ -113,8 +116,27 @@ const Chat = () => {
       });
     }
 
-    await refetchMessages();
+    await messageQuery.refetch();
   };
+
+  const sendLastJoin = async () => {
+    if (messageQuery.data) {
+      try {
+        await sendLastMessage({
+          roomId: messageQuery.data[0].roomId,
+          messageId: messageQuery.data[0].messageId,
+        });
+      } catch (error) {
+        console.error('Failed to save messages:', error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (messageQuery.data) {
+      sendLastJoin();
+    }
+  }, [messageQuery]);
 
   // 채팅방 퇴장 메세지
   const leaveMessage = (roomId: number) => {
@@ -144,7 +166,7 @@ const Chat = () => {
       />
       <ChatSpace
         refetchChatList={refetchChatList}
-        messages={messages}
+        messageQuery={messageQuery}
         stompClientRef={stompClientRef}
         leaveMessage={leaveMessage}
       />
