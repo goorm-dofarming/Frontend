@@ -4,20 +4,23 @@ import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
 import { useCookies } from 'react-cookie';
 
 // components
-import NavBar from "@/src/_components/main/NavBar";
-import { Map, Log, Likes, Chat } from "@/src/_components/main";
-import Main from "@/src/_components/main/Main";
-import RandomPin from "@/src/_components/main/RandomPin";
-import ProfileDropdown from "@/src/_components/main/ProfileDropdown";
+import NavBar from '@/src/_components/main/NavBar';
+import { Map, Log, Likes, Chat } from '@/src/_components/main';
+import Main from '@/src/_components/main/Main';
+import RandomPin from '@/src/_components/main/RandomPin';
+import ProfileDropdown from '@/src/_components/main/ProfileDropdown';
 
 // api
-import { useQuery } from "@tanstack/react-query";
-import { getMe } from "./api/user";
+import { useQuery } from '@tanstack/react-query';
+import { getMe } from './api/user';
 
 // atoms
-import { useRecoilState } from "recoil";
-import { alarmState, userState } from "@/src/atom/stats";
-import { pageState } from "@/src/atom/stats";
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { alarmState, messageAlarmState, userState } from '@/src/atom/stats';
+import { pageState } from '@/src/atom/stats';
+
+// types
+import { Alarm } from '@/src/types/aboutChat';
 
 const menu: { [key: string]: JSX.Element | null } = {
   home: <div></div>,
@@ -29,19 +32,20 @@ const menu: { [key: string]: JSX.Element | null } = {
 
 const Home = () => {
   const [user, setUser] = useRecoilState(userState);
-  const [cookies, setCookies] = useCookies(["token"]);
+  const [cookies, setCookies] = useCookies(['token']);
   const [fold, setFold] = useState<boolean>(false);
   const [page, setPage] = useRecoilState(pageState);
   const [element, setElement] = useState<React.JSX.Element | null>(menu[page]);
-  const [pin, setPin] = useState<string>("pin_hide");
+  const [pin, setPin] = useState<string>('pin_hide');
   const [alarm, setAlarm] = useRecoilState(alarmState);
+  const setMessageAlarm = useSetRecoilState(messageAlarmState);
 
   useEffect(() => {
     setElement(menu[page]);
   }, [page]);
 
   const { data: userInfo, refetch: refetchUser } = useQuery({
-    queryKey: ["me"],
+    queryKey: ['me'],
     queryFn: getMe,
     enabled: false,
   });
@@ -49,7 +53,6 @@ const Home = () => {
   useEffect(() => {
     if (userInfo) {
       setUser(userInfo);
-      console.log("set user", userInfo);
     }
   }, [userInfo, refetchUser]);
 
@@ -61,8 +64,7 @@ const Home = () => {
 
   // SSE 연결
   useEffect(() => {
-    if (user === undefined || user.email === "") return;
-    console.log("user: ", user);
+    if (user === undefined || user.email === '') return;
     const EventSource = EventSourcePolyfill || NativeEventSource;
     const userId = user.userId;
 
@@ -70,33 +72,43 @@ const Home = () => {
       `${process.env.NEXT_PUBLIC_DEPLOY_SSE_ADDRESS}?userId=${userId}`,
       {
         headers: {
-          Connection: "keep-alive",
-          Accept: "text/event-stream",
+          Connection: 'keep-alive',
+          Accept: 'text/event-stream',
         },
         heartbeatTimeout: 86400000, // 24시간
       }
     );
 
-    // if (!alarm) {
-    eventSource.onmessage = (event) => {
-      const { data: receivedData } = event;
-      console.log("ReceivedData: ", receivedData);
-      console.log("event: ", event);
-      if (receivedData === "alarm") {
-        setAlarm(true);
-        console.log("alarm on", page);
-      }
-    };
-    // }
+    if (!alarm) {
+      eventSource.onmessage = (event) => {
+        const { data: receivedData } = event;
+        // console.log('event: ', event);
+
+        if (
+          receivedData.includes('roomId') &&
+          receivedData.includes('content')
+        ) {
+          const alarmData: Alarm = JSON.parse(receivedData);
+          setMessageAlarm(alarmData);
+        }
+        if (
+          receivedData.includes('roomId') &&
+          receivedData.includes('content') &&
+          page !== 'chat'
+        ) {
+          setAlarm(true);
+        }
+      };
+    }
 
     return () => {
       eventSource.close();
-      console.log("SSE CLOSED");
+      console.log('SSE CLOSED');
     };
   }, [user]);
 
   useEffect(() => {
-    if (page === "chat") {
+    if (page === 'chat') {
       setAlarm(false);
     }
   }, [page, alarm]);
