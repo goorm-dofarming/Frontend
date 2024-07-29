@@ -76,9 +76,11 @@ const ChatList: React.FC<ChatListProps> = ({
 
     try {
       const response = await createChatRoom(body);
-      refetchChatList();
       joinMessage(response.data);
-      setActiveTab(true);
+      setTimeout(() => {
+        refetchChatList();
+        setActiveTab(true);
+      }, 500);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(error);
@@ -185,7 +187,6 @@ const ChatList: React.FC<ChatListProps> = ({
       {activeTab ? (
         <MyChatList
           myChatQuery={search && activeTab ? searchMyQuery : myChatQuery}
-          searchInput={searchInput}
         />
       ) : (
         <EntireChatList
