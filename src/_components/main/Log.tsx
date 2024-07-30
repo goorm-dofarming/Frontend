@@ -20,7 +20,7 @@ import { getLog, getLogData } from '@/pages/api/log';
 import { StaticImageData } from 'next/image';
 import { pinType } from '@/src/constatns/PinSort';
 
-const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services`;
+const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services,clusterer`;
 const imageSrc = 'http://54.180.126.49/images/pin/pin_location.png';
 
 const Log = () => {
@@ -127,6 +127,12 @@ const Log = () => {
         };
         const map = new window.kakao.maps.Map(containerRef.current, options);
 
+        const clusterer = new kakao.maps.MarkerClusterer({
+          map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
+          averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+          minLevel: 5, // 클러스터 할 최소 지도 레벨
+        });
+
         const imageSize = new window.kakao.maps.Size(60, 80); // 마커이미지의 크기입니다
         const imageOption = {
           offset: new window.kakao.maps.Point(0, 0),
@@ -137,6 +143,26 @@ const Log = () => {
           imageSize,
           imageOption
         );
+
+        const markers = [];
+
+        for (let i = 0; i < logData.length; i++) {
+          let marker = new kakao.maps.Marker({
+            map: map, // 마커를 표시할 지도
+            position: new kakao.maps.LatLng(
+              Number(logData[i].latitude),
+              Number(logData[i].longitude)
+            ), // 마커를 표시할 위치
+          });
+
+          markers.push(marker);
+
+          window.kakao.maps.event.addListener(
+            marker,
+            'click',
+            makeClickListener(logData[i])
+          );
+        }
 
         for (let i = 0; i < selectedLogData.length; i++) {
           let imageSize = new kakao.maps.Size(24, 35);
@@ -178,6 +204,8 @@ const Log = () => {
             makeOutListener(infowindow)
           );
         }
+        // 클러스터러에 마커들을 추가합니다
+        clusterer.addMarkers(markers);
       });
 
       function makeOverListener(
@@ -195,8 +223,15 @@ const Log = () => {
           infowindow.close();
         };
       }
+
+      function makeClickListener(data: logDataType) {
+        return function () {
+          const logData = getLogSubData.mutate(data.logId);
+          console.log('logData: ', logData);
+        };
+      }
     };
-  }, [selectedLogData]);
+  }, [selectedLogData, logData]);
 
   useEffect(() => {
     // console.log('selected log data: ', selectedLogData);
