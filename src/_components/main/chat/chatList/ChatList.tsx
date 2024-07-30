@@ -20,14 +20,18 @@ import useToggle from '@/src/hooks/Home/useToggle';
 // api
 import axios from 'axios';
 import { QueryObserverResult, useQuery } from '@tanstack/react-query';
-import { createChatRoom, getChatRoomList } from '@/pages/api/chat';
+import {
+  createChatRoom,
+  getChatRoomList,
+  getMyChatRooms,
+} from '@/pages/api/chat';
 
 // types
 import { Chat } from '@/src/types/aboutChat';
 
 // atoms
-import { useRecoilState } from 'recoil';
-import { searchState } from '@/src/atom/stats';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { messageAlarmState, searchState } from '@/src/atom/stats';
 
 // 알림
 // headers Accept랑 connection
@@ -51,6 +55,8 @@ const ChatList: React.FC<ChatListProps> = ({
 
   const [searchInput, setSearchInput] = useState<string>('');
   const [search, setSearch] = useRecoilState(searchState);
+  const messageAlarm = useRecoilValue(messageAlarmState);
+  const [alarm, setAlarm] = useState<boolean>(false);
 
   // 채팅방 생성 모달
   const [modal, setModal] = useState<boolean>(false);
@@ -70,11 +76,14 @@ const ChatList: React.FC<ChatListProps> = ({
 
     try {
       const response = await createChatRoom(body);
-      refetchChatList();
       joinMessage(response.data);
+      setTimeout(() => {
+        refetchChatList();
+        setActiveTab(true);
+      }, 500);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error('Axios error:', error.response?.data);
+        console.error(error);
       } else {
         console.error('Unexpected error:', error);
       }
@@ -99,11 +108,36 @@ const ChatList: React.FC<ChatListProps> = ({
     }
   };
 
-  const searchQuery = useQuery({
-    queryKey: ['searchChat', searchInput],
+  const searchEntireQuery = useQuery({
+    queryKey: ['searchEntireChat', searchInput],
     queryFn: () => getChatRoomList({ condition: searchInput }),
-    enabled: search && searchInput.trim() !== '', // 검색어가 있을 때만 쿼리 활성화
+    enabled: search && searchInput.trim() !== '' && !activeTab, // 검색어가 있을 때만 쿼리 활성화
   });
+
+  const searchMyQuery = useQuery({
+    queryKey: ['searchMyChat', searchInput],
+    queryFn: () => getMyChatRooms({ condition: searchInput }),
+    enabled: search && searchInput.trim() !== '' && activeTab, // 검색어가 있을 때만 쿼리 활성화
+  });
+
+  useEffect(() => {
+    if (activeTab) {
+      myChatQuery.refetch();
+      setAlarm(false);
+    } else {
+      entireChatQuery.refetch();
+    }
+    setSearch(false);
+    setSearchInput('');
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (activeTab) {
+      setAlarm(false);
+    } else {
+      setAlarm(true);
+    }
+  }, [messageAlarm]);
 
   return (
     <div className="chatList">
@@ -115,6 +149,7 @@ const ChatList: React.FC<ChatListProps> = ({
           onClick={() => setActiveTab(true)}
         >
           내 채팅
+          {alarm && <span className={styles.alarm}></span>}
         </div>
         <div
           className={cx(styles.tab, {
@@ -150,11 +185,12 @@ const ChatList: React.FC<ChatListProps> = ({
         />
       </div>
       {activeTab ? (
-        <MyChatList myChatQuery={myChatQuery} searchQuery={searchQuery} />
+        <MyChatList
+          myChatQuery={search && activeTab ? searchMyQuery : myChatQuery}
+        />
       ) : (
         <EntireChatList
-          mainQuery={search ? searchQuery : entireChatQuery}
-          myChatQuery={myChatQuery}
+          mainQuery={search && !activeTab ? searchEntireQuery : entireChatQuery}
           refetchChatList={refetchChatList}
           joinMessage={joinMessage}
           searchInput={searchInput}

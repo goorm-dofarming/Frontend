@@ -31,7 +31,7 @@
       border: 1px solid c.$C_SECONDARY;
       border-radius: 10px;
       opacity: 80%;
-      z-index: 1;
+      z-index: 10;
 
       &:hover {
         color: c.$C_WHITE;
@@ -101,7 +101,7 @@
     width: 100%;
     position: relative;
     overflow-y: auto;
-    margin-right: 1rem;
+    padding-right: 1rem;
 
     &::-webkit-scrollbar {
       width: 5px; /* 스크롤바 너비 */
@@ -112,76 +112,109 @@
       border-radius: 6px; /* 스크롤바 모서리 둥글게 */
     }
 
-    .messageContainer {
-      @include m.flex(flex-start, flex-start, row);
-      padding: 0.5rem;
+    .chat {
+      display: flex;
+      flex-direction: column-reverse;
 
-      .profileSize {
-        width: 2.5rem;
-        height: 2.5rem;
-        position: relative;
+      .messageContainer {
+        @include m.flex(flex-start, flex-start, row);
+        padding: 0.5rem;
+        align-items: stretch;
+
+        .profileSize {
+          width: 2.5rem;
+          height: 2.5rem;
+          position: relative;
+          border-radius: 50%;
+        }
+
+        .textArea {
+          padding-top: 1rem;
+
+          .name {
+            font-weight: 800;
+            padding-bottom: 0.5rem;
+          }
+
+          .textContainer {
+            @include m.flex(flex-start, flex-end, row);
+            gap: 0.2rem;
+
+            .message {
+              padding: 0.6rem;
+              max-width: 20rem;
+              font-size: 0.9rem;
+            }
+            .date {
+              font-size: 0.65rem;
+              color: c.$C_SMALL_TEXT;
+            }
+          }
+        }
       }
 
-      .textArea {
-        padding-top: 1rem;
+      .othersMsg {
+        margin-left: 0.5rem;
+        .textArea {
+          @include m.flex(center, flex-start, column);
 
-        .name {
-          font-weight: 800;
-          padding-bottom: 0.5rem;
+          .name {
+            padding-left: 0.5rem;
+          }
+
+          .message {
+            border-radius: 0 10px 10px 10px;
+            background-color: c.$C_CHAT_GRAY;
+          }
         }
-        .message {
-          padding: 0.6rem;
-          max-width: 20rem;
+      }
+
+      .myMsg {
+        flex-direction: row-reverse;
+
+        .textArea {
+          @include m.flex(center, flex-end, column);
+
+          .name {
+            padding-right: 0.5rem;
+          }
+          .textContainer {
+            flex-direction: row-reverse;
+            .message {
+              border-radius: 10px 0 10px 10px;
+              background-color: c.$C_TERTIARY;
+            }
+          }
+        }
+      }
+
+      .lineStyle {
+        @include m.flex(center, center, row);
+        width: 100%;
+        margin: 0.5rem;
+
+        .lineText {
           font-size: 0.9rem;
+          padding: 0.5rem;
+          border: 1px solid c.$C_DIVIDER;
+          border-radius: 10px;
         }
       }
-    }
 
-    .othersMsg {
-      margin-left: 0.5rem;
-      .textArea {
-        @include m.flex(center, flex-start, column);
-
-        .name {
-          padding-left: 0.5rem;
-        }
-
-        .message {
-          border-radius: 0 10px 10px 10px;
-          background-color: c.$C_CHAT_GRAY;
-        }
-      }
-    }
-
-    .myMsg {
-      flex-direction: row-reverse;
-
-      .textArea {
-        @include m.flex(center, flex-end, column);
-
-        .name {
-          padding-right: 0.5rem;
-        }
-
-        .message {
-          border-radius: 10px 0 10px 10px;
-          background-color: c.$C_TERTIARY;
-        }
-      }
-    }
-
-    .lineStyle {
-      @include m.flex(center, center, row);
-      width: 100%;
-      padding: 1rem;
-
-      hr {
+      .dateContainer {
+        @include m.flex(center, center, row);
         flex: 1;
-      }
+        margin: 0.5rem 0;
+        padding-left: 0.8rem;
 
-      .lineText {
-        font-size: 0.9rem;
-        padding: 0 0.5rem;
+        hr {
+          flex: 1;
+        }
+
+        .date {
+          padding: 0.5rem;
+          font-size: 0.8rem;
+        }
       }
     }
   }

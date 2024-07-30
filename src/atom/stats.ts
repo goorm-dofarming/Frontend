@@ -1,10 +1,9 @@
 import { atom } from "recoil";
 
 // types
-
-import { Chat } from "@/src/types/aboutChat";
-import { RandomPinType } from "@/src/types/aboutMap";
-import { User } from "../types/aboutMain";
+import { Alarm, Chat } from '@/src/types/aboutChat';
+import { RandomPinType } from '@/src/types/aboutMap';
+import { User } from '../types/aboutMain';
 
 export const selectedChatState = atom<Chat>({
   key: "selectedChatState",
@@ -16,6 +15,12 @@ export const selectedChatState = atom<Chat>({
     tags: [],
     participantCount: 0,
     createdAt: new Date(),
+    unreadMessageCount: 0,
+    latestMessage: {
+      messageType: '',
+      content: '',
+      nickname: '',
+    },
   },
 });
 
@@ -55,6 +60,17 @@ export const alarmState = atom<boolean>({
 });
 
 export const pageState = atom<string>({
-  key: "pageState",
-  default: "home",
+  key: 'pageState',
+  default: 'home',
+});
+
+export const messageAlarmState = atom<Alarm>({
+  key: 'messageAlarmState',
+  default: {
+    receiveId: 0,
+    roomId: 0,
+    content: '',
+    messageType: '',
+    senderId: 0,
+  },
 });

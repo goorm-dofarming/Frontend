@@ -1,3 +1,4 @@
+
 import Card from "@/src/_components/Common/Card";
 import styles from "./map.module.scss";
 import { useEffect, useRef, useState } from "react";
@@ -39,8 +40,8 @@ const Map = () => {
     alert("링크가 클립보드에 복사되었습니다. 친구와 쉽게 공유하세요!");
   };
   useEffect(() => {
-    document.cookie = "username=dofarming; SameSite=Strict; Secure";
-    const script = document.createElement("script");
+    document.cookie = 'username=dofarming; SameSite=Strict; Secure';
+    const script = document.createElement('script');
     script.src = KAKAO_SDK_URL;
     document.head.appendChild(script);
 
@@ -55,6 +56,7 @@ const Map = () => {
           level: 3,
         };
         const map = new window.kakao.maps.Map(container.current, options);
+
         const imageSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/pin/pin_location.png`;
         const imageSize = new window.kakao.maps.Size(60, 80); // 마커이미지의 크기입니다
         const markerImage = new window.kakao.maps.MarkerImage(
@@ -85,7 +87,7 @@ const Map = () => {
           xAnchor: -0.2,
         });
         setCustomOverlay(customOverlay as any);
-        window.kakao.maps.event.addListener(marker, "click", function () {
+        window.kakao.maps.event.addListener(marker, 'click', function () {
           setShowCustomOverlay((prev: boolean) => !prev);
         });
 

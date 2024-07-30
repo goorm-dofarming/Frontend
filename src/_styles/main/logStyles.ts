@@ -62,14 +62,18 @@ export const LogContainer = styled.div`
     width: 100%;
   }
   .divider {
-    border-bottom: 1px solid gray;
+    border-bottom: 1px solid #efefef;
   }
   .logSideContent {
+    position: absolute;
+    right: 0;
     width: 28%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    border: 2px solid #efefef;
+    /* border: 2px solid #efefef; */
+    z-index: 1;
     header {
       width: 100%;
       height: auto;
@@ -94,5 +98,10 @@ export const LogContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  .kakaoMap {
+    width: 100%;
+    height: 100%;
   }
 `;
