@@ -4,15 +4,39 @@ import styles from "./share.module.scss";
 import Image from "next/image";
 import cloud from "@/src/_assets/main/map/cloud.png";
 import { ImQuotesLeft, ImQuotesRight } from "react-icons/im";
+import { useQuery } from "@tanstack/react-query";
+import { getLogData } from "@/pages/api/log";
+import CardListItem from "@/src/_components/Common/CardListItem";
+import { Recommend } from "@/src/types/aboutMap";
 const LinkShare = () => {
   const router = useRouter();
-  const [logId, setLogId] = useState(router.query.id);
+  const [logId, setLogId] = useState<number>(0);
+  const [logData, setLogData] = useState<Recommend[]>([]);
   //   const id = router.query.id;
+  const getLog = useQuery({
+    queryKey: ["getLog"],
+    queryFn: async () => {
+      const response = await getLogData(logId);
+
+      console.log("get log", response.data);
+
+      if (response.status === 200) {
+        setLogData([...response.data]);
+      }
+      return response.data;
+    },
+  });
   useEffect(() => {
-    console.log(router.query);
-    console.log(typeof logId, logId);
+    if (router) {
+      setLogId(Number(router?.query?.id));
+    }
+  }, [router]);
+  useEffect(() => {
+    console.log(logId);
   }, [logId]);
-  return (
+  return getLog.isLoading ? (
+    <div>loading</div>
+  ) : (
     <main className={styles.main}>
       <p className={styles.title}>
         우리의 <br />
@@ -33,7 +57,15 @@ const LinkShare = () => {
           </div>
         </div>
       </section>
-      <section></section>
+      <section className={styles.list}>
+        {logData.map((recommend, index) => (
+          <CardListItem
+            key={recommend.id + index}
+            recommend={recommend}
+            // width={window.innerWidth}
+          />
+        ))}
+      </section>
     </main>
   );
 };

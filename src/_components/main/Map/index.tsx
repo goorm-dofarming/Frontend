@@ -22,7 +22,7 @@ const Map = () => {
   );
   const [pinInfo, setPinInfo] = useState<any[]>([]);
   const container = useRef<HTMLElement>(null);
-
+  console.log(randomPin.logId);
   const onClickShareBtn = () => {
     if (!cookies.token) {
       alert("로그인인 필요합니다.");

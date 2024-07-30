@@ -57,6 +57,8 @@ export type Recommend = {
   image: string;
   mapX: number;
   mapY: number;
+  countLikes: number;
+  liked:false;
 };
 
 export interface RandomPinType {
