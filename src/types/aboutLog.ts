@@ -37,3 +37,29 @@ export interface onSelectCityType {
   longitude: number;
   latitude: number;
 }
+
+interface GeoJsonFeature {
+  type: string;
+  properties: {
+    id: number;
+    mag: number;
+    time: string;
+    felt: null;
+    tsunami: number;
+  };
+  geometry: {
+    type: string;
+    coordinates: number[];
+  };
+}
+
+export interface GeoJsonData {
+  type: string;
+  crs: {
+    type: string;
+    properties: {
+      name: string;
+    };
+  };
+  features: GeoJsonFeature[];
+}

@@ -1,12 +1,12 @@
 import Card from '@/src/_components/Common/Card';
 import styles from './map.module.scss';
-import { useEffect, useRef, useState } from "react";
-import { pageState, randomPinState } from "@/src/atom/stats";
-import { useRecoilState } from "recoil";
-import { DataType, Recommend } from "@/src/types/aboutMap";
-import { makeCustomOverlay } from "./utils";
-import { FaLink } from "react-icons/fa6";
-import { RiKakaoTalkFill } from "react-icons/ri";
+import { useEffect, useRef, useState } from 'react';
+import { pageState, randomPinState } from '@/src/atom/stats';
+import { useRecoilState } from 'recoil';
+import { DataType, Recommend } from '@/src/types/aboutMap';
+import { makeCustomOverlay } from './utils';
+import { FaLink } from 'react-icons/fa6';
+import { RiKakaoTalkFill } from 'react-icons/ri';
 // const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=cf2b17f421b6bb8091a506fb2e0a675c&autoload=false&libraries=services`;
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services`;
 
@@ -27,8 +27,8 @@ const Map = () => {
     return <RiKakaoTalkFill />;
   };
   useEffect(() => {
-    document.cookie = "username=dofarming; SameSite=Strict; Secure";
-    const script = document.createElement("script");
+    document.cookie = 'username=dofarming; SameSite=Strict; Secure';
+    const script = document.createElement('script');
     script.src = KAKAO_SDK_URL;
     document.head.appendChild(script);
 
@@ -51,7 +51,7 @@ const Map = () => {
           (result: any, status: any) => {
             if (status === kakao.maps.services.Status.OK) {
               for (let i = 0; i < result.length; i++) {
-                if (result[i].region_type === "H") {
+                if (result[i].region_type === 'H') {
                   setRandomPin((prev) => ({
                     ...prev,
                     address: result[i].address_name,
@@ -91,7 +91,7 @@ const Map = () => {
           xAnchor: -0.3,
         });
         setCustomOverlay(customOverlay as any);
-        window.kakao.maps.event.addListener(marker, "click", function () {
+        window.kakao.maps.event.addListener(marker, 'click', function () {
           setShowCustomOverlay((prev: boolean) => !prev);
         });
 

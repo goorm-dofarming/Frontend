@@ -1,41 +1,39 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+import React, { useEffect, useRef, useState } from 'react';
 
 // styles
 import { LogContainer } from '@/src/_styles/main/logStyles';
 
 // libraries
 import { useMutation, useQuery } from '@tanstack/react-query';
-import Map, {
-  GeolocateControl,
-  MapRef,
-  Marker,
-  NavigationControl,
-} from 'react-map-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
 import { useRecoilValue } from 'recoil';
 import { pageState } from '@/src/atom/stats';
 
 // types
-import {
-  logDataType,
-  onSelectCityType,
-  recommendsType,
-} from '@/src/types/aboutLog';
+import { logDataType, recommendsType } from '@/src/types/aboutLog';
 
 // img
 import Card from '../Common/Card';
-import Pin from '@/src/_assets/main/map/pin_location.svg';
+import Logo from '@/src/_assets/icons/main_logo.jpg';
 
 // apis
 import { getLog, getLogData } from '@/pages/api/log';
+import { StaticImageData } from 'next/image';
+import { pinType } from '@/src/constatns/PinSort';
 
-// constants
+const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services,clusterer`;
+const imageSrc = 'http://54.180.126.49/images/pin/pin_location.png';
+
 const Log = () => {
+  // 위치 이동
+  const [location, setLocation] = useState({
+    latitude: 36.34, // default latitude
+    longitude: 127.77, // default longitude
+    level: 13,
+  });
   // 페이지 이동 감지
   const page = useRecoilValue(pageState);
-  // Map DOM 컨트롤
-  const mapRef = useRef<MapRef>(null);
+  // kakao map dom 컨트롤
+  const containerRef = useRef<HTMLElement>(null);
 
   // 전체 로그 데이터
   const [logData, setLogData] = useState<logDataType[]>([
@@ -51,7 +49,7 @@ const Log = () => {
     },
   ]);
 
-  // test log data
+  // 선택된 로그 데이터들
   const [selectedLogData, setSelectedLogData] = useState<recommendsType[]>([
     {
       id: 0,
@@ -65,6 +63,7 @@ const Log = () => {
     },
   ]);
 
+  // 전체 로그 데이터 불러오기
   const getLogs = useQuery({
     queryKey: ['getLogs'],
     queryFn: async () => {
@@ -79,6 +78,7 @@ const Log = () => {
     },
   });
 
+  // 로그 하위 데이터 불러오기
   const getLogSubData = useMutation({
     mutationFn: async (logId: number) => {
       const response = await getLogData(logId);
@@ -90,43 +90,159 @@ const Log = () => {
     },
   });
 
-  // 지도 핀
-  const Pins = () => (
-    <>
-      {selectedLogData.map((data, i) => (
-        <Marker
-          key={i}
-          latitude={data.mapY}
-          longitude={data.mapX}
-          anchor="bottom"
-          onClick={() => console.log(data)}
-        >
-          <Image src={Pin} alt="핀" width={20} height={20} />
-        </Marker>
-      ))}
-    </>
-  );
+  // 이미지 URL을 문자열로 변환하는 함수
+  const getImageSrc = (img: StaticImageData | string): string => {
+    if (typeof img === 'string') {
+      return img;
+    } else {
+      return img.src;
+    }
+  };
 
-  // 맵 위치 이동
-  const onSelectCity = useCallback(
-    ({ longitude, latitude }: onSelectCityType) => {
-      mapRef.current?.flyTo({
-        center: [longitude, latitude],
-        duration: 2000,
-        zoom: 9,
-      });
-    },
-    []
-  );
-
-  useEffect(() => {
-    console.log('selected log data: ', selectedLogData);
-    console.log('logData : ', logData);
-  }, [selectedLogData, logData]);
+  // 종류에 따른 핀 설정
+  const sortingPins = (dataType: number): string => {
+    const pin = pinType.find((type) => type.dataType === dataType);
+    return pin ? getImageSrc(pin.img) : 'null';
+  };
 
   useEffect(() => {
     getLogs.refetch();
   }, [page]);
+
+  useEffect(() => {
+    document.cookie = 'username=dofarming; SameSite=Strict; Secure';
+    const script = document.createElement('script');
+    script.src = KAKAO_SDK_URL;
+    document.head.appendChild(script);
+
+    script.onload = () => {
+      window.kakao.maps.load(() => {
+        const center = new window.kakao.maps.LatLng(
+          location.latitude,
+          location.longitude
+        );
+        const options = {
+          center,
+          level: location.level,
+        };
+        const map = new window.kakao.maps.Map(containerRef.current, options);
+
+        const clusterer = new kakao.maps.MarkerClusterer({
+          map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
+          averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+          minLevel: 5, // 클러스터 할 최소 지도 레벨
+        });
+
+        const imageSize = new window.kakao.maps.Size(60, 80); // 마커이미지의 크기입니다
+        const imageOption = {
+          offset: new window.kakao.maps.Point(0, 0),
+        }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+        const markerImage = new window.kakao.maps.MarkerImage(
+          imageSrc,
+          imageSize,
+          imageOption
+        );
+
+        const markers = [];
+
+        for (let i = 0; i < logData.length; i++) {
+          let marker = new kakao.maps.Marker({
+            map: map, // 마커를 표시할 지도
+            position: new kakao.maps.LatLng(
+              Number(logData[i].latitude),
+              Number(logData[i].longitude)
+            ), // 마커를 표시할 위치
+          });
+
+          markers.push(marker);
+
+          window.kakao.maps.event.addListener(
+            marker,
+            'click',
+            makeClickListener(logData[i])
+          );
+        }
+
+        for (let i = 0; i < selectedLogData.length; i++) {
+          let imageSize = new kakao.maps.Size(24, 35);
+
+          let imageSrc = sortingPins(selectedLogData[i].dataType);
+
+          // 마커 이미지를 생성합니다
+          let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+          // 마커를 생성합니다
+          let marker = new kakao.maps.Marker({
+            map: map, // 마커를 표시할 지도
+            position: new kakao.maps.LatLng(
+              selectedLogData[i].mapY,
+              selectedLogData[i].mapX
+            ), // 마커를 표시할 위치
+            image: markerImage, // 마커 이미지
+          });
+
+          // 마커 객체에 title 속성을 추가합니다
+          marker.title = selectedLogData[i].title;
+
+          const imageContent = selectedLogData[i].image
+            ? selectedLogData[i].image
+            : Logo;
+
+          const infowindow = new window.kakao.maps.InfoWindow({
+            content: `<div style="width:200px;height:200px;text-align:center;padding:6px 0;borderRadius:0.3rem;border:none;"><div>${selectedLogData[i].title.length > 15 ? selectedLogData[i].title.slice(0, 14) + '...' : selectedLogData[i].title}</div><div><img src=${imageContent} alt="사진" style="width:200px;height:170px;"/></div></div> `,
+          });
+
+          window.kakao.maps.event.addListener(
+            marker,
+            'mouseover',
+            makeOverListener(map, marker, infowindow)
+          );
+          window.kakao.maps.event.addListener(
+            marker,
+            'mouseout',
+            makeOutListener(infowindow)
+          );
+        }
+        // 클러스터러에 마커들을 추가합니다
+        clusterer.addMarkers(markers);
+      });
+
+      function makeOverListener(
+        map: kakao.maps.Map,
+        marker: kakao.maps.Marker,
+        infowindow: any
+      ) {
+        return function () {
+          infowindow.open(map, marker);
+        };
+      }
+
+      function makeOutListener(infowindow: any) {
+        return function () {
+          infowindow.close();
+        };
+      }
+
+      function makeClickListener(data: logDataType) {
+        return function () {
+          const logData = getLogSubData.mutate(data.logId);
+          console.log('logData: ', logData);
+          setLocation({
+            latitude: Number(data.latitude),
+            longitude: Number(data.longitude),
+            level: 8,
+          });
+        };
+      }
+    };
+  }, [selectedLogData, logData]);
+
+  useEffect(() => {
+    // console.log('selected log data: ', selectedLogData);
+    console.log('selected log data: ', selectedLogData);
+    console.log('logData : ', logData);
+  }, [logData, selectedLogData]);
 
   return (
     <LogContainer>
@@ -140,9 +256,10 @@ const Log = () => {
             style={{ marginBottom: '0.4rem' }}
             onClick={() => {
               getLogSubData.mutate(data.logId);
-              onSelectCity({
+              setLocation({
                 latitude: Number(data.latitude),
                 longitude: Number(data.longitude),
+                level: 8,
               });
             }}
           >
@@ -151,26 +268,13 @@ const Log = () => {
               <div className="logAddress">주소</div>
               <div className="logTheme">{data.theme}</div>
             </div>
+            {/* 색상 좀 연하게 + border-bottom로 변경 */}
             <div className="divider"></div>
           </div>
         ))}
       </div>
       <div className="logContent">
-        <Map
-          ref={mapRef}
-          mapboxAccessToken={process.env.NEXT_PUBLIC_REACT_MAP_GL_ACCESS_TOKEN}
-          initialViewState={{
-            latitude: 36.34,
-            longitude: 127.77,
-            zoom: 5,
-          }}
-          style={{ width: '100%', height: '100%' }}
-          mapStyle="mapbox://styles/mapbox/light-v9"
-        >
-          <GeolocateControl position="top-left" />
-          <NavigationControl position="top-left" />
-          <Pins />
-        </Map>
+        <section id="container" ref={containerRef} className="kakaoMap" />
       </div>
       <div className="logSideContent">
         <header></header>

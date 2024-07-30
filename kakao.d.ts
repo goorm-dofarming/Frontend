@@ -17,6 +17,7 @@ declare namespace kakao {
     }
 
     class Marker {
+      title: string;
       constructor(options: MarkerOptions);
     }
 
@@ -59,6 +60,25 @@ declare namespace kakao {
       enum Status {
         OK = 'OK',
       }
+    }
+
+    // MarkerClusterer 추가
+    class MarkerClusterer {
+      constructor(options: MarkerClustererOptions);
+      addMarker(marker: Marker): void;
+      addMarkers(markers: Marker[]): void;
+      removeMarker(marker: Marker): void;
+      removeMarkers(markers: Marker[]): void;
+      clear(): void;
+    }
+
+    interface MarkerClustererOptions {
+      map: Map;
+      averageCenter?: boolean;
+      minLevel?: number;
+      disableClickZoom?: boolean;
+      gridSize?: number;
+      styles?: object[];
     }
   }
 }
