@@ -58,12 +58,12 @@ export type Recommend = {
   mapX: number;
   mapY: number;
   countLikes: number;
-  liked:false;
+  liked: boolean;
 };
 
 export interface RandomPinType {
   address: string;
-  logId:number;
+  logId: number;
   lat: number;
   lng: number;
   latDMS: string;

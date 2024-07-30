@@ -1,34 +1,34 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 // styles
-import { LogContainer } from '@/src/_styles/main/logStyles';
+import { LogContainer } from "@/src/_styles/main/logStyles";
 
 // libraries
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Map, {
   GeolocateControl,
   MapRef,
   Marker,
   NavigationControl,
-} from 'react-map-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import { useRecoilValue } from 'recoil';
-import { pageState } from '@/src/atom/stats';
+} from "react-map-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+import { useRecoilValue } from "recoil";
+import { pageState } from "@/src/atom/stats";
 
 // types
 import {
   logDataType,
   onSelectCityType,
   recommendsType,
-} from '@/src/types/aboutLog';
+} from "@/src/types/aboutLog";
 
 // img
-import Card from '../Common/Card';
-import Pin from '@/src/_assets/main/map/pin_location.svg';
+import Card from "../Common/Card";
+import Pin from "@/src/_assets/main/map/pin_location.svg";
 
 // apis
-import { getLog, getLogData } from '@/pages/api/log';
+import { getLog, getLogData } from "@/pages/api/log";
 
 // constants
 const Log = () => {
@@ -42,11 +42,11 @@ const Log = () => {
     {
       logId: 0,
       userId: 0,
-      theme: '',
-      address: '',
-      latitude: '',
-      longitude: '',
-      createdAt: '',
+      theme: "",
+      address: "",
+      latitude: "",
+      longitude: "",
+      createdAt: "",
       status: false,
     },
   ]);
@@ -55,18 +55,20 @@ const Log = () => {
   const [selectedLogData, setSelectedLogData] = useState<recommendsType[]>([
     {
       id: 0,
-      title: '',
-      addr: '',
+      title: "",
+      addr: "",
       dataType: 1,
-      tel: '',
-      image: '',
+      tel: "",
+      image: "",
       mapX: 0,
       mapY: 0,
+      countLikes: 0,
+      liked: false,
     },
   ]);
 
   const getLogs = useQuery({
-    queryKey: ['getLogs'],
+    queryKey: ["getLogs"],
     queryFn: async () => {
       const response = await getLog();
 
@@ -120,8 +122,8 @@ const Log = () => {
   );
 
   useEffect(() => {
-    console.log('selected log data: ', selectedLogData);
-    console.log('logData : ', logData);
+    console.log("selected log data: ", selectedLogData);
+    console.log("logData : ", logData);
   }, [selectedLogData, logData]);
 
   useEffect(() => {
@@ -137,7 +139,7 @@ const Log = () => {
         {logData.map((data, i) => (
           <div
             key={i}
-            style={{ marginBottom: '0.4rem' }}
+            style={{ marginBottom: "0.4rem" }}
             onClick={() => {
               getLogSubData.mutate(data.logId);
               onSelectCity({
@@ -147,7 +149,7 @@ const Log = () => {
             }}
           >
             <div className="log">
-              <div className="logDate">{data.createdAt.split('T')[0]}</div>
+              <div className="logDate">{data.createdAt.split("T")[0]}</div>
               <div className="logAddress">주소</div>
               <div className="logTheme">{data.theme}</div>
             </div>
@@ -164,7 +166,7 @@ const Log = () => {
             longitude: 127.77,
             zoom: 5,
           }}
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: "100%", height: "100%" }}
           mapStyle="mapbox://styles/mapbox/light-v9"
         >
           <GeolocateControl position="top-left" />
