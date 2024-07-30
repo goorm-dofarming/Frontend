@@ -20,6 +20,9 @@ import {
   signupSocialLogin,
 } from '@/pages/api/auth';
 
+// components
+import Landing from '@/src/_components/Common/Landing';
+
 const Page = () => {
   const router = useRouter();
   const [, setCookies] = useCookies(['token']);
@@ -78,9 +81,7 @@ const Page = () => {
   /* eslint-enable react-hooks/exhaustive-deps */
   return (
     <SocialLoginContainer>
-      <div>
-        <Image src={Logo} alt="로고" />
-      </div>
+      <Landing />
     </SocialLoginContainer>
   );
 };
