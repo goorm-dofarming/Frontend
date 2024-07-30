@@ -1,20 +1,40 @@
 import React from 'react';
 import Image from 'next/image';
-import Hat from '@/src/_assets/icons/main_logo.png';
-import styled, { keyframes } from 'styled-components';
+import Hat from '@/src/_assets/icons/hat_logo.png';
+import styled, { keyframes, css } from 'styled-components';
 import { colorTheme } from '@/src/_styles/common/commonColorStyles';
 
-// 모자를 그네 타듯이 회전하는 애니메이션
-const swing = keyframes`
-  0%, 100% {
-    transform: rotate(10deg);
+const getRotationAngle = (index: number) => {
+  const angles = [-50, -40, -30, -20, 0, 20, 30, 40, 50];
+  return angles[index % angles.length];
+};
+
+const getTranslationY = (index: number) => {
+  const translations = [100, 60, 30, 10, 0, 10, 30, 60, 100];
+  return translations[index % translations.length];
+};
+
+const getTranslationX = (index: number) => {
+  const translations = [35, 15, 5, 0, 0, 0, -5, -15, -35];
+  return translations[index % translations.length];
+};
+
+const bounce = (index: number) => keyframes`
+  0%, 30% {
+    transform: translateY(${getTranslationY(index)}px) translateX(${getTranslationX(index)}px) rotate(${getRotationAngle(index)}deg);
   }
-  50% {
-    transform: rotate(-10deg);
+  10% {
+    transform: translateY(${getTranslationY(index) - 25}px) translateX(${getTranslationX(index)}px) rotate(${getRotationAngle(index)}deg);
+  }
+
+  20% {
+    transform: translateY(${getTranslationY(index) + 10}px) translateX(${getTranslationX(index)}px) rotate(${getRotationAngle(index)}deg);
+  }
+  100% {
+    transform: translateY(${getTranslationY(index)}px) translateX(${getTranslationX(index)}px) rotate(${getRotationAngle(index)}deg);
   }
 `;
 
-// 로고 컨테이너 스타일 정의
 const LogoContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -24,22 +44,52 @@ const LogoContainer = styled.div`
   height: 50%;
   position: relative;
   flex-direction: column;
+  gap: 10px;
+
+  .logo {
+    font-size: 3rem;
+    font-weight: 900;
+    color: ${colorTheme.logoBrownText};
+    font-family: 'NanumBarunGothic';
+    display: flex;
+    gap: 5px;
+  }
+
+  .hat {
+    object-fit: cover;
+    position: relative;
+  }
 `;
 
-// 이미지를 스타일링하고 애니메이션 적용
-const StyledImage = styled(Image)`
-  object-fit: contain;
-  animation: ${swing} 2s infinite ease-in-out;
+const Letter = styled.span<{ index: number }>`
+  width: 3rem;
+  text-align: center;
+  ${({ index }) => css`
+    transform: translateY(${getTranslationY(index)}px)
+      translateX(${getTranslationX(index)}px)
+      rotate(${getRotationAngle(index)}deg);
+    animation: ${bounce(index)} 3s linear infinite;
+    animation-delay: ${index * 0.2}s; // 인덱스에 따라 지연 시간 추가
+    animation-fill-mode: forwards; // 애니메이션 완료 후 마지막 상태 유지
+  `}
 `;
 
-// 랜딩 컴포넌트
 const Landing = () => {
+  const text = 'DOFARMING';
   return (
     <LogoContainer>
-      <StyledImage
+      <div className="logo">
+        {text.split('').map((letter, index) => (
+          <Letter key={index} index={index}>
+            {letter}
+          </Letter>
+        ))}
+      </div>
+      <Image
         src={Hat}
         alt="hat"
-        fill
+        className="hat"
+        layout="intrinsic"
         sizes="(max-width: 500px) 100vw, 50vw"
       />
     </LogoContainer>
