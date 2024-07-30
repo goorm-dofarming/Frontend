@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 // styles
-import { LogContainer } from '@/src/_styles/main/logStyles';
+import { LogContainer } from "@/src/_styles/main/logStyles";
 
 // libraries
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -40,11 +40,11 @@ const Log = () => {
     {
       logId: 0,
       userId: 0,
-      theme: '',
-      address: '',
-      latitude: '',
-      longitude: '',
-      createdAt: '',
+      theme: "",
+      address: "",
+      latitude: "",
+      longitude: "",
+      createdAt: "",
       status: false,
     },
   ]);
@@ -53,19 +53,21 @@ const Log = () => {
   const [selectedLogData, setSelectedLogData] = useState<recommendsType[]>([
     {
       id: 0,
-      title: '',
-      addr: '',
+      title: "",
+      addr: "",
       dataType: 1,
-      tel: '',
-      image: '',
+      tel: "",
+      image: "",
       mapX: 0,
       mapY: 0,
+      countLikes: 0,
+      liked: false,
     },
   ]);
 
   // 전체 로그 데이터 불러오기
   const getLogs = useQuery({
-    queryKey: ['getLogs'],
+    queryKey: ["getLogs"],
     queryFn: async () => {
       const response = await getLog();
 
@@ -253,7 +255,7 @@ const Log = () => {
         {logData.map((data, i) => (
           <div
             key={i}
-            style={{ marginBottom: '0.4rem' }}
+            style={{ marginBottom: "0.4rem" }}
             onClick={() => {
               getLogSubData.mutate(data.logId);
               setLocation({
@@ -264,7 +266,7 @@ const Log = () => {
             }}
           >
             <div className="log">
-              <div className="logDate">{data.createdAt.split('T')[0]}</div>
+              <div className="logDate">{data.createdAt.split("T")[0]}</div>
               <div className="logAddress">주소</div>
               <div className="logTheme">{data.theme}</div>
             </div>

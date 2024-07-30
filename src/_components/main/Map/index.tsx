@@ -1,30 +1,43 @@
-import Card from '@/src/_components/Common/Card';
-import styles from './map.module.scss';
-import { useEffect, useRef, useState } from 'react';
-import { pageState, randomPinState } from '@/src/atom/stats';
-import { useRecoilState } from 'recoil';
-import { DataType, Recommend } from '@/src/types/aboutMap';
-import { makeCustomOverlay } from './utils';
-import { FaLink } from 'react-icons/fa6';
-import { RiKakaoTalkFill } from 'react-icons/ri';
-// const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=cf2b17f421b6bb8091a506fb2e0a675c&autoload=false&libraries=services`;
-const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services`;
+
+import Card from "@/src/_components/Common/Card";
+import styles from "./map.module.scss";
+import { useEffect, useRef, useState } from "react";
+import { pageState, randomPinState } from "@/src/atom/stats";
+import { useRecoilState } from "recoil";
+import { DataType, Recommend } from "@/src/types/aboutMap";
+import { makeCustomOverlay, makeInfoWindow } from "./utils";
+import { useCookies } from "react-cookie";
+import { FaLessThanEqual } from "react-icons/fa";
+import { useRouter } from "next/router";
+const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=services`;
 
 const Map = () => {
-  // const { markerPositions, size } = props;
+  const router = useRouter();
+  const [cookies] = useCookies(["token"]);
   const [page, setPage] = useRecoilState(pageState);
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   const [kakaoMap, setKakaoMap] = useState<kakao.maps.Map | null>(null);
   const [focusPin, setFocusPin] = useState<Recommend | null>(null);
   const [customOverlay, setCustomOverlay] = useState<any>(null);
   const [showCustomOverlay, setShowCustomOverlay] = useState<boolean>(true);
+  const [showPinInfo, setShowPinInfo] = useState<boolean[]>(
+    new Array<boolean>(randomPin.recommends.length)
+  );
+  const [pinInfo, setPinInfo] = useState<any[]>([]);
   const container = useRef<HTMLElement>(null);
-
-  const Link = () => {
-    return <FaLink />;
-  };
-  const KakaoTalk = () => {
-    return <RiKakaoTalkFill />;
+  useEffect(() => {
+    if (router) {
+      console.log(router);
+    }
+  }, [router]);
+  console.log(randomPin);
+  const onClickShareBtn = () => {
+    if (!cookies.token) {
+      alert("로그인인 필요합니다.");
+      return;
+    }
+    navigator.clipboard.writeText(`${window.location}tours/${randomPin.logId}`);
+    alert("링크가 클립보드에 복사되었습니다. 친구와 쉽게 공유하세요!");
   };
   useEffect(() => {
     document.cookie = 'username=dofarming; SameSite=Strict; Secure';
@@ -44,62 +57,47 @@ const Map = () => {
         };
         const map = new window.kakao.maps.Map(container.current, options);
 
-        const geocoder = new window.kakao.maps.services.Geocoder();
-        geocoder.coord2RegionCode(
-          center.getLng(),
-          center.getLat(),
-          (result: any, status: any) => {
-            if (status === kakao.maps.services.Status.OK) {
-              for (let i = 0; i < result.length; i++) {
-                if (result[i].region_type === 'H') {
-                  setRandomPin((prev) => ({
-                    ...prev,
-                    address: result[i].address_name,
-                  }));
-                  break;
-                }
-              }
-            } else {
-              console.log('error');
-            }
-          }
-        );
-        const imageSrc = 'http://54.180.126.49/images/pin/pin_location.png';
+        const imageSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/pin/pin_location.png`;
         const imageSize = new window.kakao.maps.Size(60, 80); // 마커이미지의 크기입니다
-        const imageOption = {
-          offset: new window.kakao.maps.Point(0, 0),
-        }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-
         const markerImage = new window.kakao.maps.MarkerImage(
           imageSrc,
-          imageSize,
-          imageOption
+          imageSize
         );
-
         const marker = new window.kakao.maps.Marker({
           map: map,
           position: center,
           image: markerImage,
         });
 
-        const content = makeCustomOverlay(randomPin);
+        const content = document.createElement("div");
+        content.innerHTML = makeCustomOverlay(randomPin);
+
+        content
+          .querySelector("#share-link")
+          ?.addEventListener("click", onClickShareBtn);
+        content
+          .querySelector("#share-kakaotalk")
+          ?.addEventListener("click", onClickShareBtn);
+
         const customOverlay = new window.kakao.maps.CustomOverlay({
-          map: map,
+          // map: map,
           position: center,
           content: content,
-          yAnchor: 1,
-          xAnchor: -0.3,
+          yAnchor: 1.4,
+          xAnchor: -0.2,
         });
         setCustomOverlay(customOverlay as any);
         window.kakao.maps.event.addListener(marker, 'click', function () {
           setShowCustomOverlay((prev: boolean) => !prev);
         });
 
-        // const length =
-        //   randomPin.recommends.length < 8 ? randomPin.recommends.length : 8;
+        let arr = new Array<boolean>(randomPin.recommends.length);
+        arr.fill(false);
+        setShowPinInfo([...arr]);
+        const infoWindows: any[] = [];
         for (let i = 0; i < randomPin.recommends.length; i++) {
           const curr = randomPin.recommends[i];
-          const pinSize = new window.kakao.maps.Size(48, 60);
+          const pinSize = new kakao.maps.Size(48, 60);
           const pinImg = DataType[curr.dataType].img;
           const newMarkerImg = new kakao.maps.MarkerImage(pinImg, pinSize);
           const latlng = new kakao.maps.LatLng(curr.mapY, curr.mapX);
@@ -109,35 +107,49 @@ const Map = () => {
             position: latlng, // 마커를 표시할 위치
             image: newMarkerImg, // 마커 이미지
           });
-          const infowindow = new window.kakao.maps.InfoWindow({
-            content: `<div style="width:150px;text-align:center;padding:6px 0;">${curr.title}</div>`,
+          const infowindowContent = makeInfoWindow(curr.title);
+          const infowindow = new window.kakao.maps.CustomOverlay({
+            map: map,
+            clickable: true,
+            position: latlng,
+            content: infowindowContent,
+            yAnchor: 3.15,
+            xAnchor: 0.5,
           });
-          // 마커에 마우스오버 이벤트를 등록합니다
-          window.kakao.maps.event.addListener(pin, 'mouseover', function () {
-            // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
-            infowindow.open(map, pin);
-          });
+          infoWindows.push(infowindow);
 
-          window.kakao.maps.event.addListener(pin, 'mouseout', function () {
-            // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
-            infowindow.close();
+          window.kakao.maps.event.addListener(pin, "click", function () {
+            setShowPinInfo((prev) => {
+              const newInfos = [...prev];
+              const tmp = newInfos[i];
+              newInfos[i] = !tmp;
+              return newInfos;
+            });
           });
         }
+        setPinInfo([...infoWindows]);
         setKakaoMap(map);
       });
     };
   }, [randomPin.lng, randomPin.lat, randomPin.recommends, randomPin.address]);
-
+  useEffect(() => {
+    if (kakaoMap && pinInfo.length > 0) {
+      for (let i = 0; i < showPinInfo.length; i++) {
+        if (showPinInfo[i]) {
+          pinInfo[i].setMap(kakaoMap);
+        } else {
+          pinInfo[i].setMap(null);
+        }
+      }
+    }
+  }, [showPinInfo]);
   useEffect(() => {
     if (kakaoMap === null) {
       return;
     }
-    // save center position
-    const center = kakaoMap.getCenter();
-    // relayout and...
-    kakaoMap.relayout();
-    // restore
+    const center = new window.kakao.maps.LatLng(randomPin.lat, randomPin.lng);
     kakaoMap.setCenter(center);
+    kakaoMap.relayout();
   }, [kakaoMap]);
 
   useEffect(() => {
@@ -153,12 +165,9 @@ const Map = () => {
     if (kakaoMap === null) {
       return;
     }
-    // save center position
-    const center = kakaoMap.getCenter();
-    // relayout and...
-    kakaoMap.relayout();
-    // restore
+    const center = new window.kakao.maps.LatLng(randomPin.lat, randomPin.lng);
     kakaoMap.setCenter(center);
+    kakaoMap.relayout();
   }, [page]);
   useEffect(() => {
     if (kakaoMap === null || container.current === null) {
@@ -170,8 +179,8 @@ const Map = () => {
     } else {
       center = new window.kakao.maps.LatLng(randomPin.lat, randomPin.lng);
     }
-    kakaoMap.relayout();
     kakaoMap.setCenter(center);
+    kakaoMap.relayout();
   }, [focusPin]);
   return (
     <main className={styles.main}>

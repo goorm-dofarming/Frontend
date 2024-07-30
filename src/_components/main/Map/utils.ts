@@ -2,6 +2,7 @@ import { RandomPinType } from "@/src/types/aboutMap";
 import kakaotalk from "@/src/_assets/main/map/kakaotalk.png";
 import link from "@/src/_assets/main/map/link.png";
 const imgSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/share/`;
+
 const makeCOImages = (randomPin: RandomPinType) => {
   let images = ``;
   let count = 0;
@@ -72,13 +73,15 @@ drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
       <div
         style="
           text-align: left;
-          flex: 1;
           margin-right: 5px;
+          width:70%;
         "
       >
-        <p style="margin: 0; font-size: 12px;">${randomPin.address}</p>
+        <p style="width:100%; white-space: nowrap;
+    overflow-y: hidden;
+    text-overflow: ellipsis; margin: 0; font-size: 12px;">${randomPin.address}</p>
         <p style="margin: 0; font-size: 12px; color: #ccc;">
-          ${randomPin?.theme?.id}
+          ${randomPin?.theme}
         </p>
       </div>
       <div
@@ -91,17 +94,29 @@ drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
       >
         <!-- 버튼 또는 추가 UI 요소를 여기에 추가할 수 있습니다 -->
         <button
+            type="button"
         id="share-kakaotalk"
         style="background :none; border:none;cursor:pointer;">
           <img src=${imgSrc + "kakaotalk.png"} alt="kakaotalk"  style="width: 28px; height: 28px; "/>
         </button>
          <button  
-         id="share-link"
+         type="button"
+        id="share-link"
          style="background :none; border:none;cursor:pointer;">
-          <img src=${imgSrc + "link.png"} alt="kakaotalk"  style="width: 24px; height: 24px; "/>
+          <img src=${imgSrc + "link.png"} alt="link"  style="width: 24px; height: 24px; "/>
         </button>
       </div>
     </div>
   </div>
 `;
+};
+
+export const makeInfoWindow = (title: string) => {
+  return `<div style="width:150px;
+background-color:white;
+text-align:center;padding:8px; font-size:16px;
+white-space: nowrap;
+    overflow: hidden;
+text-overflow:ellipsis;  filter: drop-shadow(0 20px 13px rgb(0 0 0 / 0.03))
+    drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));">${title}</div>`;
 };

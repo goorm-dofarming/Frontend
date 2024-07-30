@@ -26,6 +26,8 @@ export interface recommendsType {
   image: string;
   mapX: number;
   mapY: number;
+  liked: boolean;
+  countLikes: number;
 }
 
 export interface locationType {
