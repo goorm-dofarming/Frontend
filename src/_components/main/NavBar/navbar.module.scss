@@ -65,20 +65,17 @@
     top: 1rem;
     right: 1rem;
   }
+}
 
+.isMember {
   &:hover {
     background-color: c.$C_WHITE;
     svg {
       fill: c.$C_SECONDARY;
     }
   }
-  // &:focus {
-  //   background-color: c.$C_WHITE;
-  //   svg {
-  //     fill: c.$C_SECONDARY;
-  //   }
-  // }
 }
+
 .focus {
   background-color: c.$C_WHITE;
   svg {

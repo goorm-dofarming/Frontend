@@ -8,4 +8,5 @@ export const colorTheme = {
   inputBorder: '#A09F9F',
   divider: '#D2D1D1',
   customOverlay: '#3E3E3E',
+  white: '#ffffff',
 };

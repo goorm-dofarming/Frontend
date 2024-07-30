@@ -1,23 +1,25 @@
-import React, { MouseEventHandler, useState } from "react";
-import Image from "next/image";
-import styles from "./randomPin.module.scss";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
-import { getRandomCoord, decimalToDMS } from "./util";
+import React, { MouseEventHandler, useState } from 'react';
+import Image from 'next/image';
+import styles from './randomPin.module.scss';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import { BsFillCaretLeftFill, BsFillCaretRightFill } from 'react-icons/bs';
+import { getRandomCoord, decimalToDMS } from './util';
 import {
   getMountainRecommends,
   getOceanRecommends,
   getRandomRecommends,
   getThemeRecommends,
-} from "@/pages/api/map";
-import { themes, Theme } from "@/src/types/aboutMap";
-import { useRecoilState } from "recoil";
-import { randomPinState } from "@/src/atom/stats";
-import { RandomPinType } from "@/src/types/aboutMap";
-import { useCookies } from "react-cookie";
-import cx from "classnames";
+} from '@/pages/api/map';
+import { themes, Theme } from '@/src/types/aboutMap';
+import { useRecoilState } from 'recoil';
+import { randomPinState } from '@/src/atom/stats';
+import { RandomPinType } from '@/src/types/aboutMap';
+import { useCookies } from 'react-cookie';
+import cx from 'classnames';
+import Toast from '../../Common/Toast';
+import useToggle from '@/src/hooks/Home/useToggle';
 
 const RandomPin = ({
   setFold,
@@ -28,25 +30,19 @@ const RandomPin = ({
   setPage: React.Dispatch<React.SetStateAction<string>>;
   setPin: React.Dispatch<React.SetStateAction<string>>;
 }) => {
-  const [cookies] = useCookies(["token"]);
+  const [cookies] = useCookies(['token']);
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   const [showMsg, setShowMsg] = useState(false);
 
-  const onClickBtn: MouseEventHandler<HTMLElement> = (e) => {
-    e.stopPropagation();
-    setShowMsg(true);
-    console.log("slider Btn");
-    console.log("showMsg:", showMsg);
-    setTimeout(() => {
-      setShowMsg(false);
-    }, 4000);
-  };
+  const [toast, setToast] = useState<boolean>(false);
+  const openToast = useToggle(toast, setToast);
+
   const getResponse = async (theme: Theme) => {
     try {
       let response: any;
-      if (theme.id === "Ocean" || theme.id === "Mountain") {
+      if (theme.id === 'Ocean' || theme.id === 'Mountain') {
         response =
-          theme.id === "Ocean"
+          theme.id === 'Ocean'
             ? await getOceanRecommends()
             : await getMountainRecommends();
         const location = { ...response.data[0] };
@@ -66,7 +62,7 @@ const RandomPin = ({
       } else {
         const { lat, lng } = getRandomCoord();
         const { latDMS, lngDMS } = decimalToDMS(lat, lng);
-        if (theme.id === "Random") {
+        if (theme.id === 'Random') {
           response = await getRandomRecommends(lng, lat);
         } else {
           response = await getThemeRecommends(lng, lat, theme.themeId);
@@ -89,10 +85,10 @@ const RandomPin = ({
 
   const onClick = (e: React.MouseEvent<HTMLElement>, theme: Theme) => {
     e.stopPropagation();
-    setPin("pin_show");
-    setPage("map");
+    setPin('pin_show');
+    setPage('map');
     setTimeout(() => {
-      setPin("pin_hide");
+      setPin('pin_hide');
     }, 1600);
     getResponse(theme);
     setTimeout(() => {
@@ -106,16 +102,11 @@ const RandomPin = ({
       <>
         <BsFillCaretRightFill
           className={className}
-          style={{ ...style, width: "40px", height: "40px", zIndex: "1" }}
-          fontSize={"40px"}
+          style={{ ...style, width: '40px', height: '40px', zIndex: '1' }}
+          fontSize={'40px'}
           fill="white"
-          onClick={cookies.token ? onClick : onClickBtn}
+          onClick={cookies.token ? onClick : openToast}
         />
-        {!cookies.token && (
-          <span className={cx(styles.msg, { [styles.showMsg]: showMsg })}>
-            {`로그인하여 더 많은 \n테마를 이용해 보세요~!`}
-          </span>
-        )}
       </>
     );
   };
@@ -126,10 +117,10 @@ const RandomPin = ({
       <>
         <BsFillCaretLeftFill
           className={className}
-          style={{ ...style, width: "40px", height: "40px" }}
-          fontSize={"40px"}
+          style={{ ...style, width: '40px', height: '40px' }}
+          fontSize={'40px'}
           fill="white"
-          onClick={cookies.token ? onClick : onClickBtn}
+          onClick={cookies.token ? onClick : openToast}
         />
       </>
     );
@@ -146,7 +137,7 @@ const RandomPin = ({
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} draggable="false">
       <Slider {...settings}>
         {themes.map((theme: Theme) => (
           <button key={theme.id} className={styles.pin}>
@@ -157,10 +148,18 @@ const RandomPin = ({
               width={148}
               height={214}
               onClick={(e) => onClick(e, theme)}
+              draggable="false"
             />
           </button>
         ))}
       </Slider>
+      {!cookies.token && (
+        <Toast
+          content={'로그인하여 더 많은 테마를 이용해 보세요 !'}
+          toast={toast}
+          openToast={openToast}
+        />
+      )}
     </div>
   );
 };
