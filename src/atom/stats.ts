@@ -1,18 +1,18 @@
-import { atom } from 'recoil';
+import { atom } from "recoil";
 
 // types
 
-import { Chat } from '@/src/types/aboutChat';
-import { RandomPinType } from '@/src/types/aboutMap';
-import { User } from '../types/aboutMain';
+import { Chat } from "@/src/types/aboutChat";
+import { RandomPinType } from "@/src/types/aboutMap";
+import { User } from "../types/aboutMain";
 
 export const selectedChatState = atom<Chat>({
-  key: 'selectedChatState',
+  key: "selectedChatState",
   default: {
     roomId: 0,
-    title: '',
-    regionName: '',
-    regionImageUrl: '',
+    title: "",
+    regionName: "",
+    regionImageUrl: "",
     tags: [],
     participantCount: 0,
     createdAt: new Date(),
@@ -20,36 +20,37 @@ export const selectedChatState = atom<Chat>({
 });
 
 export const randomPinState = atom<RandomPinType>({
-  key: 'randomPinState',
+  key: "randomPinState",
   default: {
-    address: '',
+    address: "",
+    logId: 0,
     lat: 0,
     lng: 0,
-    latDMS: '',
-    lngDMS: '',
+    latDMS: "",
+    lngDMS: "",
     theme: null,
     recommends: [],
   },
 });
 
 export const searchState = atom<boolean>({
-  key: 'searchState',
+  key: "searchState",
   default: false,
 });
 
 export const userState = atom<User>({
-  key: 'userState',
+  key: "userState",
   default: {
     userId: 0,
-    email: '',
-    nickname: '',
-    imageUrl: '',
-    role: '',
+    email: "",
+    nickname: "",
+    imageUrl: "",
+    role: "",
   },
 });
 
 export const alarmState = atom<boolean>({
-  key: 'alarmState',
+  key: "alarmState",
   default: false,
 });
 

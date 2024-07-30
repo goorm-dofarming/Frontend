@@ -11,6 +11,7 @@ import {
   getOceanRecommends,
   getRandomRecommends,
   getThemeRecommends,
+  getAddress,
 } from "@/pages/api/map";
 import { themes, Theme } from "@/src/types/aboutMap";
 import { useRecoilState } from "recoil";
@@ -49,36 +50,45 @@ const RandomPin = ({
           theme.id === "Ocean"
             ? await getOceanRecommends()
             : await getMountainRecommends();
-        const location = { ...response.data[0] };
+        const location = { ...response.data.recommendations[0] };
         const lat = location.mapY;
         const lng = location.mapX;
         const { latDMS, lngDMS } = decimalToDMS(lat, lng);
-        const recommendList = response.data.slice(1);
+        const recommendList = response.data.recommendations.slice(1);
         setRandomPin((prev: RandomPinType) => ({
-          ...prev,
-          lat: location.mapY,
-          lng: location.mapX,
-          latDMS: latDMS,
-          lngDMS: lngDMS,
-          theme: theme,
-          recommends: [...recommendList],
-        }));
-      } else {
-        const { lat, lng } = getRandomCoord();
-        const { latDMS, lngDMS } = decimalToDMS(lat, lng);
-        if (theme.id === "Random") {
-          response = await getRandomRecommends(lng, lat);
-        } else {
-          response = await getThemeRecommends(lng, lat, theme.themeId);
-        }
-        const recommendList = response.data;
-        setRandomPin((prev: RandomPinType) => ({
-          ...prev,
+          address: response.data.address,
+          logId: response.data.logId,
           lat: lat,
           lng: lng,
           latDMS: latDMS,
           lngDMS: lngDMS,
-          theme: theme,
+          theme: theme.id,
+          recommends: [...recommendList],
+        }));
+      } else {
+        const { lat, lng } = getRandomCoord();
+        const addressResponse = await getAddress(lng, lat);
+        const fullAddress = addressResponse.data.documents[0].address;
+        const address = [
+          fullAddress.region_1depth_name,
+          fullAddress.region_2depth_name,
+          fullAddress.region_3depth_name,
+        ].join(" ");
+        const { latDMS, lngDMS } = decimalToDMS(lat, lng);
+        if (theme.id === "Random") {
+          response = await getRandomRecommends(lng, lat, address);
+        } else {
+          response = await getThemeRecommends(lng, lat, theme.themeId, address);
+        }
+        const recommendList = response.data.recommendations;
+        setRandomPin((prev: RandomPinType) => ({
+          address: response.data.address,
+          logId: response.data.logId,
+          lat: lat,
+          lng: lng,
+          latDMS: latDMS,
+          lngDMS: lngDMS,
+          theme: theme.id,
           recommends: [...recommendList],
         }));
       }

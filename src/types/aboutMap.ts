@@ -61,10 +61,11 @@ export type Recommend = {
 
 export interface RandomPinType {
   address: string;
+  logId:number;
   lat: number;
   lng: number;
   latDMS: string;
   lngDMS: string;
-  theme: Theme | null;
+  theme: String | null;
   recommends: Recommend[];
 }
