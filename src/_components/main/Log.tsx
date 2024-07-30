@@ -17,8 +17,11 @@ import Logo from '@/src/_assets/icons/main_logo.jpg';
 
 // apis
 import { getLog, getLogData } from '@/pages/api/log';
+import { StaticImageData } from 'next/image';
+import { pinType } from '@/src/constatns/PinSort';
 
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services`;
+const imageSrc = 'http://54.180.126.49/images/pin/pin_location.png';
 
 const Log = () => {
   // 위치 이동
@@ -87,6 +90,21 @@ const Log = () => {
     },
   });
 
+  // 이미지 URL을 문자열로 변환하는 함수
+  const getImageSrc = (img: StaticImageData | string): string => {
+    if (typeof img === 'string') {
+      return img;
+    } else {
+      return img.src;
+    }
+  };
+
+  // 종류에 따른 핀 설정
+  const sortingPins = (dataType: number): string => {
+    const pin = pinType.find((type) => type.dataType === dataType);
+    return pin ? getImageSrc(pin.img) : 'null';
+  };
+
   useEffect(() => {
     getLogs.refetch();
   }, [page]);
@@ -109,7 +127,6 @@ const Log = () => {
         };
         const map = new window.kakao.maps.Map(containerRef.current, options);
 
-        const imageSrc = 'http://54.180.126.49/images/pin/pin_location.png';
         const imageSize = new window.kakao.maps.Size(60, 80); // 마커이미지의 크기입니다
         const imageOption = {
           offset: new window.kakao.maps.Point(0, 0),
@@ -123,6 +140,8 @@ const Log = () => {
 
         for (let i = 0; i < selectedLogData.length; i++) {
           let imageSize = new kakao.maps.Size(24, 35);
+
+          let imageSrc = sortingPins(selectedLogData[i].dataType);
 
           // 마커 이미지를 생성합니다
           let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
@@ -145,7 +164,7 @@ const Log = () => {
             : Logo;
 
           const infowindow = new window.kakao.maps.InfoWindow({
-            content: `<div style="width:200px;height:200px;text-align:center;padding:6px 0;borderRadius:0.3rem;border:none;"><div>${selectedLogData[i].title.length > 15 ? selectedLogData[i].title.slice(0, 14) + '...' : selectedLogData[i].title}</div><div><img src=${imageContent} alt="사진" style="width:200px;height:190px;"/></div></div> `,
+            content: `<div style="width:200px;height:200px;text-align:center;padding:6px 0;borderRadius:0.3rem;border:none;"><div>${selectedLogData[i].title.length > 15 ? selectedLogData[i].title.slice(0, 14) + '...' : selectedLogData[i].title}</div><div><img src=${imageContent} alt="사진" style="width:200px;height:170px;"/></div></div> `,
           });
 
           window.kakao.maps.event.addListener(
