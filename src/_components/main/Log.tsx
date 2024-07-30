@@ -228,6 +228,11 @@ const Log = () => {
         return function () {
           const logData = getLogSubData.mutate(data.logId);
           console.log('logData: ', logData);
+          setLocation({
+            latitude: Number(data.latitude),
+            longitude: Number(data.longitude),
+            level: 8,
+          });
         };
       }
     };
