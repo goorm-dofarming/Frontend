@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { loginLoading } from '../keyframes';
 
 export const SocialLoginContainer = styled.div`
   width: 100vw;
@@ -8,9 +7,4 @@ export const SocialLoginContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  div {
-    animation: 1s ${loginLoading};
-    animation-iteration-count: infinite;
-  }
 `;

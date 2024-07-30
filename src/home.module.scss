@@ -1,5 +1,5 @@
-@use "./_styles/constants/color" as c;
-@use "./_styles/mixins/" as m;
+@use './_styles/constants/color' as c;
+@use './_styles/mixins/' as m;
 .main {
   @include m.flex(space-between, flex-start, row);
   width: 100vw;
@@ -12,6 +12,10 @@
     background-color: c.$C_SECONDARY;
     color: c.$C_WHITE;
     transition: 0.5s width ease-in-out;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     .sliderSection {
       @include m.flex(center, center, column);
       row-gap: 16px;
@@ -45,6 +49,10 @@
     background-color: c.$C_SECONDARY;
     transition: 0.5s all ease-in-out;
     animation: fadein 2s ease-in-out;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
   }
   .home {
     @include m.flex(space-between, flex-start, row);
