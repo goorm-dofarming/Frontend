@@ -29,7 +29,7 @@ const Map = () => {
       console.log(router);
     }
   }, [router]);
-  console.log(randomPin.logId);
+  console.log(randomPin);
   const onClickShareBtn = () => {
     if (!cookies.token) {
       alert("로그인인 필요합니다.");

@@ -80,6 +80,7 @@ const Likes = styled.div`
   > svg {
     cursor: pointer;
     fill: ${colorTheme.secondary};
+    /* fill: #fe0b62; */
   }
   .likesNumber {
     font-weight: 600;

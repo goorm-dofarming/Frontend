@@ -1,11 +1,12 @@
-import React, { SetStateAction, Dispatch, useState } from "react";
+import React, { SetStateAction, Dispatch, useState, useEffect } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { IoHeartSharp } from "react-icons/io5"; //꽉찬하트
 import { IoHeartOutline } from "react-icons/io5"; //빈하트
 import { Recommend, DataType } from "@/src/types/aboutMap";
 import main_logo from "@/src/_assets/icons/main_logo.png";
-
+import { colorTheme } from "@/src/_styles/common/commonColorStyles";
+import cx from "classnames";
 const Container = styled.div`
   padding: 8px 4px;
   width: 300px;
@@ -36,9 +37,19 @@ const LocationImage = styled.div`
   }
 `;
 
-const Description = styled.div`
-  width: 96%;
+const Info = styled.div`
   border-top: 1px solid #cacaca;
+  width: 96%;
+  height: 140px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 4px;
+`;
+const Description = styled.div`
+  width: 90%;
+  height: 100%;
   padding: 4px;
   display: flex;
   flex-direction: column;
@@ -46,6 +57,13 @@ const Description = styled.div`
   justify-content: center;
   font-size: 14px;
   gap: 4px;
+  .title {
+    font-size: 20px;
+    height: 24px;
+    width: 90%;
+    overflow: hidden;
+    text-overflow: hidden;
+  }
   .type {
     font-weight: 500;
   }
@@ -66,28 +84,65 @@ const Description = styled.div`
     font-weight: 200;
   }
 `;
-const Title = styled.div`
-  width: 100%;
-  font-size: 20px;
+
+const Likes = styled.div`
+  width: 10%;
+  height: 100%;
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  font-weight: bold;
-  .likes {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: space-between;
+  flex-direction: column;
+  justify-content: start;
+  .likeBtn {
+    width: 30px;
+    height: 30px;
+    background: none;
+    border: none;
     > svg {
+      width: 100%;
+      height: 100%;
       cursor: pointer;
-    }
-    .likesNumber {
-      font-weight: 600;
-      font-size: 12px;
+      stroke: ${colorTheme.secondary};
+      stroke-width: 8px;
+      transition: fill 0.3s ease-in-out;
     }
   }
+  .active {
+    > svg {
+      fill: ${colorTheme.secondary};
+    }
+    &:hover,
+    :active {
+      > svg {
+        fill: white;
+      }
+    }
+  }
+  .inactive {
+    > svg {
+      fill: white;
+    }
+    &:hover,
+    :active {
+      > svg {
+        fill: ${colorTheme.secondary};
+      }
+    }
+  }
+
+  .likesNumber {
+    font-weight: 600;
+    font-size: 12px;
+  }
 `;
+const formatNumber = (num: number) => {
+  if (num >= 1e6) {
+    return (num / 1e6).toFixed(1) + "M";
+  } else if (num >= 1e3) {
+    return (num / 1e3).toFixed(1) + "K";
+  } else {
+    return num.toString();
+  }
+};
 const Card = ({
   recommend,
   onClick,
@@ -96,12 +151,18 @@ const Card = ({
   onClick?: (recommend: Recommend) => void;
 }) => {
   // TODO: heart animation
-  const { id, image, title, dataType, addr, tel } = recommend;
+  const { id, image, title, dataType, addr, tel, countLikes, liked } =
+    recommend;
   const [hover, setHover] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
-  const onClickLike = () => {
-    setIsLiked(!isLiked);
+  const [isLiked, setIsLiked] = useState<boolean>(liked);
+  const onClickLike = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault(); // 링크의 기본 동작 방지
+    setIsLiked((prev) => !prev);
   };
+  useEffect(() => {
+    // console.log(randomPin)
+    console.log(isLiked);
+  }, [isLiked]);
   return (
     <Container onClick={() => onClick && onClick(recommend)}>
       <LocationImage>
@@ -117,37 +178,27 @@ const Card = ({
           />
         )}
       </LocationImage>
-      <Description>
-        <Title>
-          <span>{title}</span>
-          <span className="likes">
-            {/* <IoHeartSharp fill={"#FE0B62"} fontSize={26} /> */}
-            <IoHeartOutline
-              fontSize={26}
-              onMouseOver={() => setHover(true)}
-              onMouseOut={() => setHover(false)}
-            />
-            {/* {hover ? (
-              <IoHeartSharp
-                fill={"#FE0B62"}
-                fontSize={26}
-                onMouseOver={() => setHover(false)}
-                onMouseOut={() => setHover(true)}
-              />
-            ) : (
-              <IoHeartOutline
-                fontSize={26}
-                onMouseOver={() => setHover(true)}
-                onMouseOut={() => setHover(false)}
-              />
-            )} */}
-            <div className="likesNumber">14K</div>
-          </span>
-        </Title>
-        <div className="type">{DataType[dataType].type}</div>
-        <div className="address">{addr}</div>
-        <div className="phone">{`☎️: ${tel || "준비중"} `}</div>
-      </Description>
+      <Info>
+        <Description>
+          <span className="title">{title}</span>
+          <div className="type">{DataType[dataType].type}</div>
+          <div className="address">{addr}</div>
+          <div className="phone">{`☎️: ${tel || "준비중"} `}</div>
+        </Description>
+        <Likes>
+          <button
+            onClick={onClickLike}
+            className={cx(
+              "likeBtn",
+              { ["active"]: isLiked },
+              { ["inactive"]: !isLiked }
+            )}
+          >
+            <IoHeartSharp fontSize={30} />
+          </button>
+          <div className="likesNumber">{formatNumber(countLikes)}</div>
+        </Likes>
+      </Info>
     </Container>
   );
 };

@@ -44,3 +44,5 @@ export const getMountainRecommends = () => {
 export const getAddress = (lng: number, lat: number) => {
   return kakaoClient.get(`/geo/coord2address?&x=${lng}&y=${lat}`);
 };
+
+export const modifyLike = () => {};
