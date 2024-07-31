@@ -108,8 +108,12 @@ const Login = ({
       };
 
       const signupGoogle = await signupSocialLogin(body);
-      setCookies("token", signupGoogle.data, { path: "/" });
-      // console.log("signupGoogle: ", signupGoogle);
+      setCookies('token', signupGoogle.data, {
+        path: '/',
+        sameSite: 'none',
+        secure: true,
+      });
+      //console.log('signupGoogle: ', signupGoogle);
 
       if (signupGoogle.status === 200) {
         openModal();

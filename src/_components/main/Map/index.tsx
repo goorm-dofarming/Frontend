@@ -30,7 +30,7 @@ const Map = () => {
       return;
     }
     navigator.clipboard.writeText(`${window.location}tours/${randomPin.logId}`);
-    alert("링크가 클립보드에 복사되었습니다. 친구와 쉽게 공유하세요!");
+    alert('링크가 클립보드에 복사되었습니다. 친구와 쉽게 공유하세요!');
   };
 
   useEffect(() => {
@@ -63,15 +63,15 @@ const Map = () => {
           image: markerImage,
         });
 
-        const content = document.createElement("div");
+        const content = document.createElement('div');
         content.innerHTML = makeCustomOverlay(randomPin);
 
         content
-          .querySelector("#share-link")
-          ?.addEventListener("click", onClickShareBtn);
+          .querySelector('#share-link')
+          ?.addEventListener('click', onClickShareBtn);
         content
-          .querySelector("#share-kakaotalk")
-          ?.addEventListener("click", onClickShareBtn);
+          .querySelector('#share-kakaotalk')
+          ?.addEventListener('click', onClickShareBtn);
 
         const customOverlay = new window.kakao.maps.CustomOverlay({
           // map: map,
@@ -112,7 +112,7 @@ const Map = () => {
           });
           infoWindows.push(infowindow);
 
-          window.kakao.maps.event.addListener(pin, "click", function () {
+          window.kakao.maps.event.addListener(pin, 'click', function () {
             setShowPinInfo((prev) => {
               const newInfos = [...prev];
               const tmp = newInfos[i];
