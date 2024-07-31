@@ -15,4 +15,5 @@ export const colorTheme = {
   divider: '#D2D1D1',
   customOverlay: '#3E3E3E',
   white: '#ffffff',
+  logoBrownText: '#3D0007',
 };
