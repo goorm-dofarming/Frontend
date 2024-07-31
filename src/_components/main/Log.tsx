@@ -1,27 +1,27 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 
 // styles
 import { LogContainer } from "@/src/_styles/main/logStyles";
 
 // libraries
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { useRecoilValue } from 'recoil';
-import { pageState } from '@/src/atom/stats';
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRecoilValue } from "recoil";
+import { pageState } from "@/src/atom/stats";
 
 // types
-import { logDataType, recommendsType } from '@/src/types/aboutLog';
+import { logDataType, recommendsType } from "@/src/types/aboutLog";
 
 // img
-import Card from '../Common/Card';
-import Logo from '@/src/_assets/icons/main_logo.jpg';
+import Card from "../Common/Card";
+import Logo from "@/src/_assets/icons/main_logo.jpg";
 
 // apis
-import { getLog, getLogData } from '@/pages/api/log';
-import { StaticImageData } from 'next/image';
-import { pinType } from '@/src/constatns/PinSort';
+import { getLog, getLogData } from "@/pages/api/log";
+import { StaticImageData } from "next/image";
+import { pinType } from "@/src/constatns/PinSort";
 
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services,clusterer`;
-const imageSrc = 'http://54.180.126.49/images/pin/pin_location.png';
+const imageSrc = "http://54.180.126.49/images/pin/pin_location.png";
 
 const Log = () => {
   // 위치 이동
@@ -94,7 +94,7 @@ const Log = () => {
 
   // 이미지 URL을 문자열로 변환하는 함수
   const getImageSrc = (img: StaticImageData | string): string => {
-    if (typeof img === 'string') {
+    if (typeof img === "string") {
       return img;
     } else {
       return img.src;
@@ -104,7 +104,7 @@ const Log = () => {
   // 종류에 따른 핀 설정
   const sortingPins = (dataType: number): string => {
     const pin = pinType.find((type) => type.dataType === dataType);
-    return pin ? getImageSrc(pin.img) : 'null';
+    return pin ? getImageSrc(pin.img) : "null";
   };
 
   useEffect(() => {
@@ -112,8 +112,8 @@ const Log = () => {
   }, [page]);
 
   useEffect(() => {
-    document.cookie = 'username=dofarming; SameSite=Strict; Secure';
-    const script = document.createElement('script');
+    document.cookie = "username=dofarming; SameSite=Strict; Secure";
+    const script = document.createElement("script");
     script.src = KAKAO_SDK_URL;
     document.head.appendChild(script);
 
@@ -161,7 +161,7 @@ const Log = () => {
 
           window.kakao.maps.event.addListener(
             marker,
-            'click',
+            "click",
             makeClickListener(logData[i])
           );
         }
@@ -192,17 +192,17 @@ const Log = () => {
             : Logo;
 
           const infowindow = new window.kakao.maps.InfoWindow({
-            content: `<div style="width:200px;height:200px;text-align:center;padding:6px 0;borderRadius:0.3rem;border:none;"><div>${selectedLogData[i].title.length > 15 ? selectedLogData[i].title.slice(0, 14) + '...' : selectedLogData[i].title}</div><div><img src=${imageContent} alt="사진" style="width:200px;height:170px;"/></div></div> `,
+            content: `<div style="width:200px;height:200px;text-align:center;padding:6px 0;borderRadius:0.3rem;border:none;"><div>${selectedLogData[i].title.length > 15 ? selectedLogData[i].title.slice(0, 14) + "..." : selectedLogData[i].title}</div><div><img src=${imageContent} alt="사진" style="width:200px;height:170px;"/></div></div> `,
           });
 
           window.kakao.maps.event.addListener(
             marker,
-            'mouseover',
+            "mouseover",
             makeOverListener(map, marker, infowindow)
           );
           window.kakao.maps.event.addListener(
             marker,
-            'mouseout',
+            "mouseout",
             makeOutListener(infowindow)
           );
         }
@@ -229,7 +229,7 @@ const Log = () => {
       function makeClickListener(data: logDataType) {
         return function () {
           const logData = getLogSubData.mutate(data.logId);
-          console.log('logData: ', logData);
+          console.log("logData: ", logData);
           setLocation({
             latitude: Number(data.latitude),
             longitude: Number(data.longitude),
@@ -242,8 +242,8 @@ const Log = () => {
 
   useEffect(() => {
     // console.log('selected log data: ', selectedLogData);
-    console.log('selected log data: ', selectedLogData);
-    console.log('logData : ', logData);
+    console.log("selected log data: ", selectedLogData);
+    console.log("logData : ", logData);
   }, [logData, selectedLogData]);
 
   return (
@@ -267,7 +267,7 @@ const Log = () => {
           >
             <div className="log">
               <div className="logDate">{data.createdAt.split("T")[0]}</div>
-              <div className="logAddress">주소</div>
+              <div className="logAddress">{data.address}</div>
               <div className="logTheme">{data.theme}</div>
             </div>
             {/* 색상 좀 연하게 + border-bottom로 변경 */}

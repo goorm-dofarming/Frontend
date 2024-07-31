@@ -161,7 +161,7 @@ const Card = ({
     recommend;
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   const [hover, setHover] = useState(false);
-  const [isLiked, setIsLiked] = useState<boolean>(liked);
+  // const [isLiked, setIsLiked] = useState<boolean>(liked);
   const [toast, setToast] = useState<boolean>(false);
   const openToast = useToggle(toast, setToast);
   const [user, setUser] = useRecoilState(userState);
@@ -173,7 +173,6 @@ const Card = ({
     }
     const response = await modifyLike(id, dataType);
     if (response.status === 200) {
-      setIsLiked((prev) => !prev);
       const logResponse = await getLogData(randomPin.logId);
       if (response.status === 200) {
         setRandomPin((prev) => ({
@@ -211,8 +210,8 @@ const Card = ({
             onClick={onClickLike}
             className={cx(
               "likeBtn",
-              { ["active"]: isLiked },
-              { ["inactive"]: !isLiked }
+              { ["active"]: liked },
+              { ["inactive"]: !liked }
             )}
           >
             <IoHeartSharp fontSize={30} />
