@@ -1,31 +1,31 @@
-import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import React, { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 // styles
-import { HomeContainer } from "@/src/_styles/main/mainStyles";
+import { HomeContainer } from '@/src/_styles/main/mainStyles';
 
 // constants
-import { LoginButton } from "@/src/_styles/common/buttons";
+import { LoginButton } from '@/src/_styles/common/buttons';
 
 // components
-import Modal from "@/src/_components/Common/Modal";
-import Login from "@/src/_components/main/modal/Login";
-import Signup from "@/src/_components/main/modal/Signup";
+import Modal from '@/src/_components/Common/Modal';
+import Login from '@/src/_components/main/modal/Login';
+import Signup from '@/src/_components/main/modal/Signup';
 
 // img
-import ColorMap from "@/src/_assets/main/colored_Map.svg";
-import Logo from "@/src/_assets/main/logo.svg";
-import pin_location from "@/src/_assets/main/map/pin_location.png";
+import ColorMap from '@/src/_assets/main/colored_Map.svg';
+import Logo from '@/src/_assets/icons/hat_logo.png';
+import pin_location from '@/src/_assets/main/map/pin_location.png';
 
 // types
-import { inputDataType } from "@/src/types/aboutMain";
+import { inputDataType } from '@/src/types/aboutMain';
 
 // hooks
-import useToggle from "@/src/hooks/Home/useToggle";
-import { useCookies } from "react-cookie";
+import useToggle from '@/src/hooks/Home/useToggle';
+import { useCookies } from 'react-cookie';
 
 const Main = ({ pin }: { pin: string }) => {
   // cookie
-  const [cookies, setCookies] = useCookies(["token"]);
+  const [cookies, setCookies] = useCookies(['token']);
   // 모달 컨트롤
   const [modal, setModal] = useState<boolean>(false);
   // 로그인 회원가입 페이지 컨트롤
@@ -34,10 +34,10 @@ const Main = ({ pin }: { pin: string }) => {
   const [pwdShow, setPwdShow] = useState<boolean>(false);
   // input data
   const [inputData, setInputData] = useState<inputDataType>({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    authentication: "",
+    email: '',
+    password: '',
+    confirmPassword: '',
+    authentication: '',
   });
   const [showFog, setShowFog] = useState<boolean>(false);
 
@@ -64,7 +64,7 @@ const Main = ({ pin }: { pin: string }) => {
       const handleAnimationEnd = () => {
         setShowFog(true);
       };
-      pinElement.addEventListener("animationend", handleAnimationEnd);
+      pinElement.addEventListener('animationend', handleAnimationEnd);
       return () => {
         // pinElement.removeEventListener("animationend", handleAnimationEnd);
         setShowFog(false);
@@ -74,18 +74,19 @@ const Main = ({ pin }: { pin: string }) => {
 
   return (
     <HomeContainer modal={modal.toString()}>
-      <div className={`fog ${showFog ? "fog_show" : ""}`}></div>
+      <div className={`fog ${showFog ? 'fog_show' : ''}`}></div>
       <main className="mainSection">
         <Image className="colorMap" src={ColorMap} alt="맵" width={360} />
         <div className="logoContainer">
-          <Image className="logo" src={Logo} alt="로고" width={280} />
+          <Image className="logo" src={Logo} alt="로고" width={50} />
+          <div className="textLogo">DOFARMING</div>
           {cookies.token ? null : (
             <LoginButton onClick={openModal}>로그인</LoginButton>
           )}
         </div>
         <Image
           ref={pinRef}
-          className={pin === "pin_hide" ? "pin_hide" : "pin_show"}
+          className={pin === 'pin_hide' ? 'pin_hide' : 'pin_show'}
           src={pin_location}
           alt="pin"
           width={40}

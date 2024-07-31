@@ -1,5 +1,6 @@
-import styled, { css } from "styled-components";
-import { hideHomeIcons, showHomeIcons } from "../keyframes";
+import styled, { css } from 'styled-components';
+import { hideHomeIcons, showHomeIcons } from '../keyframes';
+import { colorTheme } from '../common/commonColorStyles';
 
 export const HomeContainer = styled.div<{
   modal: string;
@@ -56,7 +57,7 @@ export const HomeContainer = styled.div<{
     background-color: white;
     border-radius: 0.5rem;
     // true 말고 show hide로 바꾸기
-    visibility: ${({ modal }) => (modal === "true" ? "visible" : "hidden")};
+    visibility: ${({ modal }) => (modal === 'true' ? 'visible' : 'hidden')};
   }
   .mainSection {
     width: 100%;
@@ -97,6 +98,12 @@ export const HomeContainer = styled.div<{
   }
   .logo {
     z-index: 0;
+  }
+  .textLogo {
+    font-size: 40px;
+    font-weight: 700;
+    color: ${colorTheme.logoBrownText};
+    text-shadow: 2px 2px 2px ${colorTheme.inputBorder};
   }
   .modalHeader {
     display: flex;
