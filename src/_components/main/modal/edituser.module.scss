@@ -47,7 +47,7 @@
       .imageBtn {
         cursor: pointer;
         width: 8rem;
-        padding: 0.2rem 0;
+        padding: 0.4rem 0;
         margin: 1rem;
         font-size: 0.9rem;
         color: c.$C_SECONDARY;
@@ -139,7 +139,8 @@
 
   .yesBtn {
     cursor: pointer;
-    width: 7rem;
+    width: 6.25rem;
+    height: 2.25rem;
     padding: 0.5rem;
     margin-top: 2rem;
     color: c.$C_WHITE;
