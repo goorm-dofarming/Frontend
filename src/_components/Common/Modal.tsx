@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Image from 'next/image';
 
 // img
-import CloseBtn from '@/src/_assets/main/close.svg';
+import { MdClose } from 'react-icons/md';
 
 // contestAPI
 import { ModalContainer } from '@/src/_styles/common/modalStyles';
@@ -38,14 +38,7 @@ const Modal: React.FC<MainModalType> = ({
       <div className="modal">
         {/* 모달 헤더 */}
         <div className="modalHeader">
-          <Image
-            className="logo"
-            src={CloseBtn}
-            alt="닫기"
-            width={30}
-            height={30}
-            onClick={openModal}
-          />
+          <MdClose onClick={openModal} size={'2rem'} className="logo" />
         </div>
         {/* 모달 컨텐츠 부분 */}
         {children}
