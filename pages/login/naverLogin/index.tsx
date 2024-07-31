@@ -36,7 +36,7 @@ const Page = () => {
 
       const response = await getNaverUserData(params);
 
-      console.log(response);
+      // console.log(response);
 
       const body2 = {
         socialType: 'NAVER',
@@ -45,7 +45,7 @@ const Page = () => {
 
       const signupNaver = await signupSocialLogin(body2);
 
-      console.log('signupNaver: ', signupNaver);
+      // console.log('signupNaver: ', signupNaver);
 
       if (signupNaver.status === 200) {
         setTimeout(() => {

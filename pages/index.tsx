@@ -103,7 +103,7 @@ const Home = () => {
 
     return () => {
       eventSource.close();
-      console.log('SSE CLOSED');
+      // console.log('SSE CLOSED');
     };
   }, [user]);
 

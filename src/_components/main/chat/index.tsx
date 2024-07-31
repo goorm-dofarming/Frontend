@@ -66,7 +66,7 @@ const Chat = () => {
         // console.log(str);
       },
       onConnect: (frame) => {
-        console.log('roomId: ', selectedChat.roomId, '\nConnected: ' + frame);
+        // console.log('roomId: ', selectedChat.roomId, '\nConnected: ' + frame);
 
         stompClient.subscribe(
           `/room/${selectedChat.roomId}`,

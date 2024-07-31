@@ -7,7 +7,7 @@ export const InputBorder = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-
+  border-radius: 0.3rem;
   input {
     width: 100%;
     outline: none !important;
@@ -25,7 +25,7 @@ export const InputBorder = styled.div`
   &:hover {
     border: 2px solid ${colorTheme.primary};
   }
-
+  transition: border 0.3s ease-in-out;
   .inputRow {
     display: flex;
     flex-direction: row;
@@ -37,7 +37,8 @@ export const InputLoginBorder = styled(InputBorder)<{
   isChanging?: string | null;
 }>`
   width: 23vw;
-  border-radius: 0.3rem 0.3rem 0 0;
+  /* border-radius: 0.3rem 0.3rem 0 0; */
+
   padding: 0.2rem 0.2rem 0.2rem 0.4rem;
   border: ${(props) =>
     props.isChanging === "email" && `2px solid ${colorTheme.primary}`};
@@ -55,7 +56,7 @@ export const InputPwdBorder = styled(InputBorder)<{
   isChanging?: string | null;
 }>`
   width: 23vw;
-  border-radius: 0 0 0.3rem 0.3rem;
+  /* border-radius: 0 0 0.3rem 0.3rem; */
   padding: 0.2rem 0.2rem 0.2rem 0.4rem;
   border: ${(props) =>
     props.isChanging === "password" && `2px solid ${colorTheme.primary}`};
@@ -73,7 +74,7 @@ export const InputSignupBorder = styled(InputBorder)<{
   isChanging?: boolean;
 }>`
   width: 23vw;
-  border-radius: 0.5rem;
+  /* border-radius: 0.5rem; */
   padding: 0.2rem 0.2rem 0.2rem 0.4rem;
   margin-bottom: 1rem;
   border: ${(props) => props.isChanging && `2px solid ${colorTheme.primary}`};
@@ -91,7 +92,7 @@ export const InputSignupAuthpBorder = styled(InputBorder)<{
   isChanging?: boolean;
 }>`
   width: 19vw;
-  border-radius: 0.5rem;
+  /* border-radius: 0.5rem; */
   padding: 0.2rem 0.2rem 0.2rem 0.4rem;
   border: ${(props) => props.isChanging && `2px solid ${colorTheme.primary}`};
   .inputInMent {

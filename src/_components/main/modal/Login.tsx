@@ -66,7 +66,7 @@ const Login = ({
 
       const response = await login(body);
 
-      console.log("login success: ", response);
+      // console.log("login success: ", response);
 
       if (response.status === 200) {
         // 성공 시 cookie에 token 추가
@@ -86,7 +86,7 @@ const Login = ({
 
   const gLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
-      console.log("토큰 발급 성공: ", tokenResponse);
+      // console.log("토큰 발급 성공: ", tokenResponse);
 
       setGToken(tokenResponse.access_token);
     },
@@ -100,7 +100,7 @@ const Login = ({
         Authorization: `Bearer ${gToken}`,
       };
       const userResponse = await getGoogleUserData(headers);
-      console.log("userResponse:", userResponse);
+      // console.log("userResponse:", userResponse);
 
       const body = {
         socialType: "GOOGLE",
@@ -109,7 +109,7 @@ const Login = ({
 
       const signupGoogle = await signupSocialLogin(body);
       setCookies("token", signupGoogle.data, { path: "/" });
-      console.log("signupGoogle: ", signupGoogle);
+      // console.log("signupGoogle: ", signupGoogle);
 
       if (signupGoogle.status === 200) {
         openModal();
@@ -134,7 +134,7 @@ const Login = ({
   }, [gToken]);
   /* eslint-enable react-hooks/exhaustive-deps */
   return (
-    <div className="modalContents">
+    <div className="modalContents" style={{ gap: "16px" }}>
       <InputLoginBorder isChanging={isChanging}>
         <div
           style={{
@@ -142,7 +142,7 @@ const Login = ({
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            gap:"4px",
+            gap: "4px",
           }}
           // className={isChanging === "email" ? "activeInput" : ""}
         >
@@ -166,7 +166,7 @@ const Login = ({
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            gap:"4px",
+            gap: "4px",
           }}
         >
           <div className="inputInMent">Password</div>
@@ -202,40 +202,26 @@ const Login = ({
 
       <div className="socialButtonContainer">
         <KakaoButton onClick={KakaoLogin}>
-          {/* <Image
-            src={KakaoLogo}
-            alt="kakao"
-            style={{ paddingLeft: '0rem', width: '38px' }}
-          /> */}
           <div className="btn">
-          <RiKakaoTalkFill size={36} fill="#000000" />
+            <RiKakaoTalkFill size={36} fill="#000000" />
           </div>
-        
+
           <span>카카오 로그인</span>
           <span></span>
         </KakaoButton>
         <NaverButton onClick={NaverLogin}>
-          {/* <Image
-            src={NaverLogo}
-            alt="kakao"
-            style={{ paddingLeft: "0rem", width: "38px" }}
-          /> */}
           <div className="btn">
-          <SiNaver size={24} fill="#FFFFFF" />
+            <SiNaver size={24} fill="#FFFFFF" />
           </div>
-         
+
           <span>네이버 로그인</span>
           <span></span>
         </NaverButton>
         <GoogleButton onClick={() => gLogin()}>
-          {/* <FcGoogle
-            style={{ paddingLeft: "0rem", width: "38px", height: "38px" }}
-          /> */}
-                  <div className="btn">
-                  <FcGoogle size={36} />
+          <div className="btn">
+            <FcGoogle size={36} />
           </div>
-         
-       
+
           <span className="loginText">구글 로그인</span>
           <span></span>
         </GoogleButton>

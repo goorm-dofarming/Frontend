@@ -15,6 +15,7 @@ export const LoginButton = styled.button`
     background-color: ${colorTheme.primary};
     cursor: pointer;
   }
+  transition:  background-color, color 0.3s ease-in-out;
 `;
 
 export const SignupButton = styled.button`
@@ -31,6 +32,7 @@ export const SignupButton = styled.button`
     border: 1px solid ${colorTheme.secondary};
     background-color: white;
   }
+  transition:  background-color, color 0.3s ease-in-out;
 `;
 
 export const SignupDisActiveButton = styled.button`
@@ -46,7 +48,7 @@ export const SignupDisActiveButton = styled.button`
 export const ModalLoginButton = styled.button`
   width: 23vw;
   height: 7vh;
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
   background-color: ${colorTheme.secondary};
   color: white;
   border: none;
@@ -59,6 +61,7 @@ export const ModalLoginButton = styled.button`
     color: ${colorTheme.secondary};
     cursor: pointer;
   }
+  transition:  background-color, color 0.3s ease-in-out;
 `;
 
 const SocialButton = styled.div`
@@ -104,7 +107,6 @@ export const NaverButton = styled(SocialButton)`
 export const GoogleButton = styled(SocialButton)`
   color: gray;
   background-color: white;
-  /* border: 2px solid #9c9c9c; */
 `;
 
 const SocialBtn = styled.div`
@@ -121,11 +123,11 @@ const SocialBtn = styled.div`
 `;
 
 export const KakaoCircleButton = styled(SocialBtn)`
-    background-color: #fee500;
+  background-color: #fee500;
 `;
 
 export const NAverCircleButton = styled(SocialBtn)`
- background-color: #03c75a;
+  background-color: #03c75a;
 `;
 
 export const GoogleCircleButton = styled(SocialBtn)`
