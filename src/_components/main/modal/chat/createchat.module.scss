@@ -41,6 +41,17 @@
       outline: none;
       border: 2px solid c.$C_SECONDARY;
     }
+
+    appearance: none; /* 기본 브라우저 스타일 제거 */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    background-image: url('../../../../_assets/main/arrow.png');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1.5rem 1.5rem;
   }
 }
 

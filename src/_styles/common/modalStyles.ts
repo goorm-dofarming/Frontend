@@ -118,6 +118,7 @@ export const ModalContainer = styled.div<{
 
   .logo {
     z-index: 0;
+    cursor: pointer;
   }
   .modalHeader {
     display: flex;

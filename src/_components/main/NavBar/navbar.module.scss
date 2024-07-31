@@ -20,19 +20,16 @@
         > img {
           animation: logo_animation 2s ease-in-out;
           animation-iteration-count: infinite;
-          transform-origin: 0% 100%;
+          // transform-origin: 0% 100%;
         }
         @keyframes logo_animation {
-          0% {
+          0%,
+          100% {
             transform: rotate(5deg);
           }
 
           50% {
             transform: rotate(-5deg);
-          }
-
-          100% {
-            transform: rotate(5deg);
           }
         }
       }
