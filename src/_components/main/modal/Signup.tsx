@@ -7,6 +7,7 @@ import HidePwd from '@/src/_assets/main/eye-closed.svg';
 import KakaoLogo from '@/src/_assets/main/kakao.svg';
 import NaverLogo from '@/src/_assets/main/N.svg';
 import GoogleLogo from '@/src/_assets/main/g-logo.svg';
+import { FcGoogle } from 'react-icons/fc';
 
 // styles
 import {
@@ -192,6 +193,7 @@ const Signup = ({
           width={25}
           height={25}
           onClick={handlePwd}
+          style={{ cursor: 'pointer' }}
         />
       </InputSignupBorder>
       <InputSignupBorder>
@@ -269,14 +271,14 @@ const Signup = ({
           <Image src={NaverLogo} alt="네이버버튼" />
         </NAverCircleButton>
         <GoogleCircleButton>
-          <Image src={GoogleLogo} alt="구글버튼" />
+          <FcGoogle size={'3rem'} />
         </GoogleCircleButton>
       </div>
       {/* ment */}
       <div>
-        <span className="ment">이미</span>
+        <span className="ment">이미 </span>
         <span className="ment3">도파밍</span>
-        <span className="ment">회원이신가요?</span>
+        <span className="ment"> 회원이신가요?</span>
         <span className="ment2" onClick={handleComponent}>
           로그인
         </span>

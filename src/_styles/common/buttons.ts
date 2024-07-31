@@ -8,7 +8,6 @@ export const LoginButton = styled.button`
   border: 1px solid ${colorTheme.secondary};
   background-color: white;
   border-radius: 0.2rem;
-  font-family: 'RedHatDisplay_Italic';
   font-size: 20px;
   &:hover {
     color: white;
@@ -25,7 +24,6 @@ export const SignupButton = styled.button`
   border: 1px solid ${colorTheme.secondary};
   background-color: ${colorTheme.secondary};
   border-radius: 0.2rem;
-  font-family: 'RedHatDisplay_Italic';
   cursor: pointer;
 
   &:hover {
@@ -42,7 +40,6 @@ export const SignupDisActiveButton = styled.button`
   border: 1px solid #c1c1c1;
   background-color: #d2d1d1;
   border-radius: 0.2rem;
-  font-family: 'RedHatDisplay_Italic';
   font-weight: 700;
 `;
 
@@ -73,33 +70,32 @@ const SocialButton = styled.div`
   justify-content: space-around;
   border-radius: 0.3rem;
   font-weight: 700;
+  font-size: 1.1rem;
   cursor: pointer;
+
+  .loginText {
+    width: 6rem;
+    text-align: center;
+  }
 `;
 
 export const KakaoButton = styled(SocialButton)`
-  color: white;
-  background-color: #fee500;
-  font-size: 1.1rem;
-  font-family: 'RedHatDisplay_Variable';
+  background-color: #f8dd08;
+  border: 2px solid #f8dd08;
 `;
 
 export const NaverButton = styled(SocialButton)`
-  color: white;
-  background-color: #62b645;
-  font-size: 1.1rem;
-  font-family: 'RedHatDisplay_Variable';
+  background-color: #1ac049;
+  border: 2px solid #1ac049;
 `;
 
 export const GoogleButton = styled(SocialButton)`
-  justify-content: space-around;
-  border: 2px solid #9c9c9c;
-  color: #9c9c9c;
   background-color: white;
-  font-size: 1.1rem;
-  font-family: 'RedHatDisplay_Variable';
+  border: 2px solid #9c9c9c;
 `;
 
 const SocialBtn = styled.div`
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,11 +105,11 @@ const SocialBtn = styled.div`
 `;
 
 export const KakaoCircleButton = styled(SocialBtn)`
-  background-color: #fee500;
+  background-color: #f8dd08;
 `;
 
 export const NAverCircleButton = styled(SocialBtn)`
-  background-color: #62b645;
+  background-color: #1ac049;
 `;
 
 export const GoogleCircleButton = styled(SocialBtn)`

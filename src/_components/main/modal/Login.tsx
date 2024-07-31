@@ -5,7 +5,7 @@ import ShowPwd from '@/src/_assets/main/eye.svg';
 import HidePwd from '@/src/_assets/main/eye-closed.svg';
 import KakaoLogo from '@/src/_assets/main/kakao.svg';
 import NaverLogo from '@/src/_assets/main/N.svg';
-import GoogleLogo from '@/src/_assets/main/g-logo.svg';
+import { FcGoogle } from 'react-icons/fc';
 
 //styles
 import {
@@ -174,6 +174,7 @@ const Login = ({
           width={30}
           height={30}
           onClick={handlePwd}
+          style={{ cursor: 'pointer' }}
         />
       </InputPwdBorder>
       <ModalLoginButton onClick={() => doLogin.mutate()}>
@@ -187,28 +188,34 @@ const Login = ({
 
       <div className="socialButtonContainer">
         <KakaoButton onClick={KakaoLogin}>
-          <Image src={KakaoLogo} alt="kakao" style={{ paddingLeft: '0rem' }} />
+          <Image
+            src={KakaoLogo}
+            alt="kakao"
+            style={{ paddingLeft: '0rem', width: '38px' }}
+          />
           <span>카카오 로그인</span>
-          <span>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;
-          </span>
+          <span></span>
         </KakaoButton>
         <NaverButton onClick={NaverLogin}>
-          <Image src={NaverLogo} alt="kakao" style={{ paddingLeft: '0rem' }} />
+          <Image
+            src={NaverLogo}
+            alt="kakao"
+            style={{ paddingLeft: '0rem', width: '38px' }}
+          />
+          {/* <SiNaver color="#FFFFFF" /> */}
           <span>네이버 로그인</span>
-          <span>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;
-          </span>
+          <span></span>
         </NaverButton>
         <GoogleButton onClick={() => gLogin()}>
-          <Image src={GoogleLogo} alt="kakao" style={{ paddingLeft: '0rem' }} />
-          <span>구글 로그인</span>
-          <span>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;
-          </span>
+          <FcGoogle
+            style={{ paddingLeft: '0rem', width: '38px', height: '38px' }}
+          />
+          {/* <FcGoogle /> */}
+          <span className="loginText">구글 로그인</span>
+          <span></span>
         </GoogleButton>
       </div>
-      <div>
+      <div style={{ paddingTop: '1rem' }}>
         <span className="ment">아직 회원이 아니신가요?</span>
         <span className="ment2" onClick={handleComponent}>
           회원가입
