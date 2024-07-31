@@ -62,7 +62,11 @@ const Page = () => {
 
       const signupKakao = await signupSocialLogin(signupKakaoBody);
 
-      setCookies('token', signupKakao.data, { path: '/' });
+      setCookies('token', signupKakao.data, {
+        path: '/',
+        sameSite: 'none',
+        secure: true,
+      });
       console.log('signupKakao: ', signupKakao);
 
       if (signupKakao.status === 200) {
