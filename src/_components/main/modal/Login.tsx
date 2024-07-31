@@ -105,7 +105,11 @@ const Login = ({
       };
 
       const signupGoogle = await signupSocialLogin(body);
-      setCookies('token', signupGoogle.data, { path: '/' });
+      setCookies('token', signupGoogle.data, {
+        path: '/',
+        sameSite: 'none',
+        secure: true,
+      });
       console.log('signupGoogle: ', signupGoogle);
 
       if (signupGoogle.status === 200) {
