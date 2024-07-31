@@ -8,18 +8,36 @@ import { useQuery } from "@tanstack/react-query";
 import { getLogData } from "@/pages/api/log";
 import CardListItem from "@/src/_components/Common/CardListItem";
 import { Recommend } from "@/src/types/aboutMap";
+import { decimalToDMS } from "@/src/_components/main/RandomPin/util";
 const LinkShare = () => {
   const router = useRouter();
   const [logId, setLogId] = useState<number>(0);
   const [logData, setLogData] = useState<Recommend[]>([]);
+  const [logInfo, setLogInfo] = useState({
+    address: "",
+    latitue: 0,
+    longitude: 0,
+    lngDMS: "",
+    latDMS: "",
+    theme: "",
+  });
   //   const id = router.query.id;
   const getLog = useQuery({
     queryKey: ["getLog"],
     queryFn: async () => {
       const response = await getLogData(logId);
-      console.log("get log", response.data);
+      const data = response.data;
       if (response.status === 200) {
-        setLogData([...response.data]);
+        setLogData([...data.logData]);
+        const { latDMS, lngDMS } = decimalToDMS(data.latitude, data.longitude);
+        setLogInfo({
+          address: data.address,
+          latitue: data.latitude,
+          longitude: data.longitude,
+          theme: data.theme,
+          lngDMS: lngDMS,
+          latDMS: latDMS,
+        });
         return response.data;
       }
     },
@@ -35,10 +53,7 @@ const LinkShare = () => {
     <div>loading</div>
   ) : (
     <main className={styles.main}>
-      <p className={styles.title}>
-        우리의 <br />
-        랜덤(카페 etc) 여행지는?{" "}
-      </p>
+      <p className={styles.title}>{`우리의\n${logInfo?.theme} 여행지는?`}</p>
       <section className={styles.cloud}>
         <Image src={cloud} width={308} height={221} alt="cloud" />
         <div className={styles.addrContainer}>
@@ -46,8 +61,10 @@ const LinkShare = () => {
             <ImQuotesLeft />
           </div>
           <div className={styles.addr}>
-            <p className={styles.address}>대구광역시 군위군</p>
-            <p className={styles.latlng}> 37˚00'00"N 127˚00'00"E</p>
+            <p className={styles.address}> {logInfo?.address}</p>
+            <p className={styles.latlng}>
+              {`${logInfo?.latDMS} ${logInfo?.lngDMS} `}
+            </p>
           </div>
           <div className={styles.right}>
             <ImQuotesRight />

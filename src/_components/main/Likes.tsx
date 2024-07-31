@@ -38,6 +38,7 @@ const Likes = () => {
       if (response.status === 200) {
         setLikes([...response.data]);
         console.log(response.data);
+
         return response.data;
       }
     },
