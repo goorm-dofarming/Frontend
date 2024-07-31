@@ -9,6 +9,7 @@ import { IoHeartSharp, IoChatbubbleEllipsesSharp } from 'react-icons/io5';
 import { IoMdLogOut } from 'react-icons/io';
 import { FaMapMarkedAlt, FaRegClock } from 'react-icons/fa';
 import logo from '@/src/_assets/icons/logo.png';
+import { IoMdLogIn } from 'react-icons/io';
 
 // atoms
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -90,7 +91,11 @@ const NavBar = ({
         ))}
       </div>
       <button className={styles.button}>
-        <IoMdLogOut fill="white" onClick={handleLogout} />
+        {user.userId > 0 ? (
+          <IoMdLogOut fill="white" onClick={handleLogout} />
+        ) : (
+          <IoMdLogIn fill="white" />
+        )}
       </button>
       {user.userId === 0 && (
         <Toast
