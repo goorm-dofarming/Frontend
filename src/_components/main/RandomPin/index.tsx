@@ -140,7 +140,7 @@ const RandomPin = ({
     <div className={styles.container} draggable="false">
       <Slider {...settings}>
         {themes.map((theme: Theme) => (
-          <button key={theme.id} className={styles.pin}>
+          <button key={theme.id} className={styles.pin} draggable="false">
             <span>{theme.title}</span>
             <Image
               src={theme.img}
