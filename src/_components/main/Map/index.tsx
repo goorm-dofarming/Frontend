@@ -1,18 +1,15 @@
-import Card from '@/src/_components/Common/Card';
-import styles from './map.module.scss';
-import { useEffect, useRef, useState } from 'react';
-import { pageState, randomPinState } from '@/src/atom/stats';
-import { useRecoilState } from 'recoil';
-import { DataType, Recommend } from '@/src/types/aboutMap';
-import { makeCustomOverlay, makeInfoWindow } from './utils';
-import { useCookies } from 'react-cookie';
-import { FaLessThanEqual } from 'react-icons/fa';
-import { useRouter } from 'next/router';
+import Card from "@/src/_components/Common/Card";
+import styles from "./map.module.scss";
+import { useEffect, useRef, useState } from "react";
+import { pageState, randomPinState, userState } from "@/src/atom/stats";
+import { useRecoilState } from "recoil";
+import { DataType, Recommend } from "@/src/types/aboutMap";
+import { makeCustomOverlay, makeInfoWindow } from "./utils";
+import useToggle from "@/src/hooks/Home/useToggle";
+import Toast from "@/src/_components/Common/Toast";
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=services`;
 
 const Map = () => {
-  const router = useRouter();
-  const [cookies] = useCookies(['token']);
   const [page, setPage] = useRecoilState(pageState);
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   const [kakaoMap, setKakaoMap] = useState<kakao.maps.Map | null>(null);
@@ -24,23 +21,21 @@ const Map = () => {
   );
   const [pinInfo, setPinInfo] = useState<any[]>([]);
   const container = useRef<HTMLElement>(null);
-  useEffect(() => {
-    if (router) {
-      console.log(router);
-    }
-  }, [router]);
-  console.log(randomPin);
+  const [toast, setToast] = useState<boolean>(false);
+  const openToast = useToggle(toast, setToast);
+  const [user, setUser] = useRecoilState(userState);
   const onClickShareBtn = () => {
-    if (!cookies.token) {
-      alert('로그인인 필요합니다.');
+    if (!user.userId) {
+      openToast();
       return;
     }
     navigator.clipboard.writeText(`${window.location}tours/${randomPin.logId}`);
     alert('링크가 클립보드에 복사되었습니다. 친구와 쉽게 공유하세요!');
   };
+
   useEffect(() => {
-    document.cookie = 'username=dofarming; SameSite=Strict; Secure';
-    const script = document.createElement('script');
+    document.cookie = "username=dofarming; SameSite=Strict; Secure";
+    const script = document.createElement("script");
     script.src = KAKAO_SDK_URL;
     document.head.appendChild(script);
 
@@ -86,7 +81,7 @@ const Map = () => {
           xAnchor: -0.2,
         });
         setCustomOverlay(customOverlay as any);
-        window.kakao.maps.event.addListener(marker, 'click', function () {
+        window.kakao.maps.event.addListener(marker, "click", function () {
           setShowCustomOverlay((prev: boolean) => !prev);
         });
 
@@ -198,6 +193,13 @@ const Map = () => {
           />
         ))}
       </div>
+      {!user.userId && (
+        <Toast
+          content={"로그인하여 더 많은 기능을 이용해 보세요 !"}
+          toast={toast}
+          openToast={openToast}
+        />
+      )}
     </main>
   );
 };

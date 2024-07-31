@@ -2,11 +2,17 @@ import React, { SetStateAction, Dispatch, useState, useEffect } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { IoHeartSharp } from "react-icons/io5"; //꽉찬하트
-import { IoHeartOutline } from "react-icons/io5"; //빈하트
 import { Recommend, DataType } from "@/src/types/aboutMap";
 import main_logo from "@/src/_assets/icons/main_logo.png";
 import { colorTheme } from "@/src/_styles/common/commonColorStyles";
 import cx from "classnames";
+import useToggle from "@/src/hooks/Home/useToggle";
+import { userState, randomPinState } from "@/src/atom/stats";
+import { useRecoilState } from "recoil";
+import Toast from "@/src/_components/Common/Toast";
+import { modifyLike } from "@/pages/api/map";
+import { getLogData } from "@/pages/api/log";
+
 const Container = styled.div`
   padding: 8px 4px;
   width: 300px;
@@ -153,16 +159,30 @@ const Card = ({
   // TODO: heart animation
   const { id, image, title, dataType, addr, tel, countLikes, liked } =
     recommend;
+  const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   const [hover, setHover] = useState(false);
-  const [isLiked, setIsLiked] = useState<boolean>(liked);
-  const onClickLike = (e: React.MouseEvent<HTMLButtonElement>) => {
+  // const [isLiked, setIsLiked] = useState<boolean>(liked);
+  const [toast, setToast] = useState<boolean>(false);
+  const openToast = useToggle(toast, setToast);
+  const [user, setUser] = useRecoilState(userState);
+  const onClickLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault(); // 링크의 기본 동작 방지
-    setIsLiked((prev) => !prev);
+    if (!user.userId) {
+      openToast();
+      return;
+    }
+    const response = await modifyLike(id, dataType);
+    if (response.status === 200) {
+      const logResponse = await getLogData(randomPin.logId);
+      if (response.status === 200) {
+        setRandomPin((prev) => ({
+          ...prev,
+          recommends: [...logResponse.data],
+        }));
+      }
+    }
   };
-  useEffect(() => {
-    // console.log(randomPin)
-    console.log(isLiked);
-  }, [isLiked]);
+
   return (
     <Container onClick={() => onClick && onClick(recommend)}>
       <LocationImage>
@@ -190,8 +210,8 @@ const Card = ({
             onClick={onClickLike}
             className={cx(
               "likeBtn",
-              { ["active"]: isLiked },
-              { ["inactive"]: !isLiked }
+              { ["active"]: liked },
+              { ["inactive"]: !liked }
             )}
           >
             <IoHeartSharp fontSize={30} />
@@ -199,6 +219,13 @@ const Card = ({
           <div className="likesNumber">{formatNumber(countLikes)}</div>
         </Likes>
       </Info>
+      {!user.userId && (
+        <Toast
+          content={"로그인하여 더 많은 기능을 이용해 보세요 !"}
+          toast={toast}
+          openToast={openToast}
+        />
+      )}
     </Container>
   );
 };

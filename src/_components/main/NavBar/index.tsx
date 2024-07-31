@@ -1,32 +1,32 @@
-import Image from 'next/image';
-import { useCookies } from 'react-cookie';
-import { MouseEvent, useEffect, useState } from 'react';
-import styles from './navbar.module.scss';
-import cx from 'classnames';
+import Image from "next/image";
+import { useCookies } from "react-cookie";
+import { MouseEvent, useEffect, useState } from "react";
+import styles from "./navbar.module.scss";
+import cx from "classnames";
 
 // icons
-import { IoHeartSharp, IoChatbubbleEllipsesSharp } from 'react-icons/io5';
-import { IoMdLogOut } from 'react-icons/io';
-import { FaMapMarkedAlt, FaRegClock } from 'react-icons/fa';
-import logo from '@/src/_assets/icons/logo.png';
-import { IoMdLogIn } from 'react-icons/io';
+import { IoHeartSharp, IoChatbubbleEllipsesSharp } from "react-icons/io5";
+import { IoMdLogOut } from "react-icons/io";
+import { FaMapMarkedAlt, FaRegClock } from "react-icons/fa";
+import logo from "@/src/_assets/icons/logo.png";
+import { IoMdLogIn } from "react-icons/io";
 
 // atoms
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { pageState, userState } from '@/src/atom/stats';
-import { alarmState } from '@/src/atom/stats';
+import { useRecoilState, useRecoilValue } from "recoil";
+import { pageState, userState } from "@/src/atom/stats";
+import { alarmState } from "@/src/atom/stats";
 
 // hooks
-import useToggle from '@/src/hooks/Home/useToggle';
+import useToggle from "@/src/hooks/Home/useToggle";
 
 // components
-import Toast from '../../Common/Toast';
+import Toast from "@/src/_components/Common/Toast";
 
 const menu = [
-  { page: 'map', icon: <FaMapMarkedAlt fill="white" /> },
-  { page: 'log', icon: <FaRegClock fill="white" /> },
-  { page: 'likes', icon: <IoHeartSharp fill="white" /> },
-  { page: 'chat', icon: <IoChatbubbleEllipsesSharp fill="white" /> },
+  { page: "map", icon: <FaMapMarkedAlt fill="white" /> },
+  { page: "log", icon: <FaRegClock fill="white" /> },
+  { page: "likes", icon: <IoHeartSharp fill="white" /> },
+  { page: "chat", icon: <IoChatbubbleEllipsesSharp fill="white" /> },
 ];
 const NavBar = ({
   className,
@@ -37,7 +37,7 @@ const NavBar = ({
 }) => {
   const [user, setUser] = useRecoilState(userState);
   const [active, setPage] = useRecoilState(pageState);
-  const [cookies, removeCookie] = useCookies(['token']);
+  const [cookies, removeCookie] = useCookies(["token"]);
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const id = event.currentTarget.id;
     setPage(id);
@@ -47,16 +47,15 @@ const NavBar = ({
   const openToast = useToggle(toast, setToast);
 
   const handleLogout = () => {
-    removeCookie('token', '', { path: '/' });
-    setUser({ userId: 0, email: '', nickname: '', imageUrl: '', role: '' });
+    removeCookie("token", "", { path: "/" });
+    setUser({ userId: 0, email: "", nickname: "", imageUrl: "", role: "" });
     setInitial(false);
-    setPage('home');
+    setPage("home");
   };
 
   useEffect(() => {
-    if (active === 'chat') {
+    if (active === "chat") {
       setAlarm(false);
-      console.log('alarm off');
     }
   }, [active]);
   return (
@@ -66,7 +65,7 @@ const NavBar = ({
           className={styles.logo}
           onClick={() => {
             setInitial(false);
-            setPage('home');
+            setPage("home");
           }}
         >
           <Image src={logo} width={68} height={60} alt="logo" />
@@ -80,10 +79,10 @@ const NavBar = ({
               { [styles.focus]: page === active },
               { [styles.isMember]: user.userId > 0 }
             )}
-            onClick={user.userId > 0 || page === 'map' ? onClick : openToast}
+            onClick={user.userId > 0 || page === "map" ? onClick : openToast}
             id={page}
           >
-            {page === 'chat' && (
+            {page === "chat" && (
               <span className={cx(alarm && styles.alarm)}></span>
             )}
             {icon}
@@ -99,7 +98,7 @@ const NavBar = ({
       </button>
       {user.userId === 0 && (
         <Toast
-          content={'로그인하여 더 많은 기능을 이용해 보세요 !'}
+          content={"로그인하여 더 많은 기능을 이용해 보세요 !"}
           toast={toast}
           openToast={openToast}
         />

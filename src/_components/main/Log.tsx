@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 
 // styles
 import { LogContainer } from '@/src/_styles/main/logStyles';
@@ -8,8 +8,9 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { logEntireData, pageState } from '@/src/atom/stats';
 
+
 // types
-import { logDataType, recommendsType } from '@/src/types/aboutLog';
+import { logDataType, recommendsType } from "@/src/types/aboutLog";
 
 // img
 import Card from '../Common/Card';
@@ -21,6 +22,7 @@ import { pinType } from '@/src/constatns/PinSort';
 import { makeInfoWindow } from './Map/utils';
 
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services,clusterer`;
+
 
 const Log = () => {
   // 위치 이동
@@ -82,7 +84,7 @@ const Log = () => {
 
   // 이미지 URL을 문자열로 변환하는 함수
   const getImageSrc = (img: StaticImageData | string): string => {
-    if (typeof img === 'string') {
+    if (typeof img === "string") {
       return img;
     } else {
       return img.src;
@@ -92,7 +94,7 @@ const Log = () => {
   // 종류에 따른 핀 설정
   const sortingPins = (dataType: number): string => {
     const pin = pinType.find((type) => type.dataType === dataType);
-    return pin ? getImageSrc(pin.img) : 'null';
+    return pin ? getImageSrc(pin.img) : "null";
   };
 
   useEffect(() => {
@@ -100,8 +102,8 @@ const Log = () => {
   }, []);
 
   useEffect(() => {
-    document.cookie = 'username=dofarming; SameSite=Strict; Secure';
-    const script = document.createElement('script');
+    document.cookie = "username=dofarming; SameSite=Strict; Secure";
+    const script = document.createElement("script");
     script.src = KAKAO_SDK_URL;
     document.head.appendChild(script);
 
@@ -151,7 +153,7 @@ const Log = () => {
 
           window.kakao.maps.event.addListener(
             marker,
-            'click',
+            "click",
             makeClickListener(logData[i])
           );
         }
@@ -237,8 +239,8 @@ const Log = () => {
 
   useEffect(() => {
     // console.log('selected log data: ', selectedLogData);
-    console.log('selected log data: ', selectedLogData);
-    console.log('logData : ', logData);
+    console.log("selected log data: ", selectedLogData);
+    console.log("logData : ", logData);
   }, [logData, selectedLogData]);
 
   return (

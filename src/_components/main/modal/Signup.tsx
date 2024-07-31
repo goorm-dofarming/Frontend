@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
 
 // img
-import ShowPwd from '@/src/_assets/main/eye.svg';
-import HidePwd from '@/src/_assets/main/eye-closed.svg';
-import KakaoLogo from '@/src/_assets/main/kakao.svg';
-import NaverLogo from '@/src/_assets/main/N.svg';
-import GoogleLogo from '@/src/_assets/main/g-logo.svg';
-import { FcGoogle } from 'react-icons/fc';
-
+import ShowPwd from "@/src/_assets/main/eye.svg";
+import HidePwd from "@/src/_assets/main/eye-closed.svg";
+import KakaoLogo from "@/src/_assets/main/kakao.svg";
+import NaverLogo from "@/src/_assets/main/N.svg";
+import GoogleLogo from "@/src/_assets/main/g-logo.svg";
+import { FcGoogle } from "react-icons/fc";
+import { RiKakaoTalkFill } from "react-icons/ri";
+import { SiNaver } from "react-icons/si";
 // styles
 import {
   GoogleCircleButton,
@@ -16,21 +17,21 @@ import {
   NAverCircleButton,
   SignupButton,
   SignupDisActiveButton,
-} from '@/src/_styles/common/buttons';
+} from "@/src/_styles/common/buttons";
 
 // styles
 import {
   InputSignupAuthpBorder,
   InputSignupBorder,
-} from '@/src/_styles/common/inputs';
+} from "@/src/_styles/common/inputs";
 
 // libraries
-import { useMutation } from '@tanstack/react-query';
-import axios, { AxiosError } from 'axios';
-import { inputDataType } from '@/src/types/aboutMain';
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { inputDataType } from "@/src/types/aboutMain";
 
 // apis
-import { checkEmail, sendEmail, signUp } from '@/pages/api/auth';
+import { checkEmail, sendEmail, signUp } from "@/pages/api/auth";
 
 interface SignupType {
   inputData: inputDataType;
@@ -40,6 +41,7 @@ interface SignupType {
   handleComponent: () => void;
   setPageState: React.Dispatch<React.SetStateAction<boolean>>;
 }
+type ChangingType = "email" | "password" | "confirmPassword" | "authentication";
 const Signup = ({
   inputData,
   pwdShow,
@@ -58,15 +60,15 @@ const Signup = ({
   const MINUTES_IN_MS = 3 * 61 * 1000;
   const INTERVAL = 1000;
   const [timeLeft, setTimeLeft] = useState<number>(MINUTES_IN_MS);
-
+  const [isChanging, setIsChanging] = useState<ChangingType | null>(null);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (isCertificate === true) {
       const timer = setInterval(() => {
         setTimeLeft((prevTime) => prevTime - INTERVAL);
       }, INTERVAL);
-      console.log('timer:', timer);
-      console.log('timeLeft:', timeLeft);
+      // console.log("timer:", timer);
+      // console.log("timeLeft:", timeLeft);
 
       if (timeLeft <= 0) {
         clearInterval(timer);
@@ -82,12 +84,12 @@ const Signup = ({
 
   const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(
     2,
-    '0'
+    "0"
   );
-  const second = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, '0');
+  const second = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, "0");
 
   const doSignup = useMutation({
-    mutationKey: ['signup'],
+    mutationKey: ["signup"],
     mutationFn: async () => {
       const body = {
         email,
@@ -96,7 +98,7 @@ const Signup = ({
       };
 
       const response = await signUp(body);
-      console.log('create user success: ', response);
+      // console.log("create user success: ", response);
 
       if (response.status === 201) {
         setPageState(false);
@@ -109,14 +111,14 @@ const Signup = ({
   });
 
   const certification = useMutation({
-    mutationKey: ['certification'],
+    mutationKey: ["certification"],
     mutationFn: async () => {
       const body = {
         email,
       };
 
       const response = await sendEmail(body);
-      console.log('email certification: ', response);
+      // console.log("email certification: ", response);
 
       if (response.status === 204) {
         setIsCertificate(true);
@@ -129,7 +131,7 @@ const Signup = ({
   });
 
   const signup = useMutation({
-    mutationKey: ['signup'],
+    mutationKey: ["signup"],
     mutationFn: async () => {
       const body = {
         email,
@@ -138,7 +140,7 @@ const Signup = ({
 
       const response = await checkEmail(body);
 
-      console.log('email certification: ', response);
+      // console.log("email certification: ", response);
       if (response.status === 204) {
         setIsActive(true);
       }
@@ -149,40 +151,50 @@ const Signup = ({
   });
   return (
     <div className="modalContents">
-      <InputSignupBorder>
+      <InputSignupBorder isChanging={isChanging === "email" ? true : false}>
         <div
           style={{
-            width: '90%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
+            width: "90%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            gap: "4px",
           }}
         >
           <div className="inputInMent">Email</div>
           <div className="inputRow">
             <input
               name="email"
-              onChange={(e) => handleInputData(e.target.name, e.target.value)}
+              onChange={(e) => {
+                handleInputData(e.target.name, e.target.value);
+                setIsChanging("email");
+              }}
+              onBlur={() => setIsChanging(null)}
               placeholder="이메일을 입력해주세요"
             />
           </div>
         </div>
       </InputSignupBorder>
-      <InputSignupBorder>
+      <InputSignupBorder isChanging={isChanging === "password" ? true : false}>
         <div
           style={{
-            width: '90%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
+            width: "90%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            gap: "4px",
           }}
         >
           <div className="inputInMent">Password</div>
           <div className="inputRow">
             <input
-              type={pwdShow === true ? 'text' : 'password'}
+              type={pwdShow === true ? "text" : "password"}
               name="password"
-              onChange={(e) => handleInputData(e.target.name, e.target.value)}
+              onChange={(e) => {
+                handleInputData(e.target.name, e.target.value);
+                setIsChanging("password");
+              }}
+              onBlur={() => setIsChanging(null)}
               placeholder="비밀번호를 입력해주세요(8~12자)"
             />
           </div>
@@ -193,46 +205,60 @@ const Signup = ({
           width={25}
           height={25}
           onClick={handlePwd}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: "pointer" }}
         />
       </InputSignupBorder>
-      <InputSignupBorder>
+      <InputSignupBorder
+        isChanging={isChanging === "confirmPassword" ? true : false}
+      >
         <div
           style={{
-            width: '90%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
+            width: "90%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            gap: "4px",
           }}
         >
-          <div className="inputInMent" style={{ marginBottom: '0.3rem' }}>
+          <div className="inputInMent" style={{ marginBottom: "0.3rem" }}>
             Check Password
           </div>
           <div className="inputRow">
             <input
-              type={pwdShow === true ? 'text' : 'password'}
+              type={pwdShow === true ? "text" : "password"}
               name="confirmPassword"
-              onChange={(e) => handleInputData(e.target.name, e.target.value)}
+              onChange={(e) => {
+                handleInputData(e.target.name, e.target.value);
+                setIsChanging("confirmPassword");
+              }}
+              onBlur={() => setIsChanging(null)}
               placeholder="비밀번호 확인"
             />
           </div>
         </div>
       </InputSignupBorder>
       <div className="authContainer">
-        <InputSignupAuthpBorder>
+        <InputSignupAuthpBorder
+          isChanging={isChanging === "authentication" ? true : false}
+        >
           <div
             style={{
-              width: '90%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
+              width: "90%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              gap: "4px",
             }}
           >
             <div className="inputInMent">Authentication</div>
             <div className="inputRow">
               <input
                 name="authentication"
-                onChange={(e) => handleInputData(e.target.name, e.target.value)}
+                onChange={(e) => {
+                  handleInputData(e.target.name, e.target.value);
+                  setIsChanging("authentication");
+                }}
+                onBlur={() => setIsChanging(null)}
               />
             </div>
           </div>
@@ -246,7 +272,7 @@ const Signup = ({
       <div className="limitTime">
         <span>
           {password !== confirmPassword && password.length > 7
-            ? '비밀번호가 틀립니다❌'
+            ? "비밀번호가 일치하지 않습니다."
             : null}
         </span>
         <span>{isCertificate === true && `${minutes}:${second}`}</span>
@@ -265,13 +291,16 @@ const Signup = ({
       {/* 소셜 로그인 */}
       <div className="signupSocialContainer">
         <KakaoCircleButton>
-          <Image src={KakaoLogo} alt="카카오버튼" />
+          {/* <Image src={KakaoLogo} alt="카카오버튼" /> */}
+          <RiKakaoTalkFill size={36} fill="#000000" />
         </KakaoCircleButton>
         <NAverCircleButton>
-          <Image src={NaverLogo} alt="네이버버튼" />
+          {/* <Image src={NaverLogo} alt="네이버버튼" /> */}
+          <SiNaver size={24} fill="#FFFFFF" />
         </NAverCircleButton>
         <GoogleCircleButton>
-          <FcGoogle size={'3rem'} />
+          {/* <FcGoogle size={"3rem"} /> */}
+          <FcGoogle size={36} />
         </GoogleCircleButton>
       </div>
       {/* ment */}
