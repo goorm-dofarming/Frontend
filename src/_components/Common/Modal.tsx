@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
-import Image from 'next/image';
+import React, { useContext, useEffect, useState } from "react";
+import ReactDOM from "react-dom";
+import Image from "next/image";
 
 // img
-import { MdClose } from 'react-icons/md';
+import { MdClose } from "react-icons/md";
 
 // contestAPI
-import { ModalContainer } from '@/src/_styles/common/modalStyles';
+import { ModalContainer } from "@/src/_styles/common/modalStyles";
 interface MainModalType {
   children: React.ReactNode;
   width: string;
@@ -26,7 +26,7 @@ const Modal: React.FC<MainModalType> = ({
 
   useEffect(() => {
     const root = document.querySelector(
-      '#modal-container'
+      "#modal-container"
     ) as HTMLElement | null;
     setModalRoot(root);
   }, []);

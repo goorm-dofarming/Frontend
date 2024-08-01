@@ -39,6 +39,7 @@ const Home = () => {
   const [pin, setPin] = useState<string>('pin_hide');
   const [alarm, setAlarm] = useRecoilState(alarmState);
   const setMessageAlarm = useSetRecoilState(messageAlarmState);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setElement(menu[page]);
@@ -51,20 +52,24 @@ const Home = () => {
   });
 
   useEffect(() => {
-    if (userInfo) {
-      setUser(userInfo);
-    }
-  }, [userInfo, refetchUser]);
+    setIsClient(true); // 클라이언트 렌더링 시점에 상태 업데이트
+  }, []);
 
   useEffect(() => {
-    if (cookies.token) {
+    if (isClient && userInfo) {
+      setUser(userInfo);
+    }
+  }, [isClient, userInfo, refetchUser]);
+
+  useEffect(() => {
+    if (isClient && cookies.token) {
       refetchUser();
     }
-  }, [cookies]);
+  }, [isClient, cookies]);
 
   // SSE 연결
   useEffect(() => {
-    if (user === undefined || user.email === '') return;
+    if (!isClient || user === undefined || user.email === '') return;
     const EventSource = EventSourcePolyfill || NativeEventSource;
     const userId = user.userId;
 
@@ -103,9 +108,9 @@ const Home = () => {
 
     return () => {
       eventSource.close();
-      console.log('SSE CLOSED');
+      // console.log('SSE CLOSED');
     };
-  }, [user]);
+  }, [isClient, user]);
 
   useEffect(() => {
     if (page === 'chat') {
@@ -116,13 +121,14 @@ const Home = () => {
   return (
     <main className={styles.main}>
       <div id="modal-container"></div>
-      {cookies.token && (
-        <ProfileDropdown
-          setFold={setFold}
-          setPage={setPage}
-          refetchUser={refetchUser}
-        />
-      )}
+      {isClient &&
+        cookies.token && ( // 클라이언트 렌더링 시점에 쿠키를 확인
+          <ProfileDropdown
+            setFold={setFold}
+            setPage={setPage}
+            refetchUser={refetchUser}
+          />
+        )}
       <section className={fold ? styles.navBar : styles.pinSection}>
         {fold ? (
           <NavBar className={styles.navbar} setInitial={setFold} />

@@ -8,7 +8,7 @@ import apiClient from '../apiClient';
 export const getChatRoomList = async (params: {}): Promise<Chat[]> => {
   const response = await apiClient.get('/chatroom', { params });
   const data = response.data;
-  console.log('entire chat : ', data);
+  // console.log('entire chat : ', data);
   return data;
 };
 
@@ -32,7 +32,7 @@ export const joinChatRoom = async (roomId: number) => {
 export const getMyChatRooms = async (params: {}): Promise<Chat[]> => {
   const response = await apiClient.get('/chatroom/my', { params });
   const data = response.data;
-  console.log('my chat : ', data);
+  // console.log('my chat : ', data);
   return data;
 };
 

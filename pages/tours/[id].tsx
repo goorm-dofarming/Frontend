@@ -17,23 +17,20 @@ const LinkShare = () => {
     queryKey: ["getLog"],
     queryFn: async () => {
       const response = await getLogData(logId);
-
       console.log("get log", response.data);
-
       if (response.status === 200) {
         setLogData([...response.data]);
+        return response.data;
       }
-      return response.data;
     },
+    refetchInterval: 1000 * 60,
   });
   useEffect(() => {
     if (router) {
       setLogId(Number(router?.query?.id));
     }
   }, [router]);
-  useEffect(() => {
-    console.log(logId);
-  }, [logId]);
+
   return getLog.isLoading ? (
     <div>loading</div>
   ) : (
@@ -58,7 +55,7 @@ const LinkShare = () => {
         </div>
       </section>
       <section className={styles.list}>
-        {logData.map((recommend, index) => (
+        {logData?.map((recommend, index) => (
           <CardListItem
             key={recommend.id + index}
             recommend={recommend}

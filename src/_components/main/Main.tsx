@@ -40,6 +40,7 @@ const Main = ({ pin }: { pin: string }) => {
     authentication: '',
   });
   const [showFog, setShowFog] = useState<boolean>(false);
+  const [isClient, setIsClient] = useState(false); // 클라이언트 측 렌더링 여부 상태 추가
 
   const pinRef = useRef<HTMLImageElement>(null); // 핀 요소에 대한 ref
 
@@ -54,9 +55,9 @@ const Main = ({ pin }: { pin: string }) => {
     }));
   };
 
-  // useEffect(() => {
-  //   console.log("inputData: ", inputData);
-  // }, [inputData]);
+  useEffect(() => {
+    setIsClient(true); // 클라이언트 렌더링 시점에 상태 업데이트
+  }, []);
 
   useEffect(() => {
     const pinElement = pinRef.current;
@@ -66,7 +67,7 @@ const Main = ({ pin }: { pin: string }) => {
       };
       pinElement.addEventListener('animationend', handleAnimationEnd);
       return () => {
-        // pinElement.removeEventListener("animationend", handleAnimationEnd);
+        pinElement.removeEventListener('animationend', handleAnimationEnd);
         setShowFog(false);
       };
     }
@@ -102,9 +103,10 @@ const Main = ({ pin }: { pin: string }) => {
               </text>
             </svg>
           </div>
-          {cookies.token ? null : (
-            <LoginButton onClick={openModal}>로그인</LoginButton>
-          )}
+          {isClient &&
+            !cookies.token && ( // 클라이언트 렌더링 시점에 쿠키를 확인
+              <LoginButton onClick={openModal}>로그인</LoginButton>
+            )}
         </div>
         <Image
           ref={pinRef}

@@ -45,7 +45,7 @@ const Page = () => {
 
       const token = await getKakaoAccessToken(body, headers);
 
-      console.log('get token:', token.data);
+      // console.log('get token:', token.data);
       const { access_token } = token.data;
 
       const userDataHeader = {
@@ -53,7 +53,7 @@ const Page = () => {
       };
 
       const userData = await getKaKaoUserData(userDataHeader);
-      console.log('user data:', userData.data);
+      // console.log('user data:', userData.data);
 
       const signupKakaoBody = {
         socialType: 'KAKAO',
@@ -62,8 +62,13 @@ const Page = () => {
 
       const signupKakao = await signupSocialLogin(signupKakaoBody);
 
-      setCookies('token', signupKakao.data, { path: '/' });
-      console.log('signupKakao: ', signupKakao);
+      setCookies('token', signupKakao.data, {
+        path: '/',
+        sameSite: 'none',
+        secure: true,
+      });
+       // console.log('signupKakao: ', signupKakao);
+
 
       if (signupKakao.status === 200) {
         setTimeout(() => {

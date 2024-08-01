@@ -45,4 +45,9 @@ export const getAddress = (lng: number, lat: number) => {
   return kakaoClient.get(`/geo/coord2address?&x=${lng}&y=${lat}`);
 };
 
-export const modifyLike = () => {};
+export const modifyLike = (placeId: number, dataType: number) => {
+  return apiClient.post(`/like?&placeId=${placeId}&dataType=${dataType}`);
+};
+export const getLikeList = () => {
+  return apiClient.get(`/likeList`);
+};
