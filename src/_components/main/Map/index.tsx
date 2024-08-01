@@ -1,11 +1,13 @@
-import Card from "@/src/_components/Common/Card";
-import styles from "./map.module.scss";
-import { useEffect, useRef, useState } from "react";
+import Card from '@/src/_components/Common/Card';
+import styles from './map.module.scss';
+import { useEffect, useRef, useState } from 'react';
 import { pageState, randomPinState, userState } from "@/src/atom/stats";
-import { useRecoilState } from "recoil";
-import { DataType, RandomPinType, Recommend } from "@/src/types/aboutMap";
-import { makeCustomOverlay, makeInfoWindow } from "./utils";
-import useToggle from "@/src/hooks/Home/useToggle";
+import { useRecoilState } from 'recoil';
+import { DataType, Recommend,RandomPinType } from '@/src/types/aboutMap';
+import { makeCustomOverlay, makeInfoWindow } from './utils';
+import Modal from '../../Common/Modal';
+import PlaceInfo from '../modal/review/PlaceInfo';
+import useToggle from '@/src/hooks/Home/useToggle';
 import Toast from "@/src/_components/Common/Toast";
 import { getLog, getLogData } from "@/pages/api/log";
 import { decimalToDMS } from "../RandomPin/util";
@@ -22,6 +24,8 @@ const Map = () => {
     new Array<boolean>(randomPin.recommends.length)
   );
   const [pinInfo, setPinInfo] = useState<any[]>([]);
+  const [modal, setModal] = useState<boolean>(false);
+  const openModal = useToggle(modal, setModal);
   const container = useRef<HTMLElement>(null);
   const [toast, setToast] = useState<boolean>(false);
   const openToast = useToggle(toast, setToast);
@@ -238,9 +242,13 @@ const Map = () => {
             recommend={recommend}
             onClick={setFocusPin}
             refetch={refetch}
+            // onClick={openModal}
           />
         ))}
       </div>
+      <Modal openModal={openModal} modal={modal} width="51rem" height="46rem">
+        <PlaceInfo openModal={openModal} />
+      </Modal>
       {!user.userId && (
         <Toast
           content={"로그인하여 더 많은 기능을 이용해 보세요 !"}
