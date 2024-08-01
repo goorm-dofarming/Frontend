@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { MdInfo } from "react-icons/md";
+import { MdInfo, MdCheckCircle } from "react-icons/md";
+import { IoMdCloseCircle } from "react-icons/io";
 
 // contestAPI
 import { ToastContainer } from "@/src/_styles/common/toastStyles";
@@ -9,9 +10,19 @@ interface MainToastType {
   content: string;
   toast: boolean;
   openToast: () => void;
+  toastType?: toastType;
 }
-
-const Toast: React.FC<MainToastType> = ({ content, openToast, toast }) => {
+const icons = {
+  warning: <MdInfo size="1.5em" color="ED4A51" />,
+  success: <MdCheckCircle size="1.5em" color="64c945" />,
+  failure: <IoMdCloseCircle size="1.5em" color="ED4A51" />,
+};
+const Toast: React.FC<MainToastType> = ({
+  content,
+  openToast,
+  toast,
+  toastType = "warning",
+}) => {
   const [modalRoot, setModalRoot] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -35,7 +46,8 @@ const Toast: React.FC<MainToastType> = ({ content, openToast, toast }) => {
   return ReactDOM.createPortal(
     <ToastContainer toast={toast.toString()}>
       <div className="toast">
-        <MdInfo size="1.5em" color="ED4A51" />
+        {/* <MdInfo size="1.5em" color="ED4A51" /> */}
+        {icons[toastType]}
         <div className="content">{content}</div>
       </div>
     </ToastContainer>,

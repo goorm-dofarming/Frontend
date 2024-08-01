@@ -3,10 +3,12 @@ import styles from "./map.module.scss";
 import { useEffect, useRef, useState } from "react";
 import { pageState, randomPinState, userState } from "@/src/atom/stats";
 import { useRecoilState } from "recoil";
-import { DataType, Recommend } from "@/src/types/aboutMap";
+import { DataType, RandomPinType, Recommend } from "@/src/types/aboutMap";
 import { makeCustomOverlay, makeInfoWindow } from "./utils";
 import useToggle from "@/src/hooks/Home/useToggle";
 import Toast from "@/src/_components/Common/Toast";
+import { getLog, getLogData } from "@/pages/api/log";
+import { decimalToDMS } from "../RandomPin/util";
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=services`;
 
 const Map = () => {
@@ -24,15 +26,60 @@ const Map = () => {
   const [toast, setToast] = useState<boolean>(false);
   const openToast = useToggle(toast, setToast);
   const [user, setUser] = useRecoilState(userState);
+
+  const refetch = async () => {
+    //after like button click
+    const logResponse = await getLogData(randomPin.logId);
+    if (logResponse.status === 200) {
+      setRandomPin((prev) => ({
+        ...prev,
+        recommends: [...logResponse.data.recommendations],
+      }));
+    }
+  };
   const onClickShareBtn = () => {
     if (!user.userId) {
       openToast();
       return;
     }
     navigator.clipboard.writeText(`${window.location}tours/${randomPin.logId}`);
-    alert("링크가 클립보드에 복사되었습니다. 친구와 쉽게 공유하세요!");
+    openToast();
+  };
+  const setInitial = async () => {
+    const response = await getLog();
+    // console.log("get logs", response.data);
+    if (response.status === 200) {
+      const data = response.data;
+      const logResponse = await getLogData(data[0].logId);
+      if (logResponse.status === 200) {
+        const logData = logResponse.data.logResponse;
+        let recommendList = logResponse.data.recommendations;
+        if (logData.theme === "ocean" || logData.theme === "mountain") {
+          recommendList = recommendList.slice(1);
+        }
+        const { latDMS, lngDMS } = decimalToDMS(
+          logData.latitude,
+          logData.longitude
+        );
+        setRandomPin((prev: RandomPinType) => ({
+          address: logData.address,
+          logId: logData.logId,
+          lat: logData.latitude,
+          lng: logData.longitude,
+          latDMS: latDMS,
+          lngDMS: lngDMS,
+          theme: logData.theme,
+          recommends: [...recommendList],
+        }));
+      }
+    }
   };
 
+  useEffect(() => {
+    if (user.userId && randomPin.logId === 0) {
+      setInitial();
+    }
+  }, [randomPin]);
   useEffect(() => {
     document.cookie = "username=dofarming; SameSite=Strict; Secure";
     const script = document.createElement("script");
@@ -190,6 +237,7 @@ const Map = () => {
             key={recommend.locationId + index}
             recommend={recommend}
             onClick={setFocusPin}
+            refetch={refetch}
           />
         ))}
       </div>
@@ -198,6 +246,14 @@ const Map = () => {
           content={"로그인하여 더 많은 기능을 이용해 보세요 !"}
           toast={toast}
           openToast={openToast}
+        />
+      )}
+      {user.userId && (
+        <Toast
+          content={"링크가 클립보드에 복사되었습니다. 친구와 쉽게 공유하세요!"}
+          toast={toast}
+          openToast={openToast}
+          toastType="success"
         />
       )}
     </main>

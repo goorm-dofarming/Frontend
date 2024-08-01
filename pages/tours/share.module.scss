@@ -1,6 +1,11 @@
 @use "../../src/_styles/constants/color" as c;
 @use "../../src/_styles/mixins/" as m;
-
+.landing {
+  background-color: c.$C_TERTIARY;
+  width: 100vw;
+  height: 100vh;
+  @include m.flex(center, center, column);
+}
 .main {
   @include m.flex(start, center, column);
   width: 100%;
