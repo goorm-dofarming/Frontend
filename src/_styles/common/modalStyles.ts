@@ -119,11 +119,21 @@ export const ModalContainer = styled.div<{
   .logo {
     z-index: 0;
     cursor: pointer;
+    font-size: 28px;
   }
   .modalHeader {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    height: 32px;
+    position: relative;
+    z-index: 100;
+    text-shadow:
+      1px 1px 0 white,
+      -1px -1px 0 white,
+      1px -1px 0 white,
+      -1px 1px 0 white;
+    padding-right: 10px;
   }
 
   .socialButtonContainer {

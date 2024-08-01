@@ -38,7 +38,9 @@ const Modal: React.FC<MainModalType> = ({
       <div className="modal">
         {/* 모달 헤더 */}
         <div className="modalHeader">
-          <MdClose onClick={openModal} size={'2rem'} className="logo" />
+          <div onClick={openModal} className="logo">
+            X
+          </div>
         </div>
         {/* 모달 컨텐츠 부분 */}
         {children}
