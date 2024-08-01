@@ -12,9 +12,9 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  padding: 20px;
-  gap: 20px;
-  .title {
+  padding: 40px;
+  gap: 40px;
+  > .header {
     width: 100%;
     height: 60px;
     font-size: 40px;
@@ -24,9 +24,10 @@ const Container = styled.div`
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    gap: 24px;
   }
 `;
 const Likes = () => {
@@ -37,22 +38,21 @@ const Likes = () => {
       const response = await getLikeList();
       if (response.status === 200) {
         setLikes([...response.data]);
-        console.log(response.data);
-
         return response.data;
       }
     },
-    refetchInterval: 1000 * 60,
+
+    // refetchInterval: 1000 * 60,
   });
   return getLikes.isLoading ? (
     <div>loading</div>
   ) : (
     <Container>
-      <div className="title">Liked List</div>
+      <div className="header">Liked List</div>
       <div className="likes">
-        {/* {likes.map((recommend, index) => (
-          <Card key={recommend.id + index} recommend={recommend} />
-        ))} */}
+        {likes.map((recommend, index) => (
+          <Card key={recommend.locationId + index} recommend={recommend} />
+        ))}
       </div>
     </Container>
   );

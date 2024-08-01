@@ -49,7 +49,7 @@ export const DataType: DataTypeMap = {
 };
 
 export type Recommend = {
-  id: number;
+  locationId: number;
   title: string;
   addr: string;
   dataType: number;

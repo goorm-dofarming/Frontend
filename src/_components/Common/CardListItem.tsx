@@ -47,7 +47,11 @@ const Description = styled.div`
   gap: 1px;
   overflow: hidden;
   .title {
+    width: 100%;
+    overflow-y: hidden;
     font-size: 16px;
+    white-space: nowrap;
+    /* text-overflow: ellipsis; */
   }
   .type {
     font-weight: 500;
@@ -105,7 +109,8 @@ const CardListItem = ({
   onClick?: (recommend: Recommend) => void;
 }) => {
   // TODO: heart animation
-  const { id, image, title, dataType, addr, tel, countLikes } = recommend;
+  const { locationId, image, title, dataType, addr, tel, countLikes } =
+    recommend;
   const [hover, setHover] = useState(false);
 
   return (

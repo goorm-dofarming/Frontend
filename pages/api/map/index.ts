@@ -1,26 +1,23 @@
 import apiClient from "../apiClient";
 import basicClient from "../basicClient";
 import kakaoClient from "../kakaoClient";
-import { Cookies } from "react-cookie";
-const cookies = new Cookies();
+
 export const downloadTour = () => {
   return basicClient.get(`/apiCall/download/TourAttraction`);
+};
+export const getRandomGuest = (mapX: number, mapY: number, address: string) => {
+  return basicClient.get(
+    `/recommend/random?mapX=${mapX}&mapY=${mapY}&address=${address}`
+  );
 };
 export const getRandomRecommends = (
   mapX: number,
   mapY: number,
   address: string
-  // themes: number[]
 ) => {
-  if (cookies.get("token")) {
-    return apiClient.get(
-      `/recommend/random?mapX=${mapX}&mapY=${mapY}&address=${address}`
-    );
-  } else {
-    return basicClient.get(
-      `/recommend/random?mapX=${mapX}&mapY=${mapY}&address=${address}`
-    );
-  }
+  return apiClient.get(
+    `/recommend/random?mapX=${mapX}&mapY=${mapY}&address=${address}`
+  );
 };
 export const getThemeRecommends = (
   mapX: number,
@@ -45,8 +42,8 @@ export const getAddress = (lng: number, lat: number) => {
   return kakaoClient.get(`/geo/coord2address?&x=${lng}&y=${lat}`);
 };
 
-export const modifyLike = (placeId: number, dataType: number) => {
-  return apiClient.post(`/like?&placeId=${placeId}&dataType=${dataType}`);
+export const modifyLike = (locationId: number) => {
+  return apiClient.post(`/like?&locationId=${locationId}`);
 };
 export const getLikeList = () => {
   return apiClient.get(`/likeList`);

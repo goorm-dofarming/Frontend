@@ -26,15 +26,20 @@ const LinkShare = () => {
     queryKey: ["getLog"],
     queryFn: async () => {
       const response = await getLogData(logId);
+      console.log(response);
       const data = response.data;
+      const logData = data.logResponse;
       if (response.status === 200) {
-        setLogData([...data.logData]);
-        const { latDMS, lngDMS } = decimalToDMS(data.latitude, data.longitude);
+        setLogData([...data.recommendations]);
+        const { latDMS, lngDMS } = decimalToDMS(
+          logData.latitude,
+          logData.longitude
+        );
         setLogInfo({
-          address: data.address,
-          latitue: data.latitude,
-          longitude: data.longitude,
-          theme: data.theme,
+          address: logData.address,
+          latitue: logData.latitude,
+          longitude: logData.longitude,
+          theme: logData.theme,
           lngDMS: lngDMS,
           latDMS: latDMS,
         });
@@ -74,7 +79,7 @@ const LinkShare = () => {
       <section className={styles.list}>
         {logData?.map((recommend, index) => (
           <CardListItem
-            key={recommend.id + index}
+            key={recommend.locationId + index}
             recommend={recommend}
             // width={window.innerWidth}
           />

@@ -1,9 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
-import { MdInfo } from 'react-icons/md';
+import React, { useContext, useEffect, useState } from "react";
+import ReactDOM from "react-dom";
+import { MdInfo } from "react-icons/md";
 
 // contestAPI
-import { ToastContainer } from '@/src/_styles/common/toastStyles';
+import { ToastContainer } from "@/src/_styles/common/toastStyles";
+type toastType = "success" | "failure" | "warning";
 interface MainToastType {
   content: string;
   toast: boolean;
@@ -15,7 +16,7 @@ const Toast: React.FC<MainToastType> = ({ content, openToast, toast }) => {
 
   useEffect(() => {
     const root = document.querySelector(
-      '#modal-container'
+      "#modal-container"
     ) as HTMLElement | null;
     setModalRoot(root);
   }, []);
