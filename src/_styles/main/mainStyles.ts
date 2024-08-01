@@ -40,7 +40,7 @@ export const HomeContainer = styled.div<{
     opacity: 1;
   }
   .logoContainer {
-    top: 40%;
+    top: 35%;
     /* right: 24%; */
     position: absolute;
     display: flex;
@@ -97,13 +97,37 @@ export const HomeContainer = styled.div<{
     display: none;
   }
   .logo {
+    width: 100%;
+    height: 177px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  .hatLogo {
     z-index: 0;
+    position: absolute;
   }
   .textLogo {
+    position: absolute;
+    width: 300px; /* 필요에 따라 조정 */
+    height: 60px;
+    bottom: 40px;
     font-size: 40px;
     font-weight: 700;
+    text-align: center;
     color: ${colorTheme.logoBrownText};
-    text-shadow: 2px 2px 2px ${colorTheme.inputBorder};
+    text-shadow: 1px 1px 4px ${colorTheme.inputBorder};
+    text-shadow:
+      1px 1px 0 white,
+      -1px -1px 0 white,
+      1px -1px 0 white,
+      -1px 1px 0 white;
+  }
+  svg {
+    width: 100%;
+    height: 100%;
   }
   .modalHeader {
     display: flex;

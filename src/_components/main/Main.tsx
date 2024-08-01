@@ -78,8 +78,30 @@ const Main = ({ pin }: { pin: string }) => {
       <main className="mainSection">
         <Image className="colorMap" src={ColorMap} alt="맵" width={360} />
         <div className="logoContainer">
-          <Image className="logo" src={Logo} alt="로고" width={50} />
-          <div className="textLogo">DOFARMING</div>
+          <div className="logo">
+            <Image className="hatLogo" src={Logo} alt="로고" width={200} />
+            {/* <div className="textLogo">DOFARMING</div> */}
+            <svg className="textLogo" viewBox="0 0 500 100">
+              <defs>
+                <path
+                  id="wave"
+                  d="M 0 50 Q 250 10 500 50 T 1000 50"
+                  fill="transparent"
+                />
+              </defs>
+              <text
+                font-size="60"
+                font-weight="700"
+                fill="#3D0007"
+                text-anchor="middle"
+                dominant-baseline="middle"
+              >
+                <textPath xlinkHref="#wave" startOffset="25%">
+                  DOFARMING
+                </textPath>
+              </text>
+            </svg>
+          </div>
           {cookies.token ? null : (
             <LoginButton onClick={openModal}>로그인</LoginButton>
           )}
