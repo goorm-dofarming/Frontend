@@ -1,19 +1,21 @@
-
-import Card from "@/src/_components/Common/Card";
-import styles from "./map.module.scss";
-import { useEffect, useRef, useState } from "react";
-import { pageState, randomPinState } from "@/src/atom/stats";
-import { useRecoilState } from "recoil";
-import { DataType, Recommend } from "@/src/types/aboutMap";
-import { makeCustomOverlay, makeInfoWindow } from "./utils";
-import { useCookies } from "react-cookie";
-import { FaLessThanEqual } from "react-icons/fa";
-import { useRouter } from "next/router";
+import Card from '@/src/_components/Common/Card';
+import styles from './map.module.scss';
+import { useEffect, useRef, useState } from 'react';
+import { pageState, randomPinState } from '@/src/atom/stats';
+import { useRecoilState } from 'recoil';
+import { DataType, Recommend } from '@/src/types/aboutMap';
+import { makeCustomOverlay, makeInfoWindow } from './utils';
+import { useCookies } from 'react-cookie';
+import { FaLessThanEqual } from 'react-icons/fa';
+import { useRouter } from 'next/router';
+import Modal from '../../Common/Modal';
+import PlaceInfo from '../modal/review/PlaceInfo';
+import useToggle from '@/src/hooks/Home/useToggle';
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=services`;
 
 const Map = () => {
   const router = useRouter();
-  const [cookies] = useCookies(["token"]);
+  const [cookies] = useCookies(['token']);
   const [page, setPage] = useRecoilState(pageState);
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   const [kakaoMap, setKakaoMap] = useState<kakao.maps.Map | null>(null);
@@ -24,6 +26,8 @@ const Map = () => {
     new Array<boolean>(randomPin.recommends.length)
   );
   const [pinInfo, setPinInfo] = useState<any[]>([]);
+  const [modal, setModal] = useState<boolean>(false);
+  const openModal = useToggle(modal, setModal);
   const container = useRef<HTMLElement>(null);
   useEffect(() => {
     if (router) {
@@ -33,11 +37,11 @@ const Map = () => {
   console.log(randomPin);
   const onClickShareBtn = () => {
     if (!cookies.token) {
-      alert("로그인인 필요합니다.");
+      alert('로그인인 필요합니다.');
       return;
     }
     navigator.clipboard.writeText(`${window.location}tours/${randomPin.logId}`);
-    alert("링크가 클립보드에 복사되었습니다. 친구와 쉽게 공유하세요!");
+    alert('링크가 클립보드에 복사되었습니다. 친구와 쉽게 공유하세요!');
   };
   useEffect(() => {
     document.cookie = 'username=dofarming; SameSite=Strict; Secure';
@@ -69,15 +73,15 @@ const Map = () => {
           image: markerImage,
         });
 
-        const content = document.createElement("div");
+        const content = document.createElement('div');
         content.innerHTML = makeCustomOverlay(randomPin);
 
         content
-          .querySelector("#share-link")
-          ?.addEventListener("click", onClickShareBtn);
+          .querySelector('#share-link')
+          ?.addEventListener('click', onClickShareBtn);
         content
-          .querySelector("#share-kakaotalk")
-          ?.addEventListener("click", onClickShareBtn);
+          .querySelector('#share-kakaotalk')
+          ?.addEventListener('click', onClickShareBtn);
 
         const customOverlay = new window.kakao.maps.CustomOverlay({
           // map: map,
@@ -118,7 +122,7 @@ const Map = () => {
           });
           infoWindows.push(infowindow);
 
-          window.kakao.maps.event.addListener(pin, "click", function () {
+          window.kakao.maps.event.addListener(pin, 'click', function () {
             setShowPinInfo((prev) => {
               const newInfos = [...prev];
               const tmp = newInfos[i];
@@ -196,9 +200,13 @@ const Map = () => {
             key={recommend.id + index}
             recommend={recommend}
             onClick={setFocusPin}
+            // onClick={openModal}
           />
         ))}
       </div>
+      <Modal openModal={openModal} modal={modal} width="51rem" height="46rem">
+        <PlaceInfo openModal={openModal} />
+      </Modal>
     </main>
   );
 };
