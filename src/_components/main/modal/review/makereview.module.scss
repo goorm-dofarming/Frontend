@@ -1,0 +1,145 @@
+@use '@/src/_styles/constants/color' as c;
+@use '@/src/_styles/mixins/' as m;
+
+.container {
+  @include m.flex(flex-start, center, column);
+  position: relative;
+  width: 100%;
+  height: 95%;
+  gap: 1rem;
+
+  .profile {
+    @include m.flex(flex-start, center, row);
+    width: 95%;
+    gap: 1rem;
+
+    .userImage {
+      width: 3rem;
+      height: 3rem;
+      position: relative;
+    }
+
+    .userName {
+      font-weight: 900;
+    }
+  }
+
+  .stars {
+    width: 95%;
+    text-align: center;
+    font-size: 3rem;
+  }
+
+  .textArea {
+    @include m.flex(center, center, row);
+    width: 90%;
+    height: 40%;
+    border: 2px solid c.$C_BORDER_GRAY;
+    border-radius: 10px;
+
+    textArea {
+      width: 95%;
+      height: 90%;
+      border: none;
+      box-sizing: border-box;
+      overflow-y: auto;
+      resize: none;
+      outline: none;
+
+      &::placeholder {
+        color: c.$C_BORDER_GRAY;
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      &::-webkit-scrollbar {
+        width: 5px; /* 스크롤바 너비 */
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: c.$C_BORDER_GRAY; /* 스크롤바 색상 */
+        border-radius: 6px; /* 스크롤바 모서리 둥글게 */
+      }
+    }
+  }
+
+  .imageBtn {
+    @include m.flex(center, center, row);
+    cursor: pointer;
+    border: 1px solid c.$C_SECONDARY;
+    border-radius: 50px;
+    padding: 0.5rem 1.5rem;
+    color: c.$C_SECONDARY;
+    gap: 0.4rem;
+
+    &:hover {
+      background-color: c.$C_SECONDARY;
+      color: c.$C_WHITE;
+    }
+  }
+
+  .images {
+    @include m.flex(flex-start, flex-start, row);
+    width: 90%;
+    padding: 0 0 1rem;
+    gap: 0.5rem;
+    position: relative;
+    border-bottom: 1px solid c.$C_DIVIDER;
+
+    .deleteBtn {
+      @include m.flex(center, center, row);
+      cursor: pointer;
+      position: absolute;
+      width: 1.5rem;
+      height: 1.5rem;
+      font-size: 0.8rem;
+      text-align: center;
+      background-color: c.$C_BORDER_INPUT;
+      color: c.$C_WHITE;
+      border: 2px solid c.$C_WHITE;
+      border-radius: 50%;
+      z-index: 1000;
+      right: -0.4rem;
+      top: -0.7rem;
+    }
+
+    .image {
+      position: relative;
+      width: 6rem;
+      height: 6rem;
+    }
+  }
+
+  .buttons {
+    @include m.flex(flex-end, center, row);
+    width: 95%;
+    padding: 0 0 1rem;
+    gap: 0.5rem;
+    div {
+      cursor: pointer;
+      border-radius: 10px;
+      padding: 0.3rem 1rem;
+    }
+
+    .cancelBtn {
+      border: 1.5px solid c.$C_BORDER_INPUT;
+      color: c.$C_BORDER_INPUT;
+
+      &:hover {
+        background-color: c.$C_BORDER_INPUT;
+        color: c.$C_WHITE;
+      }
+    }
+    .submitBtn {
+      border: 1.5px solid c.$C_SECONDARY;
+      color: c.$C_SECONDARY;
+
+      &:hover {
+        background-color: c.$C_SECONDARY;
+        color: c.$C_WHITE;
+      }
+    }
+  }
+}

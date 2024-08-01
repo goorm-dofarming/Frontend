@@ -1,0 +1,187 @@
+@use '@/src/_styles/constants/color' as c;
+@use '@/src/_styles/mixins/' as m;
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  top: -32px;
+  z-index: 99;
+
+  .infoContainer {
+    @include m.flex(space-between, flex-end, row);
+    width: 100%;
+    height: 45%;
+    border-radius: 0.5rem 0.5rem 0 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: none;
+    color: c.$C_WHITE;
+    text-shadow:
+      1px 1px 0 black,
+      -1px -1px 0 black,
+      1px -1px 0 black,
+      -1px 1px 0 black;
+    // 배경 이미지가 흰색일 시 텍스트 안보임
+
+    .leftSection {
+      @include m.flex(space-between, flex-start, column);
+      font-weight: 600;
+      font-size: 1.2rem;
+      padding: 0.5rem;
+      gap: 1rem;
+
+      .title {
+        @include m.flex(space-between, flex-end, row);
+        gap: 1rem;
+
+        .titleText1 {
+          font-size: 2rem;
+          font-weight: 900;
+        }
+
+        .liked {
+          @include m.flex(flex-start, flex-start, row);
+          gap: 0.5rem;
+        }
+      }
+    }
+
+    .rightSection {
+      @include m.flex(space-between, flex-start, column);
+      padding: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      gap: 0.2rem;
+
+      .titleText2 {
+        font-size: 1.5rem;
+        font-weight: 900;
+      }
+
+      .gradeText {
+        color: c.$C_BORDER_INPUT;
+      }
+    }
+  }
+
+  .reviewContainer {
+    @include m.flex(center, center, column);
+    width: 100%;
+    height: 55%;
+
+    .buttonArea {
+      @include m.flex(flex-start, flex-start, column);
+      width: 98%;
+      padding: 1rem 1rem 0.5rem;
+      border-bottom: 1px solid c.$C_DIVIDER;
+      gap: 0.5rem;
+
+      .titleText {
+        font-size: 1.2rem;
+        font-weight: 100;
+      }
+
+      .buttons {
+        @include m.flex(space-between, center, row);
+        width: 100%;
+        font-size: 0.9rem;
+
+        .sortingBtns {
+          @include m.flex(center, center, row);
+          gap: 0.5rem;
+
+          .sortingBtn {
+            cursor: pointer;
+            border: 1.5px solid c.$C_BORDER_INPUT;
+            border-radius: 20px;
+            color: c.$C_BORDER_INPUT;
+            padding: 0.4rem 0.8rem;
+
+            &:hover {
+              background-color: c.$C_BORDER_INPUT;
+              color: c.$C_WHITE;
+            }
+          }
+        }
+
+        .reviewBtn {
+          cursor: pointer;
+          border: 1.5px solid c.$C_SECONDARY;
+          border-radius: 20px;
+          color: c.$C_SECONDARY;
+          padding: 0.4rem 0.8rem;
+
+          &:hover {
+            background-color: c.$C_SECONDARY;
+            color: c.$C_WHITE;
+          }
+        }
+      }
+    }
+
+    .reviewArea {
+      @include m.flex(space-between, center, column);
+      width: 100%;
+      max-height: 75%;
+      flex: 1;
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: relative;
+      &::-webkit-scrollbar {
+        width: 6px; /* 스크롤바 너비 */
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: c.$C_BORDER_INPUT; /* 스크롤바 색상 */
+        border-radius: 6px; /* 스크롤바 모서리 둥글게 */
+      }
+
+      .review {
+        @include m.flex(flex-start, flex-start, row);
+        width: 98%;
+        padding: 1rem 0.5rem;
+        border-bottom: 1px solid c.$C_DIVIDER;
+
+        .userImage {
+          width: 2rem;
+          height: 2rem;
+          position: relative;
+        }
+
+        .textArea {
+          @include m.flex(flex-start, flex-start, column);
+          padding: 0.5rem;
+          gap: 0.4rem;
+          .userName {
+            font-weight: 900;
+          }
+
+          .starArea {
+            @include m.flex(flex-start, center, row);
+            gap: 1rem;
+
+            .date {
+              font-size: 0.8rem;
+              color: c.$C_BORDER_INPUT;
+            }
+          }
+
+          .text {
+          }
+
+          .images {
+            @include m.flex(flex-start, flex-start, row);
+            gap: 0.5rem;
+
+            .image {
+              position: relative;
+              width: 6rem;
+              height: 6rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
