@@ -1,6 +1,11 @@
 @use "../../src/_styles/constants/color" as c;
 @use "../../src/_styles/mixins/" as m;
-
+.landing {
+  background-color: c.$C_TERTIARY;
+  width: 100vw;
+  height: 100vh;
+  @include m.flex(center, center, column);
+}
 .main {
   @include m.flex(start, center, column);
   width: 100%;
@@ -15,7 +20,7 @@
     @include m.flex(center, center, row);
     width: 100%;
     font-weight: bold;
-    // font-size: 40px;
+    white-space: pre-line;
   }
   .cloud {
     @include m.flex(center, center, column);
@@ -43,14 +48,22 @@
       .addr {
         @include m.flex(center, center, column);
         width: 100%;
-
         gap: 4px;
         // color: c.$C_BROWN;
         // color: c.$C_WHITE;
         color: c.$C_SECONDARY;
         //   right: -40%;
         .address {
+          width: 100%;
           font-size: 24px;
+          font-weight: bold;
+          text-align: center;
+          word-break: keep-all; /* 단어 단위로 줄바꿈 */
+          overflow-wrap: break-word; /* 긴 단어가 있을 때 줄바꿈 */
+          white-space: normal; /* 기본 공백 처리 */
+        }
+        .latlng {
+          font-size: 14px;
           font-weight: bold;
         }
       }
@@ -82,23 +95,7 @@
     font-size: 28px;
   }
 }
-@media (max-width: 375px) {
-  /* 여기에 모바일 화면을 위한 스타일을 작성하세요 */
-  .title {
-    font-size: 26px;
-  }
-}
-@media (max-width: 360px) {
-  /* 여기에 모바일 화면을 위한 스타일을 작성하세요 */
-  .title {
-    font-size: 24px;
-  }
-}
-// @media (min-width: 200px) {
-//   .title {
-//     font-size: 20px;
-//   }
-// }
+
 @media (min-width: 431px) {
   .title {
     font-size: 32px;

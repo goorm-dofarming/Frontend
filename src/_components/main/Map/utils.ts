@@ -54,6 +54,7 @@ drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
     <div
       style="
         width: 220px;
+        height:144px;
         display: grid;
         grid-template-columns: 1fr 1fr;
       "

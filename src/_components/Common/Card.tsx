@@ -11,7 +11,6 @@ import { userState, randomPinState } from "@/src/atom/stats";
 import { useRecoilState } from "recoil";
 import Toast from "@/src/_components/Common/Toast";
 import { modifyLike } from "@/pages/api/map";
-import { getLogData } from "@/pages/api/log";
 
 const Container = styled.div`
   padding: 8px 4px;
@@ -27,6 +26,10 @@ const Container = styled.div`
   filter: drop-shadow(0 20px 13px rgb(0 0 0 / 0.03))
     drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
   cursor: pointer;
+  &:hover {
+    transform: translateY(-12px);
+    transition: transform 0.3s ease-in-out;
+  }
 `;
 const LocationImage = styled.div`
   width: 96%;
@@ -67,8 +70,9 @@ const Description = styled.div`
     font-size: 20px;
     height: 24px;
     width: 90%;
-    overflow: hidden;
-    text-overflow: hidden;
+    overflow-y: hidden;
+    white-space: nowrap;
+    /* text-overflow: hidden; */
   }
   .type {
     font-weight: 500;
@@ -152,34 +156,30 @@ const formatNumber = (num: number) => {
 const Card = ({
   recommend,
   onClick,
+  refetch,
 }: {
   recommend: Recommend;
   onClick?: (recommend: Recommend) => void;
+  refetch?: () => void;
 }) => {
   // TODO: heart animation
-  const { id, image, title, dataType, addr, tel, countLikes, liked } =
+  const { locationId, image, title, dataType, addr, tel, countLikes, liked } =
     recommend;
-  const [randomPin, setRandomPin] = useRecoilState(randomPinState);
-  const [hover, setHover] = useState(false);
-  // const [isLiked, setIsLiked] = useState<boolean>(liked);
   const [toast, setToast] = useState<boolean>(false);
   const openToast = useToggle(toast, setToast);
   const [user, setUser] = useRecoilState(userState);
   const onClickLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    //NOTE: 하트 눌렀을때 action을 카드밖에서 인자로 넘겨줘야할듯!
+    // 데이터를 불러서 어디저장할지, 다시 리다이렉트를 어떤 데이터를 해야할지 카드 내부 에선 모르기때문
+    //좋아요페이지, 맵페이지, 로그페이지
     e.preventDefault(); // 링크의 기본 동작 방지
     if (!user.userId) {
       openToast();
       return;
     }
-    const response = await modifyLike(id, dataType);
-    if (response.status === 200) {
-      const logResponse = await getLogData(randomPin.logId);
-      if (response.status === 200) {
-        setRandomPin((prev) => ({
-          ...prev,
-          recommends: [...logResponse.data],
-        }));
-      }
+    const response = await modifyLike(locationId);
+    if (response.status === 200 && refetch) {
+      refetch();
     }
   };
 

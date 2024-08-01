@@ -18,7 +18,7 @@ export interface logTestDataType {
 }
 
 export interface recommendsType {
-  id: number;
+  locationId: number;
   title: string;
   addr: string;
   dataType: number;

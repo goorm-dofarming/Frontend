@@ -1,28 +1,26 @@
 import React, { useEffect, useRef, useState } from "react";
 
 // styles
-import { LogContainer } from '@/src/_styles/main/logStyles';
+import { LogContainer } from "@/src/_styles/main/logStyles";
 
 // libraries
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { logEntireData, pageState } from '@/src/atom/stats';
-
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { logEntireData, pageState } from "@/src/atom/stats";
 
 // types
 import { logDataType, recommendsType } from "@/src/types/aboutLog";
 
 // img
-import Card from '../Common/Card';
+import Card from "../Common/Card";
 
 // apis
-import { getLog, getLogData } from '@/pages/api/log';
-import { StaticImageData } from 'next/image';
-import { pinType } from '@/src/constatns/PinSort';
-import { makeInfoWindow } from './Map/utils';
+import { getLog, getLogData } from "@/pages/api/log";
+import { StaticImageData } from "next/image";
+import { pinType } from "@/src/constatns/PinSort";
+import { makeInfoWindow } from "./Map/utils";
 
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services,clusterer`;
-
 
 const Log = () => {
   // 위치 이동
@@ -42,12 +40,12 @@ const Log = () => {
   // 선택된 로그 데이터들
   const [selectedLogData, setSelectedLogData] = useState<recommendsType[]>([
     {
-      id: 0,
-      title: '',
-      addr: '',
+      locationId: 0,
+      title: "",
+      addr: "",
       dataType: 1,
-      tel: '',
-      image: '',
+      tel: "",
+      image: "",
       mapX: 0,
       mapY: 0,
       countLikes: 0,
@@ -57,12 +55,10 @@ const Log = () => {
 
   // 전체 로그 데이터 불러오기
   const getLogs = useQuery({
-    queryKey: ['getLogs'],
+    queryKey: ["getLogs"],
     queryFn: async () => {
       const response = await getLog();
-
-      console.log('get logs', response.data);
-
+      // console.log("get logs", response.data);
       if (response.status === 200) {
         setLogData(response.data);
       }
@@ -74,8 +70,9 @@ const Log = () => {
   const getLogSubData = useMutation({
     mutationFn: async (logId: number) => {
       const response = await getLogData(logId);
-      // console.log('get log data', response.data);
-      return response.data;
+      // console.log("get log data!!", response.data);
+      // console.log(response);
+      return response.data.recommendations;
     },
     onSuccess: (data) => {
       setSelectedLogData(data);
@@ -159,7 +156,7 @@ const Log = () => {
         }
 
         // 지도의 확대/축소 레벨을 제한하는 함수 추가
-        window.kakao.maps.event.addListener(map, 'zoom_changed', function () {
+        window.kakao.maps.event.addListener(map, "zoom_changed", function () {
           var level = map.getLevel();
           if (level > 13) {
             map.setLevel(13);
@@ -210,7 +207,7 @@ const Log = () => {
 
           let infowindowVisible = false; // 인포윈도우 표시 상태를 추적하는 변수
 
-          window.kakao.maps.event.addListener(marker, 'click', () => {
+          window.kakao.maps.event.addListener(marker, "click", () => {
             if (infowindowVisible) {
               infowindow.setMap(null); // 인포윈도우 숨기기
               infowindowVisible = false;
@@ -239,8 +236,8 @@ const Log = () => {
 
   useEffect(() => {
     // console.log('selected log data: ', selectedLogData);
-    console.log("selected log data: ", selectedLogData);
-    console.log("logData : ", logData);
+    // console.log("selected log data: ", selectedLogData);
+    // console.log("logData : ", logData);
   }, [logData, selectedLogData]);
 
   return (
@@ -252,7 +249,7 @@ const Log = () => {
         {logData.map((data, i) => (
           <div
             key={i}
-            style={{ marginBottom: '0.4rem' }}
+            style={{ marginBottom: "0.4rem" }}
             onClick={() => {
               getLogSubData.mutate(data.logId);
               setLocation({
@@ -263,7 +260,7 @@ const Log = () => {
             }}
           >
             <div className="log">
-              <div className="logDate">{data.createdAt.split('T')[0]}</div>
+              <div className="logDate">{data.createdAt.split("T")[0]}</div>
               <div className="logAddress">{data.address}</div>
               <div className="logTheme">{data.theme}</div>
             </div>

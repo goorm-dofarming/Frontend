@@ -8,37 +8,58 @@ import { useQuery } from "@tanstack/react-query";
 import { getLogData } from "@/pages/api/log";
 import CardListItem from "@/src/_components/Common/CardListItem";
 import { Recommend } from "@/src/types/aboutMap";
+import { decimalToDMS } from "@/src/_components/main/RandomPin/util";
+import Landing from "@/src/_components/Common/Landing";
 const LinkShare = () => {
   const router = useRouter();
   const [logId, setLogId] = useState<number>(0);
-  const [logData, setLogData] = useState<Recommend[]>([]);
-  //   const id = router.query.id;
-  const getLog = useQuery({
+  const fetchLog = async () => {
+    const response = await getLogData(logId);
+    const data = response.data;
+    const logData = data.logResponse;
+    if (response.status === 200) {
+      const { latDMS, lngDMS } = decimalToDMS(
+        logData.latitude,
+        logData.longitude
+      );
+      return {
+        logResponse: logData,
+        recommendations: data.recommendations,
+        lngDMS: lngDMS,
+        latDMS: latDMS,
+      };
+    }
+    throw new Error("데이터 로드 실패");
+  };
+
+  const {
+    data: log,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ["getLog"],
-    queryFn: async () => {
-      const response = await getLogData(logId);
-      console.log("get log", response.data);
-      if (response.status === 200) {
-        setLogData([...response.data]);
-        return response.data;
-      }
-    },
-    refetchInterval: 1000 * 60,
+    queryFn: fetchLog,
+    refetchInterval: 1000 * 60, // 1분마다 데이터 갱신
   });
   useEffect(() => {
     if (router) {
       setLogId(Number(router?.query?.id));
     }
   }, [router]);
-
-  return getLog.isLoading ? (
-    <div>loading</div>
-  ) : (
+  if (isLoading)
+    return (
+      <div className={styles.landing}>
+        <Landing />
+      </div>
+    );
+  if (isError) return <div>Error: {error.message}</div>;
+  return (
     <main className={styles.main}>
-      <p className={styles.title}>
-        우리의 <br />
-        랜덤(카페 etc) 여행지는?{" "}
-      </p>
+      <p
+        className={styles.title}
+      >{`우리의\n${log?.logResponse?.theme} 여행지는?`}</p>
       <section className={styles.cloud}>
         <Image src={cloud} width={308} height={221} alt="cloud" />
         <div className={styles.addrContainer}>
@@ -46,8 +67,8 @@ const LinkShare = () => {
             <ImQuotesLeft />
           </div>
           <div className={styles.addr}>
-            <p className={styles.address}>대구광역시 군위군</p>
-            <p className={styles.latlng}> 37˚00'00"N 127˚00'00"E</p>
+            <p className={styles.address}> {log?.logResponse?.address}</p>
+            <p className={styles.latlng}>{`${log?.latDMS} ${log?.lngDMS} `}</p>
           </div>
           <div className={styles.right}>
             <ImQuotesRight />
@@ -55,11 +76,10 @@ const LinkShare = () => {
         </div>
       </section>
       <section className={styles.list}>
-        {logData?.map((recommend, index) => (
+        {log?.recommendations?.map((recommend: Recommend, index: number) => (
           <CardListItem
-            key={recommend.id + index}
+            key={recommend.locationId + index}
             recommend={recommend}
-            // width={window.innerWidth}
           />
         ))}
       </section>

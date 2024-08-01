@@ -4,7 +4,16 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import styled from "styled-components";
 import Card from "@/src/_components/Common/Card";
+import Landing from "@/src/_components/Common/Landing";
 
+const Loading = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -12,9 +21,9 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  padding: 20px;
-  gap: 20px;
-  .title {
+  padding: 40px;
+  gap: 40px;
+  > .header {
     width: 100%;
     height: 60px;
     font-size: 40px;
@@ -22,36 +31,48 @@ const Container = styled.div`
   }
   .likes {
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
   }
 `;
 const Likes = () => {
-  const [likes, setLikes] = useState<Recommend[]>([]);
-  const getLikes = useQuery({
+  const fetchLikes = async () => {
+    const response = await getLikeList();
+    if (response.status === 200) {
+      return response.data;
+    }
+    throw new Error("데이터 로드 실패");
+  };
+  const {
+    data: likes,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ["getLikes"],
-    queryFn: async () => {
-      const response = await getLikeList();
-      if (response.status === 200) {
-        setLikes([...response.data]);
-        console.log(response.data);
-        return response.data;
-      }
-    },
-    refetchInterval: 1000 * 60,
+    queryFn: fetchLikes,
+    refetchInterval: 1000 * 5,
   });
-  return getLikes.isLoading ? (
-    <div>loading</div>
-  ) : (
+  if (isLoading)
+    return (
+      <Loading>
+        <Landing />
+      </Loading>
+    );
+  if (isError) return <div>Error: {error.message}</div>;
+  return (
     <Container>
-      <div className="title">Liked List</div>
+      <div className="header">Liked List</div>
       <div className="likes">
-        {/* {likes.map((recommend, index) => (
-          <Card key={recommend.id + index} recommend={recommend} />
-        ))} */}
+        {likes?.map((recommend: Recommend, index: number) => (
+          <Card
+            key={recommend.locationId + index}
+            recommend={recommend}
+            refetch={refetch}
+          />
+        ))}
       </div>
     </Container>
   );
