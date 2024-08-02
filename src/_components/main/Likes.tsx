@@ -7,16 +7,34 @@ import Card from "@/src/_components/Common/Card";
 import Landing from "@/src/_components/Common/Landing";
 
 const Loading = styled.div`
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: calc(100vw - 72px);
+  height: 100vh;
+  animation: fadein 2.5s ease-in-out;
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 `;
 const Container = styled.div`
-  width: 100%;
-  height: 100%;
+  width: calc(100vw - 72px);
+  height: 100vh;
+  animation: fadein 1s ease-in-out;
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
   display: flex;
   flex-direction: column;
   justify-content: start;
