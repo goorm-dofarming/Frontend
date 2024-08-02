@@ -15,21 +15,21 @@ export const themes: Theme[] = [
     img: pin_random,
     title: "랜덤",
     // contentTypeIds: [],
-    themeId: null,
+    themeId: 0,
   },
   { id: "Restaurant", img: pin_food, title: "식도락", themeId: 5 },
   { id: "Cafe", img: pin_cafe, title: "카페 투어", themeId: 6 },
   { id: "Activity", img: pin_activity, title: "액티비티", themeId: 3 },
   { id: "Tour", img: pin_tour, title: "관광지", themeId: 4 },
-  { id: "Ocean", img: pin_ocean, title: "바다", themeId: null },
-  { id: "Mountain", img: pin_mountain, title: "산", themeId: null },
+  { id: "Ocean", img: pin_ocean, title: "바다", themeId: 1 },
+  { id: "Mountain", img: pin_mountain, title: "산", themeId: 2 },
 ];
 
 export type Theme = {
   id: string;
   img: string;
   title: string;
-  themeId: number | null;
+  themeId: number;
 };
 
 type pin = {
