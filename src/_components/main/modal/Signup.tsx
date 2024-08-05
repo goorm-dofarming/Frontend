@@ -60,7 +60,7 @@ const Signup = ({
   const MINUTES_IN_MS = 3 * 61 * 1000;
   const INTERVAL = 1000;
   const [timeLeft, setTimeLeft] = useState<number>(MINUTES_IN_MS);
-  const [isChanging, setIsChanging] = useState<ChangingType | null>(null);
+  const [ischanging, setIsChanging] = useState<ChangingType | null>(null);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (isCertificate === true) {
@@ -151,7 +151,7 @@ const Signup = ({
   });
   return (
     <div className="modalContents">
-      <InputSignupBorder isChanging={isChanging === "email" ? true : false}>
+      <InputSignupBorder ischanging={ischanging === "email" ? true : false}>
         <div
           style={{
             width: "90%",
@@ -175,7 +175,7 @@ const Signup = ({
           </div>
         </div>
       </InputSignupBorder>
-      <InputSignupBorder isChanging={isChanging === "password" ? true : false}>
+      <InputSignupBorder ischanging={ischanging === "password" ? true : false}>
         <div
           style={{
             width: "90%",
@@ -209,7 +209,7 @@ const Signup = ({
         />
       </InputSignupBorder>
       <InputSignupBorder
-        isChanging={isChanging === "confirmPassword" ? true : false}
+        ischanging={ischanging === "confirmPassword" ? true : false}
       >
         <div
           style={{
@@ -239,7 +239,7 @@ const Signup = ({
       </InputSignupBorder>
       <div className="authContainer">
         <InputSignupAuthpBorder
-          isChanging={isChanging === "authentication" ? true : false}
+          ischanging={ischanging === "authentication" ? true : false}
         >
           <div
             style={{

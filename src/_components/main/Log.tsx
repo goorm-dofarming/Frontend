@@ -20,8 +20,7 @@ import { StaticImageData } from "next/image";
 import { pinType } from "@/src/constatns/PinSort";
 import { makeInfoWindow } from "./Map/utils";
 
-const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=99910be829a7c9c364bbf190aaf02972&autoload=false&libraries=services,clusterer`;
-
+const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=clusterer`;
 const Log = () => {
   // 위치 이동
   const [location, setLocation] = useState({
@@ -39,18 +38,18 @@ const Log = () => {
 
   // 선택된 로그 데이터들
   const [selectedLogData, setSelectedLogData] = useState<recommendsType[]>([
-    {
-      locationId: 0,
-      title: "",
-      addr: "",
-      dataType: 1,
-      tel: "",
-      image: "",
-      mapX: 0,
-      mapY: 0,
-      countLikes: 0,
-      liked: false,
-    },
+    // {
+    //   locationId: 0,
+    //   title: "",
+    //   addr: "",
+    //   dataType: 1,
+    //   tel: "",
+    //   image: "",
+    //   mapX: 0,
+    //   mapY: 0,
+    //   countLikes: 0,
+    //   liked: false,
+    // },
   ]);
 
   // 전체 로그 데이터 불러오기
@@ -234,11 +233,6 @@ const Log = () => {
     };
   }, [selectedLogData, logData, location]);
 
-  useEffect(() => {
-    // console.log('selected log data: ', selectedLogData);
-    // console.log("selected log data: ", selectedLogData);
-    // console.log("logData : ", logData);
-  }, [logData, selectedLogData]);
 
   return (
     <LogContainer>

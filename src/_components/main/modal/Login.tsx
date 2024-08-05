@@ -54,7 +54,7 @@ const Login = ({
   // 구글 로그인 토큰
   const [gToken, setGToken] = useState<string>("");
   const { email, password } = inputData;
-  const [isChanging, setIsChanging] = useState<ChangingType | null>(null);
+  const [ischanging, setIsChanging] = useState<ChangingType | null>(null);
 
   const doLogin = useMutation({
     mutationKey: ["login"],
@@ -139,7 +139,7 @@ const Login = ({
   /* eslint-enable react-hooks/exhaustive-deps */
   return (
     <div className="modalContents" style={{ gap: "16px" }}>
-      <InputLoginBorder isChanging={isChanging}>
+      <InputLoginBorder ischanging={ischanging}>
         <div
           style={{
             width: "90%",
@@ -148,7 +148,7 @@ const Login = ({
             justifyContent: "center",
             gap: "4px",
           }}
-          // className={isChanging === "email" ? "activeInput" : ""}
+          // className={ischanging === "email" ? "activeInput" : ""}
         >
           <div className="inputInMent">Email</div>
           <div className="inputRow">
@@ -163,7 +163,7 @@ const Login = ({
           </div>
         </div>
       </InputLoginBorder>
-      <InputPwdBorder isChanging={isChanging}>
+      <InputPwdBorder ischanging={ischanging}>
         <div
           style={{
             width: "90%",
