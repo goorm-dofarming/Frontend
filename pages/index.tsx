@@ -16,13 +16,16 @@ import { getMe } from './api/user';
 
 // atoms
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { alarmState, messageAlarmState, userState } from '@/src/atom/stats';
+import { alarmState, messageAlarmState, userState,randomPinState } from '@/src/atom/stats';
 import { pageState } from '@/src/atom/stats';
 
 // types
 import { Alarm } from '@/src/types/aboutChat';
 import Toast from '@/src/_components/Common/Toast';
 import useToggle from '@/src/hooks/Home/useToggle';
+import { getLog, getLogData } from './api/log';
+import { decimalToDMS } from '@/src/_components/main/RandomPin/util';
+import { RandomPinType } from '@/src/types/aboutMap';
 
 const menu: { [key: string]: JSX.Element | null } = {
   home: <div></div>,
@@ -41,6 +44,7 @@ const Home = () => {
   const [pin, setPin] = useState<string>('pin_hide');
   const [alarm, setAlarm] = useRecoilState(alarmState);
   const setMessageAlarm = useSetRecoilState(messageAlarmState);
+  const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   const [isClient, setIsClient] = useState(false);
   const [toast, setToast] = useState<boolean>(false);
   const openToast = useToggle(toast, setToast);
@@ -61,9 +65,43 @@ const Home = () => {
   useEffect(() => {
     if (isClient && userInfo) {
       setUser(userInfo);
+      setInitial();
     }
   }, [isClient, userInfo, refetchUser]);
 
+
+  const setInitial = async () => {
+    const response = await getLog();
+    // console.log("get logs", response.data);
+    if (response.status === 200) {
+      const data = response.data;
+  if(!data.length){
+    return;
+  }
+      const logResponse = await getLogData(data[0].logId);
+      if (logResponse.status === 200) {
+        const logData = logResponse.data.logResponse;
+        let recommendList = logResponse.data.recommendations;
+        if (logData.theme === "ocean" || logData.theme === "mountain") {
+          recommendList = recommendList.slice(1);
+        }
+        const { latDMS, lngDMS } = decimalToDMS(
+          logData.latitude,
+          logData.longitude
+        );
+        setRandomPin((prev: RandomPinType) => ({
+          address: logData.address,
+          logId: logData.logId,
+          lat: logData.latitude,
+          lng: logData.longitude,
+          latDMS: latDMS,
+          lngDMS: lngDMS,
+          theme: logData.theme,
+          recommends: [...recommendList],
+        }));
+      }
+    }
+  };
   useEffect(() => {
     if (isClient && cookies.token) {
       refetchUser();
@@ -153,7 +191,7 @@ const Home = () => {
       <section className={fold ? styles.page : styles.home}>
         {fold ? <>{element}</> : <Main pin={pin} />}
       </section>
-      {user.userId && (
+      {user.userId>0 && (
         <Toast
           content={"랜덤핀을 던져보세요!"}
           toast={toast}

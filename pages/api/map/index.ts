@@ -1,6 +1,7 @@
 import apiClient from "../apiClient";
 import basicClient from "../basicClient";
 import kakaoClient from "../kakaoClient";
+import qs from "qs";
 
 export const downloadTour = () => {
   return basicClient.get(`/apiCall/download/TourAttraction`);
@@ -47,6 +48,9 @@ export const modifyLike = (locationId: number) => {
 };
 export const getLikeList = (params:{}) => {
   return apiClient.get(`/likeList`,{
-    params:{...params}
+    params:params,
+    paramsSerializer: params => {
+      return qs.stringify(params, { arrayFormat : 'brackets' })
+    }
   });
 };

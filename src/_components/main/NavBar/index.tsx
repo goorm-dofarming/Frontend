@@ -57,6 +57,16 @@ const NavBar = ({
     setUser({ userId: 0, email: "", nickname: "", imageUrl: "", role: "" });
     setInitial(false);
     setPage("home");
+    setRandomPin({
+      address: "",
+      lat: 0,
+      lng: 0,
+      latDMS: "",
+      lngDMS: "",
+      theme: "Random",
+      logId: 0,
+      recommends: [],
+    })
   };
 
   useEffect(() => {
@@ -109,7 +119,7 @@ const NavBar = ({
           openToast={openToast}
         />
       )}
-       {user.userId && (
+       {user.userId>0 && (
         <Toast
           content={"랜덤핀을 던져보세요!"}
           toast={toast}

@@ -135,7 +135,7 @@ const RandomPin = ({
     setTimeout(() => {
       setPin("pin_hide");
     }, 1600);
-    if (user.userId) {
+    if (user.userId>0) {
       console.log("user");
       getResponse(theme);
     } else {
@@ -157,7 +157,7 @@ const RandomPin = ({
           style={{ ...style, width: "40px", height: "40px", zIndex: "1" }}
           fontSize={"40px"}
           fill="white"
-          onClick={user.userId ? onClick : openToast}
+          onClick={user.userId>0 ? onClick : openToast}
         />
       </>
     );
@@ -172,7 +172,7 @@ const RandomPin = ({
           style={{ ...style, width: "40px", height: "40px" }}
           fontSize={"40px"}
           fill="white"
-          onClick={user.userId ? onClick : openToast}
+          onClick={user.userId>0 ? onClick : openToast}
         />
       </>
     );
@@ -205,7 +205,7 @@ const RandomPin = ({
           </button>
         ))}
       </Slider>
-      {!user.userId && (
+      {user.userId===0 && (
         <Toast
           content={"로그인하여 더 많은 테마를 이용해 보세요 !"}
           toast={toast}

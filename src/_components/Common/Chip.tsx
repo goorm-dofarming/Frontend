@@ -6,7 +6,7 @@ const ChipContainer = styled.button<{ isSelected:boolean }>`
   /* width: 80px;
   height: 40px; */
   display: inline-block;
-  padding: 0px 28px;
+  padding: 0px 20px;
   letter-spacing: 2px;
   background-color: ${({ isSelected }) =>
     isSelected ? `${colorTheme.secondary}` : "white"};

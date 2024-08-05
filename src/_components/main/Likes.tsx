@@ -104,11 +104,21 @@ const Container = styled.div`
   }
   .likes {
     width: 100%;
+    height:100%;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
     overflow-y: scroll;
   }
+  .empty{
+      width: 100%;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items: center;
+      font-size:100px;
+    }
 `;
 
 const Likes = () => {
@@ -144,7 +154,7 @@ const Likes = () => {
   } = useQuery({
     queryKey: ["getLikes"],
     queryFn: fetchLikes,
-    refetchInterval: 1000 * 5,
+    refetchInterval: 1000 * 1,
   });
   if (isLoading)
     return (
@@ -153,6 +163,7 @@ const Likes = () => {
       </Loading>
     );
   if (isError) return <div>Error: {error.message}</div>;
+  console.log(likes);
   return (
     <Container>
     <div className="header">
@@ -197,6 +208,8 @@ const Likes = () => {
    
       </div>
     </div>
+    {likes.length===0 && <div className="empty">텅</div>}
+              {likes.length >0 && 
     <div className="likes">
       {searchText ? 
        likes?.filter((recommend: Recommend)=>recommend.title.indexOf(searchText)!==-1 || recommend.addr.indexOf(searchText)!==-1 ).map((recommend: Recommend, index: number) => (
@@ -212,7 +225,7 @@ const Likes = () => {
           refetch={refetch}
         />
       ))}
-    </div>
+    </div>}
   </Container>
   )
    
