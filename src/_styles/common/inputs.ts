@@ -34,14 +34,14 @@ export const InputBorder = styled.div`
 `;
 
 export const InputLoginBorder = styled(InputBorder)<{
-  isChanging?: string | null;
+  ischanging?: string | null;
 }>`
   width: 23vw;
   /* border-radius: 0.3rem 0.3rem 0 0; */
 
   padding: 0.2rem 0.2rem 0.2rem 0.4rem;
   border: ${(props) =>
-    props.isChanging === "email" && `2px solid ${colorTheme.primary}`};
+    props.ischanging === "email" && `2px solid ${colorTheme.primary}`};
   .inputInMent {
     font-family: "NanumBarunGothic";
     color: #a09f9f;
@@ -53,13 +53,13 @@ export const InputLoginBorder = styled(InputBorder)<{
 `;
 
 export const InputPwdBorder = styled(InputBorder)<{
-  isChanging?: string | null;
+  ischanging?: string | null;
 }>`
   width: 23vw;
   /* border-radius: 0 0 0.3rem 0.3rem; */
   padding: 0.2rem 0.2rem 0.2rem 0.4rem;
   border: ${(props) =>
-    props.isChanging === "password" && `2px solid ${colorTheme.primary}`};
+    props.ischanging === "password" && `2px solid ${colorTheme.primary}`};
   .inputInMent {
     font-family: "NanumBarunGothic";
     color: #a09f9f;
@@ -71,13 +71,13 @@ export const InputPwdBorder = styled(InputBorder)<{
 `;
 
 export const InputSignupBorder = styled(InputBorder)<{
-  isChanging?: boolean;
+  ischanging?: boolean;
 }>`
   width: 23vw;
   /* border-radius: 0.5rem; */
   padding: 0.2rem 0.2rem 0.2rem 0.4rem;
   margin-bottom: 1rem;
-  border: ${(props) => props.isChanging && `2px solid ${colorTheme.primary}`};
+  border: ${(props) => props.ischanging && `2px solid ${colorTheme.primary}`};
   .inputInMent {
     font-family: "NanumBarunGothic";
     color: #a09f9f;
@@ -89,12 +89,12 @@ export const InputSignupBorder = styled(InputBorder)<{
 `;
 
 export const InputSignupAuthpBorder = styled(InputBorder)<{
-  isChanging?: boolean;
+  ischanging?: boolean;
 }>`
   width: 19vw;
   /* border-radius: 0.5rem; */
   padding: 0.2rem 0.2rem 0.2rem 0.4rem;
-  border: ${(props) => props.isChanging && `2px solid ${colorTheme.primary}`};
+  border: ${(props) => props.ischanging && `2px solid ${colorTheme.primary}`};
   .inputInMent {
     font-family: "NanumBarunGothic";
     color: #a09f9f;
