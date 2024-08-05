@@ -91,11 +91,11 @@ const Main = ({ pin }: { pin: string }) => {
                 />
               </defs>
               <text
-                font-size="60"
-                font-weight="700"
+                fontSize="60"
+                fontWeight="700"
                 fill="#3D0007"
-                text-anchor="middle"
-                dominant-baseline="middle"
+                textAnchor="middle"
+                dominantBaseline="middle"
               >
                 <textPath xlinkHref="#wave" startOffset="25%">
                   DOFARMING
