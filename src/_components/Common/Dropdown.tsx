@@ -76,8 +76,8 @@ const DropdownContainer = styled.div`
       }
     }
 `
-const Dropdown=({value,items,onClick}:{value:string, items:SortType[], onClick?:(item:SortType)=>void})=>{
-    const ref = useRef(null);
+const Dropdown=({value,items,onClick}:{value:string, items:SortType[], onClick:(item:SortType)=>void})=>{
+    const ref = useRef<HTMLDivElement | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const onClickDropdown = () => {
       setIsOpen(!isOpen);
@@ -90,6 +90,7 @@ const Dropdown=({value,items,onClick}:{value:string, items:SortType[], onClick?:
           if (ref.current && !ref.current.contains(e.target)) {
             setIsOpen(false);
           }
+
         };
     
         document.addEventListener("click", onClick);
