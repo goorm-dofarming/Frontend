@@ -21,6 +21,8 @@ import { pageState } from '@/src/atom/stats';
 
 // types
 import { Alarm } from '@/src/types/aboutChat';
+import Toast from '@/src/_components/Common/Toast';
+import useToggle from '@/src/hooks/Home/useToggle';
 
 const menu: { [key: string]: JSX.Element | null } = {
   home: <div></div>,
@@ -40,7 +42,8 @@ const Home = () => {
   const [alarm, setAlarm] = useRecoilState(alarmState);
   const setMessageAlarm = useSetRecoilState(messageAlarmState);
   const [isClient, setIsClient] = useState(false);
-
+  const [toast, setToast] = useState<boolean>(false);
+  const openToast = useToggle(toast, setToast);
   useEffect(() => {
     setElement(menu[page]);
   }, [page]);
@@ -127,6 +130,7 @@ const Home = () => {
             setFold={setFold}
             setPage={setPage}
             refetchUser={refetchUser}
+            openToast={openToast}
           />
         )}
       <section className={fold ? styles.navBar : styles.pinSection}>
@@ -149,6 +153,14 @@ const Home = () => {
       <section className={fold ? styles.page : styles.home}>
         {fold ? <>{element}</> : <Main pin={pin} />}
       </section>
+      {user.userId && (
+        <Toast
+          content={"랜덤핀을 던져보세요!"}
+          toast={toast}
+          openToast={openToast}
+          toastType="warning"
+        />
+      )}
     </main>
   );
 };

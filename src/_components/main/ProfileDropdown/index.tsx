@@ -16,7 +16,7 @@ import { hideHomeIcons, showHomeIcons } from '@/src/_styles/keyframes';
 
 // atoms
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { alarmState, userState, pageState } from '@/src/atom/stats';
+import { alarmState, userState, pageState,randomPinState } from '@/src/atom/stats';
 
 // components
 import Modal from '../../Common/Modal';
@@ -90,17 +90,19 @@ const ProfileDropdown = ({
   setFold,
   setPage,
   refetchUser,
+  openToast
 }: {
   setFold: React.Dispatch<React.SetStateAction<boolean>>;
   setPage: React.Dispatch<React.SetStateAction<string>>;
   refetchUser: () => void;
+  openToast?:()=>void;
 }) => {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const showDropdown = useToggle(dropdown, setDropdown);
   const [alarm, setAlarm] = useRecoilState(alarmState);
   const user = useRecoilValue(userState);
   const page = useRecoilValue(pageState);
-
+  const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   // 프로필 수정 모달
   const [modal, setModal] = useState<boolean>(false);
   const openModal = useToggle(modal, setModal);
@@ -109,6 +111,12 @@ const ProfileDropdown = ({
     if (id === 'settings') {
       openModal();
     } else {
+      if(!randomPin.logId && id==="map" || id==="log"){
+        if(openToast){
+          openToast();
+        }
+        return;
+      }
       setPage(id);
       setTimeout(() => {
         showDropdown();

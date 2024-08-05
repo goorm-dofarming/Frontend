@@ -21,11 +21,11 @@ import { inputDataType } from '@/src/types/aboutMain';
 
 // hooks
 import useToggle from '@/src/hooks/Home/useToggle';
-import { useCookies } from 'react-cookie';
+import { userState } from '@/src/atom/stats';
+import { useRecoilState } from 'recoil';
 
 const Main = ({ pin }: { pin: string }) => {
-  // cookie
-  const [cookies, setCookies] = useCookies(['token']);
+  const [user, setUser] = useRecoilState(userState);
   // 모달 컨트롤
   const [modal, setModal] = useState<boolean>(false);
   // 로그인 회원가입 페이지 컨트롤
@@ -104,7 +104,7 @@ const Main = ({ pin }: { pin: string }) => {
             </svg>
           </div>
           {isClient &&
-            !cookies.token && ( // 클라이언트 렌더링 시점에 쿠키를 확인
+            !user.userId && ( // 클라이언트 렌더링 시점에 쿠키를 확인
               <LoginButton onClick={openModal}>로그인</LoginButton>
             )}
         </div>

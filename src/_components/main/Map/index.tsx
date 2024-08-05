@@ -54,6 +54,9 @@ const Map = () => {
     // console.log("get logs", response.data);
     if (response.status === 200) {
       const data = response.data;
+  if(!data.length){
+    return;
+  }
       const logResponse = await getLogData(data[0].logId);
       if (logResponse.status === 200) {
         const logData = logResponse.data.logResponse;
