@@ -42,7 +42,7 @@ const Map = () => {
     }
   };
   const onClickShareBtn = () => {
-    if (!user.userId) {
+    if (user.userId>0) {
       openToast();
       return;
     }
@@ -54,6 +54,9 @@ const Map = () => {
     // console.log("get logs", response.data);
     if (response.status === 200) {
       const data = response.data;
+  if(!data.length){
+    return;
+  }
       const logResponse = await getLogData(data[0].logId);
       if (logResponse.status === 200) {
         const logData = logResponse.data.logResponse;
@@ -80,7 +83,7 @@ const Map = () => {
   };
 
   useEffect(() => {
-    if (user.userId && randomPin.logId === 0) {
+    if (user.userId>0 && randomPin.logId === 0) {
       setInitial();
     }
   }, [randomPin]);
@@ -249,14 +252,14 @@ const Map = () => {
       <Modal openModal={openModal} modal={modal} width="51rem" height="46rem">
         <PlaceInfo openModal={openModal} />
       </Modal>
-      {!user.userId && (
+      {user.userId===0 && (
         <Toast
           content={"로그인하여 더 많은 기능을 이용해 보세요 !"}
           toast={toast}
           openToast={openToast}
         />
       )}
-      {user.userId && (
+      {user.userId>0 && (
         <Toast
           content={"링크가 클립보드에 복사되었습니다. 친구와 쉽게 공유하세요!"}
           toast={toast}

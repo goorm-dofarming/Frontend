@@ -1,10 +1,21 @@
-import styled from 'styled-components';
-import { colorTheme } from '../common/commonColorStyles';
+import styled from "styled-components";
+import { colorTheme } from "../common/commonColorStyles";
 
 export const LogContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: row;
+  width: calc(100vw - 72px);
+  height: 100vh;
+  animation: fadein 2.5s ease-in-out;
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 
   h3 {
     width: 100%;
@@ -51,7 +62,7 @@ export const LogContainer = styled.div`
     font-size: 1rem;
     font-weight: 400;
     width: 100%;
-    font-family: 'RedHatDisplay_Variable';
+    font-family: "RedHatDisplay_Variable";
   }
   .logAddress {
     width: 100%;

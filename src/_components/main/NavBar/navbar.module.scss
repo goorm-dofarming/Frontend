@@ -1,5 +1,5 @@
-@use '../../../_styles/constants/color' as c;
-@use '../../../_styles/mixins/' as m;
+@use "../../../_styles/constants/color" as c;
+@use "../../../_styles/mixins/" as m;
 .nav {
   @include m.flex(space-between, center, column);
   width: 72px;
@@ -52,6 +52,15 @@
     width: 36px;
     height: 36px;
   }
+  // animation: fadein 1s ease-in-out;
+  // @keyframes fadein {
+  //   from {
+  //     opacity: 0;
+  //   }
+  //   to {
+  //     opacity: 1;
+  //   }
+  // }
 
   .alarm {
     width: 15px;

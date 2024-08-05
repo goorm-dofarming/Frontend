@@ -219,7 +219,7 @@ const Card = ({
           <div className="likesNumber">{formatNumber(countLikes)}</div>
         </Likes>
       </Info>
-      {!user.userId && (
+      {user.userId===0 && (
         <Toast
           content={"로그인하여 더 많은 기능을 이용해 보세요 !"}
           toast={toast}

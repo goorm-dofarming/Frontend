@@ -13,7 +13,7 @@ import { IoMdLogIn } from "react-icons/io";
 
 // atoms
 import { useRecoilState, useRecoilValue } from "recoil";
-import { pageState, userState } from "@/src/atom/stats";
+import { pageState, userState,randomPinState } from "@/src/atom/stats";
 import { alarmState } from "@/src/atom/stats";
 
 // hooks
@@ -38,19 +38,35 @@ const NavBar = ({
   const [user, setUser] = useRecoilState(userState);
   const [active, setPage] = useRecoilState(pageState);
   const [cookies, removeCookie] = useCookies(["token"]);
-  const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const id = event.currentTarget.id;
-    setPage(id);
-  };
   const [alarm, setAlarm] = useRecoilState(alarmState);
   const [toast, setToast] = useState<boolean>(false);
   const openToast = useToggle(toast, setToast);
-
+  const [randomPin, setRandomPin] = useRecoilState(randomPinState);
+  
+  const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const id = event.currentTarget.id;
+    if((id==="map" || id==="log") && randomPin.logId===0){
+      console.log(randomPin)
+      openToast();
+      return;
+    }
+    setPage(id);
+  };
   const handleLogout = () => {
     removeCookie("token", "", { path: "/" });
     setUser({ userId: 0, email: "", nickname: "", imageUrl: "", role: "" });
     setInitial(false);
     setPage("home");
+    setRandomPin({
+      address: "",
+      lat: 0,
+      lng: 0,
+      latDMS: "",
+      lngDMS: "",
+      theme: "Random",
+      logId: 0,
+      recommends: [],
+    })
   };
 
   useEffect(() => {
@@ -101,6 +117,14 @@ const NavBar = ({
           content={"로그인하여 더 많은 기능을 이용해 보세요 !"}
           toast={toast}
           openToast={openToast}
+        />
+      )}
+       {user.userId>0 && (
+        <Toast
+          content={"랜덤핀을 던져보세요!"}
+          toast={toast}
+          openToast={openToast}
+          toastType="warning"
         />
       )}
     </nav>
