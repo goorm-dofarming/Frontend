@@ -45,7 +45,7 @@ const Map = () => {
     }
   };
   const onClickShareBtn = () => {
-    if (user.userId > 0) {
+    if (user.userId === 0) {
       openToast();
       return;
     }
