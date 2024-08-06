@@ -1,5 +1,8 @@
 declare namespace kakao {
   namespace maps {
+    function isInitialized(): boolean;
+    function init(appKey: string): void;
+
     class LatLng {
       constructor(lat: number, lng: number);
     }
@@ -87,4 +90,8 @@ declare global {
   interface Window {
     kakao: typeof kakao;
   }
+}
+
+declare interface Window {
+  Kakao: any;
 }

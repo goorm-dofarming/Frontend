@@ -1,6 +1,6 @@
-import { RandomPinType } from "@/src/types/aboutMap";
-import kakaotalk from "@/src/_assets/main/map/kakaotalk.png";
-import link from "@/src/_assets/main/map/link.png";
+import { RandomPinType } from '@/src/types/aboutMap';
+import kakaotalk from '@/src/_assets/main/map/kakaotalk.png';
+import link from '@/src/_assets/main/map/link.png';
 const imgSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/share/`;
 
 const makeCOImages = (randomPin: RandomPinType) => {
@@ -98,13 +98,13 @@ drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
             type="button"
         id="share-kakaotalk"
         style="background :none; border:none;cursor:pointer;">
-          <img src=${imgSrc + "kakaotalk.png"} alt="kakaotalk"  style="width: 28px; height: 28px; "/>
+          <img src=${imgSrc + 'kakaotalk.png'} alt="kakaotalk"  style="width: 28px; height: 28px; "/>
         </button>
-         <button  
+         <button
          type="button"
         id="share-link"
          style="background :none; border:none;cursor:pointer;">
-          <img src=${imgSrc + "link.png"} alt="link"  style="width: 24px; height: 24px; "/>
+          <img src=${imgSrc + 'link.png'} alt="link"  style="width: 24px; height: 24px; "/>
         </button>
       </div>
     </div>
@@ -120,4 +120,36 @@ white-space: nowrap;
     overflow: hidden;
 text-overflow:ellipsis;  filter: drop-shadow(0 20px 13px rgb(0 0 0 / 0.03))
     drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));">${title}</div>`;
+};
+
+export const makeShareWindow = () => {
+  const script = document.createElement('script');
+  const KAKAO_JS_SDK_URL = `https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js`;
+  script.src = KAKAO_JS_SDK_URL;
+  document.head.appendChild(script);
+
+  script.onload = () => {
+    if (window.Kakao) {
+      if (!window.Kakao.isInitialized()) {
+        window.Kakao.init('8340178facebe8ebb2f804b95925836b');
+        console.log('script:', window.Kakao);
+
+        window.Kakao.Share.createDefaultButton({
+          container: '#share-kakaotalk', // 공유 버튼을 삽입할 HTML 요소의 ID
+          objectType: 'feed',
+          content: {
+            title: '디지털농업투어',
+            description: '농업 관련 다양한 투어를 즐겨보세요!',
+            imageUrl: `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/sample.jpg`,
+            link: {
+              mobileWebUrl: `${window.location.href}`,
+              webUrl: `${window.location.href}`,
+            },
+          },
+        });
+      }
+    } else {
+      console.error('Kakao SDK failed to load.');
+    }
+  };
 };
