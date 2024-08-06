@@ -168,7 +168,7 @@ const Likes = () => {
     setSearchText(e.target.value);
   }
 
-  const onSubmit =(e)=>{
+  const onSubmit =(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
     setSearch((prev)=>!prev);
   }
@@ -294,7 +294,7 @@ const Likes = () => {
             </div>
             
             
-              <form className="likeInput"onSubmit={onSubmit}>
+              <form className="likeInput" onSubmit={onSubmit}>
                 <button type="submit" className="icon" ><BsSearchHeart size="20" /></button>
                 
                 <input type="text" placeholder="검색어를 입력하세요." onChange={onChange} value={searchText}/>
