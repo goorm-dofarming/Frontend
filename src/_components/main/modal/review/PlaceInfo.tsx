@@ -62,6 +62,7 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
   const [modal, setModal] = useState<boolean>(false);
   const openReview = useToggle(modal, setModal);
   const [location, setLocation] = useState<LocationInfo | null>(null);
+  const [myReview, setMyReview] = useState<Review | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [selectedSort, setSelectedSort] = useState<number>(0);
   const [reviewLoading, setReviewLoading] = useState<boolean>(false);
@@ -79,6 +80,12 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
   };
 
   const getReviews = async () => {
+    const myParams = {
+      myReview: true,
+      locationId,
+      sortType: sortTypes[selectedSort],
+    };
+
     const params = {
       myReview: false,
       locationId,
@@ -93,10 +100,13 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
     try {
       setReviewLoading(true);
 
+      const myResponse = await getReviewData(myParams);
+      console.log(myResponse);
+
       const response = await getReviewData(params);
       clearTimeout(timeoutId); // 요청이 성공하면 타이머를 취소
-
       console.log(response);
+      setMyReview(myResponse[0]);
       setReviews(response);
       setTimeout(() => {
         setReviewLoading(false);
@@ -149,7 +159,7 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
     const date = inputDate instanceof Date ? inputDate : new Date(inputDate);
 
     if (isNaN(date.getTime())) {
-      throw new Error('Invalid date');
+      return;
     }
     date.setHours(date.getHours() + 9);
     const year = date.getFullYear();
@@ -327,13 +337,70 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
               </div>
             ) : (
               <div className={styles.reviewArea}>
+                {myReview && (
+                  <>
+                    {/* <div className={styles.myReviewTitle}>내가 작성한 리뷰</div> */}
+                    <div className={cx(styles.review, styles.myReview)}>
+                      <div className={styles.userImage}>
+                        <Image
+                          src={
+                            myReview.user?.imageUrl
+                              ? getImageUrl(myReview.user.imageUrl)
+                              : Profile
+                          }
+                          alt="유저 프로필"
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          style={{ objectFit: 'cover', borderRadius: '50%' }}
+                        />
+                      </div>
+                      <div className={styles.textArea}>
+                        <div className={styles.topContainer}>
+                          <div className={styles.userName}>
+                            {myReview.user?.nickname}
+                          </div>
+                          <div className={styles.userBtns}>
+                            <div className={styles.userBtn}>수정</div>
+                            <div className={styles.userBtn}>삭제</div>
+                          </div>
+                        </div>
+                        <div className={styles.starArea}>
+                          <div className={styles.stars}>
+                            <StarScore value={myReview.score} size={1} />
+                          </div>
+                          <div className={styles.date}>
+                            {getDate(myReview.createdAt)}
+                          </div>
+                        </div>
+                        <div className={styles.text}>{myReview.content}</div>
+                        <div className={styles.images}>
+                          {myReview.images &&
+                            myReview.images.map((image, index) => (
+                              <div className={styles.image} key={index}>
+                                <Image
+                                  src={image.imageUrl}
+                                  alt="이미지"
+                                  fill
+                                  sizes="(max-width: 768px) 100vw, 50vw"
+                                  style={{
+                                    objectFit: 'cover',
+                                    borderRadius: '10px',
+                                  }}
+                                />
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
                 {reviews.length > 0 ? (
                   reviews.map((review, index) => (
                     <div className={styles.review} key={index}>
                       <div className={styles.userImage}>
                         <Image
                           src={
-                            review.user.imageUrl
+                            review.user?.imageUrl
                               ? getImageUrl(review.user.imageUrl)
                               : Profile
                           }
@@ -345,7 +412,7 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
                       </div>
                       <div className={styles.textArea}>
                         <div className={styles.userName}>
-                          {review.user.nickname}
+                          {review.user?.nickname}
                         </div>
                         <div className={styles.starArea}>
                           <div className={styles.stars}>
@@ -357,20 +424,21 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
                         </div>
                         <div className={styles.text}>{review.content}</div>
                         <div className={styles.images}>
-                          {review.images.map((image, index) => (
-                            <div className={styles.image} key={index}>
-                              <Image
-                                src={image.imageUrl}
-                                alt="이미지"
-                                fill
-                                sizes="(max-width: 768px) 100vw, 50vw"
-                                style={{
-                                  objectFit: 'cover',
-                                  borderRadius: '10px',
-                                }}
-                              />
-                            </div>
-                          ))}
+                          {review.images &&
+                            review.images.map((image, index) => (
+                              <div className={styles.image} key={index}>
+                                <Image
+                                  src={image.imageUrl}
+                                  alt="이미지"
+                                  fill
+                                  sizes="(max-width: 768px) 100vw, 50vw"
+                                  style={{
+                                    objectFit: 'cover',
+                                    borderRadius: '10px',
+                                  }}
+                                />
+                              </div>
+                            ))}
                         </div>
                       </div>
                     </div>

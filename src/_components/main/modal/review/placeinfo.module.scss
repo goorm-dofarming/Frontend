@@ -215,6 +215,17 @@
         border-radius: 6px; /* 스크롤바 모서리 둥글게 */
       }
 
+      // .myReviewTitle {
+      //   width: 98%;
+      //   padding-top: 0.3rem;
+      //   font-weight: 900;
+      // }
+
+      .myReview {
+        background-color: c.$C_CHAT_GRAY;
+        border-radius: 10px;
+      }
+
       .review {
         @include m.flex(flex-start, flex-start, row);
         width: 98%;
@@ -229,10 +240,25 @@
 
         .textArea {
           @include m.flex(flex-start, flex-start, column);
+          flex: 1;
           padding: 0.5rem;
           gap: 0.4rem;
-          .userName {
-            font-weight: 900;
+
+          .topContainer {
+            @include m.flex(space-between, flex-start, row);
+            width: 100%;
+            .userName {
+              font-weight: 900;
+            }
+
+            .userBtns {
+              @include m.flex(space-between, center, row);
+              gap: 1rem;
+
+              .userBtn {
+                cursor: pointer;
+              }
+            }
           }
 
           .starArea {
