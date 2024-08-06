@@ -208,6 +208,10 @@
       font-weight: 500;
       color: c.$C_SECONDARY;
 
+      transition:
+        background-color,
+        color 0.3s ease-in-out;
+
       &:hover {
         background-color: c.$C_SECONDARY;
         color: c.$C_WHITE;
@@ -230,6 +234,7 @@
   }
 
   .hoverEffect {
+    transition: background-color 0.2s ease-in-out;
     &:hover {
       background-color: c.$C_BUTTON_HOVER;
     }

@@ -33,6 +33,10 @@
       opacity: 80%;
       z-index: 10;
 
+      transition:
+        background-color,
+        color 0.3s ease-in-out;
+
       &:hover {
         color: c.$C_WHITE;
         background-color: c.$C_SECONDARY;
@@ -265,6 +269,10 @@
       background-color: c.$C_TERTIARY;
       border: 2px solid c.$C_TERTIARY;
       border-radius: 10px;
+
+      transition:
+        background-color,
+        color 0.3s ease-in-out;
 
       &:hover {
         color: c.$C_TERTIARY;

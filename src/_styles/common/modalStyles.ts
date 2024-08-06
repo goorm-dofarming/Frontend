@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { colorTheme } from "@/src/_styles/common/commonColorStyles";
+import styled from 'styled-components';
+import { colorTheme } from '@/src/_styles/common/commonColorStyles';
 
 export const ModalContainer = styled.div<{
   modal: string;
@@ -9,9 +9,9 @@ export const ModalContainer = styled.div<{
   position: fixed;
   width: 100%;
   height: 100%;
-  visibility: ${({ modal }) => (modal === "true" ? "visible" : "hidden")};
+  visibility: ${({ modal }) => (modal === 'true' ? 'visible' : 'hidden')};
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  z-index: 999;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,7 +31,7 @@ export const ModalContainer = styled.div<{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-family: "RedHatDisplay_Variable";
+    font-family: 'RedHatDisplay_Variable';
   }
 
   .limitTime {
@@ -43,7 +43,7 @@ export const ModalContainer = styled.div<{
 
     span {
       color: ${colorTheme.primary};
-      font-family: "RedHatDisplay_Variable";
+      font-family: 'RedHatDisplay_Variable';
     }
   }
   .socialContainer {
@@ -69,20 +69,20 @@ export const ModalContainer = styled.div<{
   .ment {
     color: #8e8e8e;
     font-size: 0.8rem;
-    font-family: "RedHatDisplay_Variable";
+    font-family: 'RedHatDisplay_Variable';
   }
   .ment2 {
     color: #8e8e8e;
     font-weight: 800;
     font-size: 0.9rem;
-    font-family: "RedHatDisplay_Variable";
+    font-family: 'RedHatDisplay_Variable';
     margin-left: 0.3rem;
     cursor: pointer;
   }
   .ment3 {
     color: ${colorTheme.primary};
     font-size: 0.8rem;
-    font-family: "RedHatDisplay_Variable";
+    font-family: 'RedHatDisplay_Variable';
   }
 
   .signupSocialContainer {

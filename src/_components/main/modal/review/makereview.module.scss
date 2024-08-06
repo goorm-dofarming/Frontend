@@ -25,8 +25,8 @@
   }
 
   .stars {
+    @include m.flex(center, center, row);
     width: 95%;
-    text-align: center;
     font-size: 3rem;
   }
 
@@ -65,6 +65,10 @@
     }
   }
 
+  .fake {
+    display: none;
+  }
+
   .imageBtn {
     @include m.flex(center, center, row);
     cursor: pointer;
@@ -73,6 +77,10 @@
     padding: 0.5rem 1.5rem;
     color: c.$C_SECONDARY;
     gap: 0.4rem;
+
+    transition:
+      background-color,
+      color 0.3s ease-in-out;
 
     &:hover {
       background-color: c.$C_SECONDARY;
@@ -117,6 +125,7 @@
     width: 95%;
     padding: 0 0 1rem;
     gap: 0.5rem;
+
     div {
       cursor: pointer;
       border-radius: 10px;
@@ -126,6 +135,9 @@
     .cancelBtn {
       border: 1.5px solid c.$C_BORDER_INPUT;
       color: c.$C_BORDER_INPUT;
+      transition:
+        background-color,
+        color 0.3s ease-in-out;
 
       &:hover {
         background-color: c.$C_BORDER_INPUT;
@@ -135,6 +147,9 @@
     .submitBtn {
       border: 1.5px solid c.$C_SECONDARY;
       color: c.$C_SECONDARY;
+      transition:
+        background-color,
+        color 0.3s ease-in-out;
 
       &:hover {
         background-color: c.$C_SECONDARY;

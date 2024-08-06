@@ -1,16 +1,16 @@
 import Card from '@/src/_components/Common/Card';
 import styles from './map.module.scss';
 import { useEffect, useRef, useState } from 'react';
-import { pageState, randomPinState, userState } from "@/src/atom/stats";
+import { pageState, randomPinState, userState } from '@/src/atom/stats';
 import { useRecoilState } from 'recoil';
-import { DataType, Recommend,RandomPinType } from '@/src/types/aboutMap';
+import { DataType, Recommend, RandomPinType } from '@/src/types/aboutMap';
 import { makeCustomOverlay, makeInfoWindow } from './utils';
 import Modal from '../../Common/Modal';
 import PlaceInfo from '../modal/review/PlaceInfo';
 import useToggle from '@/src/hooks/Home/useToggle';
-import Toast from "@/src/_components/Common/Toast";
-import { getLog, getLogData } from "@/pages/api/log";
-import { decimalToDMS } from "../RandomPin/util";
+import Toast from '@/src/_components/Common/Toast';
+import { getLog, getLogData } from '@/pages/api/log';
+import { decimalToDMS } from '../RandomPin/util';
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=services`;
 
 const Map = () => {
@@ -30,6 +30,9 @@ const Map = () => {
   const [toast, setToast] = useState<boolean>(false);
   const openToast = useToggle(toast, setToast);
   const [user, setUser] = useRecoilState(userState);
+  const [selectedLocation, setSelectedLocation] = useState<Recommend | null>(
+    null
+  );
 
   const refetch = async () => {
     //after like button click
@@ -42,26 +45,32 @@ const Map = () => {
     }
   };
   const onClickShareBtn = () => {
-    if (user.userId>0) {
+    if (user.userId > 0) {
       openToast();
       return;
     }
     navigator.clipboard.writeText(`${window.location}tours/${randomPin.logId}`);
     openToast();
   };
+  const onClickCard = (recommend: Recommend) => {
+    setFocusPin(recommend);
+    console.log(recommend);
+    setSelectedLocation(recommend);
+    openModal();
+  };
   const setInitial = async () => {
     const response = await getLog();
     // console.log("get logs", response.data);
     if (response.status === 200) {
       const data = response.data;
-  if(!data.length){
-    return;
-  }
+      if (!data.length) {
+        return;
+      }
       const logResponse = await getLogData(data[0].logId);
       if (logResponse.status === 200) {
         const logData = logResponse.data.logResponse;
         let recommendList = logResponse.data.recommendations;
-        if (logData.theme === "ocean" || logData.theme === "mountain") {
+        if (logData.theme === 'ocean' || logData.theme === 'mountain') {
           recommendList = recommendList.slice(1);
         }
         const { latDMS, lngDMS } = decimalToDMS(
@@ -83,13 +92,13 @@ const Map = () => {
   };
 
   useEffect(() => {
-    if (user.userId>0 && randomPin.logId === 0) {
+    if (user.userId > 0 && randomPin.logId === 0) {
       setInitial();
     }
   }, [randomPin]);
   useEffect(() => {
-    document.cookie = "username=dofarming; SameSite=Strict; Secure";
-    const script = document.createElement("script");
+    document.cookie = 'username=dofarming; SameSite=Strict; Secure';
+    const script = document.createElement('script');
     script.src = KAKAO_SDK_URL;
     document.head.appendChild(script);
 
@@ -117,15 +126,15 @@ const Map = () => {
           image: markerImage,
         });
 
-        const content = document.createElement("div");
+        const content = document.createElement('div');
         content.innerHTML = makeCustomOverlay(randomPin);
 
         content
-          .querySelector("#share-link")
-          ?.addEventListener("click", onClickShareBtn);
+          .querySelector('#share-link')
+          ?.addEventListener('click', onClickShareBtn);
         content
-          .querySelector("#share-kakaotalk")
-          ?.addEventListener("click", onClickShareBtn);
+          .querySelector('#share-kakaotalk')
+          ?.addEventListener('click', onClickShareBtn);
 
         const customOverlay = new window.kakao.maps.CustomOverlay({
           // map: map,
@@ -135,7 +144,7 @@ const Map = () => {
           xAnchor: -0.2,
         });
         setCustomOverlay(customOverlay as any);
-        window.kakao.maps.event.addListener(marker, "click", function () {
+        window.kakao.maps.event.addListener(marker, 'click', function () {
           setShowCustomOverlay((prev: boolean) => !prev);
         });
 
@@ -166,7 +175,7 @@ const Map = () => {
           });
           infoWindows.push(infowindow);
 
-          window.kakao.maps.event.addListener(pin, "click", function () {
+          window.kakao.maps.event.addListener(pin, 'click', function () {
             setShowPinInfo((prev) => {
               const newInfos = [...prev];
               const tmp = newInfos[i];
@@ -243,25 +252,31 @@ const Map = () => {
           <Card
             key={recommend.locationId + index}
             recommend={recommend}
-            onClick={setFocusPin}
             refetch={refetch}
-            // onClick={openModal}
+            onClick={() => onClickCard(recommend)}
           />
         ))}
       </div>
       <Modal openModal={openModal} modal={modal} width="51rem" height="46rem">
-        <PlaceInfo openModal={openModal} />
+        <PlaceInfo
+          openModal={openModal}
+          // locationId={1}
+          locationId={
+            selectedLocation?.locationId ? selectedLocation?.locationId : 0
+          }
+          refetch={refetch}
+        />
       </Modal>
-      {user.userId===0 && (
+      {user.userId === 0 && (
         <Toast
-          content={"로그인하여 더 많은 기능을 이용해 보세요 !"}
+          content={'로그인하여 더 많은 기능을 이용해 보세요 !'}
           toast={toast}
           openToast={openToast}
         />
       )}
-      {user.userId>0 && (
+      {user.userId > 0 && (
         <Toast
-          content={"링크가 클립보드에 복사되었습니다. 친구와 쉽게 공유하세요!"}
+          content={'링크가 클립보드에 복사되었습니다. 친구와 쉽게 공유하세요!'}
           toast={toast}
           openToast={openToast}
           toastType="success"
