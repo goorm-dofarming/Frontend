@@ -59,6 +59,9 @@ export type Recommend = {
   mapY: number;
   countLikes: number;
   liked: boolean;
+  averageScore:string;
+  totalReview:number;
+  isReviewed:boolean;
 };
 
 export interface RandomPinType {

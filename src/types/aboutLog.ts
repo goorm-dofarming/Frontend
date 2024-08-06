@@ -26,8 +26,11 @@ export interface recommendsType {
   image: string;
   mapX: number;
   mapY: number;
-  liked: boolean;
   countLikes: number;
+  liked: boolean;
+  averageScore:string;
+  totalReview:number;
+  isReviewed:boolean;
 }
 
 export interface locationType {
