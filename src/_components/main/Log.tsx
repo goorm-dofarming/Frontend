@@ -52,6 +52,9 @@ const Log = () => {
       mapY: 0,
       countLikes: 0,
       liked: false,
+      averageScore: '',
+      totalReview: 0,
+      isReviewed: false,
     },
   ]);
 
