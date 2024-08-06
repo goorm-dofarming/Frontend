@@ -2,26 +2,41 @@
 @use '@/src/_styles/mixins/' as m;
 
 .container {
+  @include m.flex(flex-start, flex-end, column);
   position: relative;
   width: 100%;
   height: 100%;
   top: -32px;
   z-index: 99;
 
-  .infoContainer {
-    @include m.flex(space-between, flex-end, row);
+  .landing {
+    @include m.flex(center, center, column);
     width: 100%;
-    height: 45%;
+    height: 100%;
+  }
+
+  .locationImg {
+    position: relative;
+    width: 100%;
+    height: 30%;
     border-radius: 0.5rem 0.5rem 0 0;
     background-size: cover;
     background-position: center;
     background-repeat: none;
-    color: c.$C_WHITE;
-    text-shadow:
-      1px 1px 0 black,
-      -1px -1px 0 black,
-      1px -1px 0 black,
-      -1px 1px 0 black;
+  }
+
+  .infoContainer {
+    @include m.flex(space-between, center, row);
+    width: 100%;
+    height: 20%;
+
+    // color: c.$C_WHITE;
+    // text-shadow:
+    //   1px 1px 0 black,
+    //   -1px -1px 0 black,
+    //   1px -1px 0 black,
+    //   -1px 1px 0 black;
+    // -webkit-text-stroke: 0.2px black;
     // 배경 이미지가 흰색일 시 텍스트 안보임
 
     .leftSection {
@@ -32,7 +47,7 @@
       gap: 1rem;
 
       .title {
-        @include m.flex(space-between, flex-end, row);
+        @include m.flex(space-between, center, row);
         gap: 1rem;
 
         .titleText1 {
@@ -41,8 +56,43 @@
         }
 
         .liked {
-          @include m.flex(flex-start, flex-start, row);
-          gap: 0.5rem;
+          @include m.flex(flex-start, center, column);
+          font-size: 0.8rem;
+
+          .heartBtn {
+            width: 30px;
+            height: 30px;
+            background: none;
+            border: none;
+
+            .heart {
+              width: 100%;
+              height: 100%;
+              cursor: pointer;
+              stroke: c.$C_SECONDARY;
+              stroke-width: 10px;
+              transition: fill 0.3s ease-in-out;
+            }
+          }
+          .active {
+            .heart {
+              fill: c.$C_SECONDARY;
+            }
+            :active {
+              .heart {
+                fill: white;
+              }
+            }
+          }
+          .inactive {
+            .heart {
+              fill: white;
+
+              &:hover {
+                fill: c.$C_SECONDARY;
+              }
+            }
+          }
         }
       }
     }
@@ -60,6 +110,7 @@
       }
 
       .gradeText {
+        padding-left: 0.2rem;
         color: c.$C_BORDER_INPUT;
       }
     }
@@ -68,7 +119,8 @@
   .reviewContainer {
     @include m.flex(center, center, column);
     width: 100%;
-    height: 55%;
+    height: 50%;
+    overflow-y: hidden;
 
     .buttonArea {
       @include m.flex(flex-start, flex-start, column);
@@ -85,7 +137,7 @@
       .buttons {
         @include m.flex(space-between, center, row);
         width: 100%;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
 
         .sortingBtns {
           @include m.flex(center, center, row);
@@ -97,12 +149,28 @@
             border-radius: 20px;
             color: c.$C_BORDER_INPUT;
             padding: 0.4rem 0.8rem;
+            transition:
+              background-color,
+              color 0.3s ease-in-out;
 
             &:hover {
               background-color: c.$C_BORDER_INPUT;
               color: c.$C_WHITE;
             }
           }
+
+          .sortFocus {
+            cursor: pointer;
+            background-color: c.$C_BORDER_INPUT;
+            color: c.$C_WHITE;
+          }
+        }
+
+        .noReviewBtn {
+          border: 1.5px solid c.$C_BORDER_GRAY;
+          color: c.$C_BORDER_GRAY;
+          border-radius: 20px;
+          padding: 0.4rem 0.8rem;
         }
 
         .reviewBtn {
@@ -112,6 +180,10 @@
           color: c.$C_SECONDARY;
           padding: 0.4rem 0.8rem;
 
+          transition:
+            background-color,
+            color 0.3s ease-in-out;
+
           &:hover {
             background-color: c.$C_SECONDARY;
             color: c.$C_WHITE;
@@ -120,10 +192,16 @@
       }
     }
 
+    .loader {
+      @include m.flex(center, center, column);
+      flex: 1;
+      text-align: center;
+    }
+
     .reviewArea {
       @include m.flex(space-between, center, column);
       width: 100%;
-      max-height: 75%;
+      height: auto;
       flex: 1;
       overflow-x: hidden;
       overflow-y: auto;
@@ -162,7 +240,7 @@
             gap: 1rem;
 
             .date {
-              font-size: 0.8rem;
+              font-size: 0.6rem;
               color: c.$C_BORDER_INPUT;
             }
           }
