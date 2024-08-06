@@ -19,6 +19,9 @@ import { getLog, getLogData } from '@/pages/api/log';
 import { StaticImageData } from 'next/image';
 import { pinType } from '@/src/constatns/PinSort';
 import { makeInfoWindow } from './Map/utils';
+import useToggle from '@/src/hooks/Home/useToggle';
+import Modal from '../Common/Modal';
+import PlaceInfo from './modal/review/PlaceInfo';
 
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=clusterer`;
 
@@ -41,25 +44,30 @@ const Log = () => {
 
   // 선택된 로그 데이터들
   const [selectedLogData, setSelectedLogData] = useState<recommendsType[]>([
-    {
-      locationId: 0,
-      title: '',
-      addr: '',
-      dataType: 1,
-      tel: '',
-      image: '',
-      mapX: 0,
-      mapY: 0,
-      countLikes: 0,
-      liked: false,
-      averageScore: '',
-      totalReview: 0,
-      isReviewed: false,
-    },
+    // {
+    //   locationId: 0,
+    //   title: '',
+    //   addr: '',
+    //   dataType: 1,
+    //   tel: '',
+    //   image: '',
+    //   mapX: 0,
+    //   mapY: 0,
+    //   countLikes: 0,
+    //   liked: false,
+    //   averageScore: '',
+    //   totalReview: 0,
+    //   isReviewed: false,
+    // },
   ]);
 
   // 로그 아이디
   const [logId, setLogId] = useState<number>(0);
+
+  // 카드 클릭 시 정보 모달
+  const [modal, setModal] = useState<boolean>(false);
+  const openModal = useToggle(modal, setModal);
+  const [selectedLocationId, setSelectedLocationId] = useState<number>(0);
 
   // 전체 로그 데이터 불러오기
   const getLogs = useQuery({
@@ -100,6 +108,12 @@ const Log = () => {
   const sortingPins = (dataType: number): string => {
     const pin = pinType.find((type) => type.dataType === dataType);
     return pin ? getImageSrc(pin.img) : 'null';
+  };
+
+  // 카드 클릭 시 정보 모달
+  const onClickCard = (locationId: number) => {
+    setSelectedLocationId(locationId);
+    openModal();
   };
 
   useEffect(() => {
@@ -287,11 +301,19 @@ const Log = () => {
                 <Card
                   recommend={recommend}
                   refetch={() => getLogSubData.mutate(logId)}
+                  onClick={() => onClickCard(recommend.locationId)}
                 />
               </div>
             ))}
         </main>
       </div>
+      <Modal openModal={openModal} modal={modal} width="51rem" height="46rem">
+        <PlaceInfo
+          openModal={openModal}
+          locationId={selectedLocationId}
+          refetch={() => getLogSubData.mutate(logId)}
+        />
+      </Modal>
     </LogContainer>
   );
 };
