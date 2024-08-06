@@ -190,7 +190,6 @@ const Card = ({
   // TODO: heart animation
   const { locationId, image, title, dataType, addr, tel, countLikes, liked,averageScore } =
     recommend;
-    console.log(recommend);
   const [toast, setToast] = useState<boolean>(false);
   const openToast = useToggle(toast, setToast);
   const [user, setUser] = useRecoilState(userState);
