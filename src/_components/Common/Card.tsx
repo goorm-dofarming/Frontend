@@ -11,6 +11,7 @@ import { userState, randomPinState } from "@/src/atom/stats";
 import { useRecoilState } from "recoil";
 import Toast from "@/src/_components/Common/Toast";
 import { modifyLike } from "@/pages/api/map";
+import { FaStar } from "react-icons/fa";
 
 const Container = styled.div`
   padding: 8px 4px;
@@ -48,16 +49,27 @@ const LocationImage = styled.div`
 
 const Info = styled.div`
   border-top: 1px solid #cacaca;
-  width: 96%;
+  width: 98%;
   height: 140px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding: 8px 4px;
+  /* gap:8px; */
+  .btns {
+    width: 20%;
+    height:100%;
+    display: flex;
+  flex-direction: row;
+  align-items:flex-start;
+  justify-content:  flex-start;
+  gap:8px;
+  
+  }
 `;
 const Description = styled.div`
-  width: 90%;
+  width: 80%;
   height: 100%;
   padding: 4px;
   display: flex;
@@ -95,8 +107,21 @@ const Description = styled.div`
   }
 `;
 
+const Star= styled.div`
+  width: 46%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  .starNumber {
+    margin-top:1px;
+    font-weight: 600;
+    font-size: 12px;
+  }
+`
 const Likes = styled.div`
-  width: 10%;
+  width: 46%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -163,8 +188,9 @@ const Card = ({
   refetch?: () => void;
 }) => {
   // TODO: heart animation
-  const { locationId, image, title, dataType, addr, tel, countLikes, liked } =
+  const { locationId, image, title, dataType, addr, tel, countLikes, liked,averageScore } =
     recommend;
+    console.log(recommend);
   const [toast, setToast] = useState<boolean>(false);
   const openToast = useToggle(toast, setToast);
   const [user, setUser] = useRecoilState(userState);
@@ -205,19 +231,25 @@ const Card = ({
           <div className="address">{addr}</div>
           <div className="phone">{`☎️: ${tel || "준비중"} `}</div>
         </Description>
-        <Likes>
-          <button
-            onClick={onClickLike}
-            className={cx(
-              "likeBtn",
-              { ["active"]: liked },
-              { ["inactive"]: !liked }
-            )}
-          >
-            <IoHeartSharp fontSize={30} />
-          </button>
-          <div className="likesNumber">{formatNumber(countLikes)}</div>
-        </Likes>
+      <div className="btns">
+        <Star>
+            <FaStar fontSize={29} fill={'#F9E400'}/>
+            <div className="starNumber">{averageScore}</div>
+          </Star>
+          <Likes>
+            <button
+              onClick={onClickLike}
+              className={cx(
+                "likeBtn",
+                { ["active"]: liked },
+                { ["inactive"]: !liked }
+              )}
+            >
+              <IoHeartSharp fontSize={30} />
+            </button>
+            <div className="likesNumber">{formatNumber(countLikes)}</div>
+          </Likes>
+      </div>
       </Info>
       {user.userId===0 && (
         <Toast
