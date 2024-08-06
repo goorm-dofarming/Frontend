@@ -5,7 +5,7 @@ import Image from "next/image";
 import cloud from "@/src/_assets/main/map/cloud.png";
 import { ImQuotesLeft, ImQuotesRight } from "react-icons/im";
 import { useQuery } from "@tanstack/react-query";
-import { getLogData } from "@/pages/api/log";
+import { getLogDataGuest } from "@/pages/api/map";
 import CardListItem from "@/src/_components/Common/CardListItem";
 import { Recommend } from "@/src/types/aboutMap";
 import { decimalToDMS } from "@/src/_components/main/RandomPin/util";
@@ -14,8 +14,9 @@ const LinkShare = () => {
   const router = useRouter();
   const [logId, setLogId] = useState<number>(0);
   const fetchLog = async () => {
-    const response = await getLogData(logId);
+    const response = await getLogDataGuest(logId);
     const data = response.data;
+    console.log(data);
     const logData = data.logResponse;
     if (response.status === 200) {
       const { latDMS, lngDMS } = decimalToDMS(
@@ -43,6 +44,7 @@ const LinkShare = () => {
     queryFn: fetchLog,
     refetchInterval: 1000 * 60, // 1분마다 데이터 갱신
   });
+  
   useEffect(() => {
     if (router) {
       setLogId(Number(router?.query?.id));

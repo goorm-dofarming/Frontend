@@ -54,3 +54,8 @@ export const getLikeList = (params:any) => {
     }
   });
 };
+
+
+export const getLogDataGuest = (logId: number) => {
+  return basicClient.get(`/getLogData/share?logId=${logId}`);
+};

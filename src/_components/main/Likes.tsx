@@ -42,9 +42,9 @@ const Container = styled.div`
   padding: 16px 40px;
   gap: 40px;
   > .header {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
     width: 100%;
     height: 140px;
     > .title {
@@ -59,44 +59,48 @@ const Container = styled.div`
       .chips {
         width: 100%;
         height: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-
-        .row {
-          width: 100%;
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
+        display:flex;
+    flex-direction:column;
+    gap:12px;
+        .line{
+          border:1px solid ${colorTheme.secondary};
+          width:80% !important;
+        }
+        .row{
+          width:100%;
+          display:flex;
+          flex-direction:row;
+          justify-content:space-between;
           .chip {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            gap: 8px;
-            width: 100%;
-            height: 40px;
-          }
-          .likeInput {
-            z-index: 10;
-            padding: 4px 8px;
-            border: 1px solid ${colorTheme.secondary};
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
+          display:flex;
+          flex-direction:row;
+          justify-content:flex-start;
+          gap:8px;
+          width: 100%;
+          height: 40px;
+        }       
+        .likeInput{
+          z-index:10;
+          padding:4px 8px;
+          border:1px solid ${colorTheme.secondary};
+          display:flex;
+          flex-direction:row;
+          justify-content:space-between;
+          align-items:center;
+          gap:8px;
 
-            > .icon {
-              cursor: pointer;
-              background: none;
-              border: none;
-              color: ${colorTheme.secondary};
-            }
-            > input {
-              outline: none;
-              border: none;
-            }
+          >.icon{
+            cursor:pointer;
+            background: none;
+            border: none;
+            color:${colorTheme.secondary};
           }
+          >input{
+            outline:none;
+            border:none;
+          }
+         
+        }
         }
       }
       .sort {
@@ -113,39 +117,41 @@ const Container = styled.div`
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 32px;
     overflow-y: auto;
-    height: calc(100vh - 240px);
+     height: calc(100vh - 240px);
     /* height:auto; */
-    max-height: 80vh;
+    max-height: 80vh; 
   }
-  .empty {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 100px;
-    animation: fadein 1s ease-in-out;
-  }
-  .overContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+  .empty{
+      width: 100%;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items: center;
+      font-size:100px;
+      animation: fadein 1s ease-in-out;
+
+    }
+    .overContainer {
+      
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center;
     position: absolute;
     width: 25rem;
-    bottom: 32px;
+    bottom:32px;
     background-color: rgba(255, 255, 255, 0.5);
     z-index: 10;
   }
   @keyframes fadein {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+  from {
+    opacity: 0;
   }
+  to {
+    opacity: 1;
+  }
+}
 `;
 
 interface loadInfoType {
@@ -294,6 +300,8 @@ const Likes = () => {
                 items={sortMenu}
                 onClick={setSortType}
               />
+          </div>
+          <div className="row line"></div>
             </div>
             <div className="row">
               <div className="chip">
