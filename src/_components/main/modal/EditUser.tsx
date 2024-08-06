@@ -15,6 +15,7 @@ import { userState } from '@/src/atom/stats';
 
 // hooks
 import useToggle from '@/src/hooks/Home/useToggle';
+import Toast from '../../Common/Toast';
 
 interface EditUserProps {
   openModal: () => void;
@@ -52,6 +53,10 @@ const EditUser: React.FC<EditUserProps> = ({
   const [pwdState, setPwdState] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // 토스트
+  const [toast, setToast] = useState<boolean>(false);
+  const openToast = useToggle(toast, setToast);
+
   useEffect(() => {
     setChangeName(user.nickname);
     setSelectedImage(getImageUrl(user.imageUrl));
@@ -76,7 +81,7 @@ const EditUser: React.FC<EditUserProps> = ({
       const file = e.target.files ? e.target.files[0] : null;
       if (file) {
         if (file.size > maxSizeInBytes) {
-          alert('File size exceeds the limit of 1MB.');
+          openToast();
           return;
         }
         setImage(file);
@@ -251,6 +256,12 @@ const EditUser: React.FC<EditUserProps> = ({
       <button className={styles.yesBtn} onClick={handleEditUser}>
         저장
       </button>
+      <Toast
+        content={'이미지 크기는 1MB 이하만 가능합니다.'}
+        toast={toast}
+        openToast={openToast}
+        toastType="warning"
+      />
     </div>
   );
 };
