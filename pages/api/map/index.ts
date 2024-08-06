@@ -46,7 +46,7 @@ export const getAddress = (lng: number, lat: number) => {
 export const modifyLike = (locationId: number) => {
   return apiClient.post(`/like?&locationId=${locationId}`);
 };
-export const getLikeList = (params:{}) => {
+export const getLikeList = (params:any) => {
   return apiClient.get(`/likeList`,{
     params:params,
     paramsSerializer: params => {

@@ -163,7 +163,7 @@ const Home = () => {
     <main className={styles.main}>
       <div id="modal-container"></div>
       {isClient &&
-        cookies.token && ( // 클라이언트 렌더링 시점에 쿠키를 확인
+        user.userId>0 && ( // 클라이언트 렌더링 시점에 쿠키를 확인
           <ProfileDropdown
             setFold={setFold}
             setPage={setPage}

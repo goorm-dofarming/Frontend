@@ -101,7 +101,7 @@ const Likes = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  justify-content: start;
+  justify-content: flex-start;
   .likeBtn {
     width: 30px;
     height: 30px;

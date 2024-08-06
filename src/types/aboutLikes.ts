@@ -112,7 +112,7 @@ export const sortMenu:SortType[] = [{
   },
   {
     id:4,
-    value:"Latest",
+    value:"LowLike",
     name:"좋아요 적은 순"
   },
   ]

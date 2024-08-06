@@ -1,7 +1,7 @@
 import { getLikeList } from "@/pages/api/map";
 import { Recommend } from "@/src/types/aboutMap";
-import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import { useQuery,useInfiniteQuery } from "@tanstack/react-query";
+import React, { useEffect, useRef, useState ,useCallback} from "react";
 import styled from "styled-components";
 import Card from "@/src/_components/Common/Card";
 import Landing from "@/src/_components/Common/Landing";
@@ -12,6 +12,8 @@ import Dropdown from "@/src/_components/Common/Dropdown";
 import { BsSearchHeart } from "react-icons/bs";
 import { LuDelete } from "react-icons/lu";
 import { colorTheme } from "@/src/_styles/common/commonColorStyles";
+import ChatLoader from "../Common/ChatLoader";
+import debounce from 'lodash/debounce';
 const Loading = styled.div`
   display: flex;
   flex-direction: column;
@@ -24,17 +26,10 @@ const Container = styled.div`
   width: calc(100vw - 72px);
   height: 100vh;
   animation: fadein 1s ease-in-out;
-  @keyframes fadein {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
+
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   padding: 16px 40px;
   gap: 40px;
@@ -82,6 +77,7 @@ const Container = styled.div`
           justify-content:space-between;
           align-items:center;
           gap:8px;
+
           >.icon{
             cursor:pointer;
             background: none;
@@ -92,6 +88,7 @@ const Container = styled.div`
             outline:none;
             border:none;
           }
+         
         }
         }
       }
@@ -104,11 +101,14 @@ const Container = styled.div`
   }
   .likes {
     width: 100%;
-    height:100%;
+    /* height:100%; */
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    overflow-y: scroll;
+    gap: 32px;
+    overflow-y: auto;
+     height: calc(100vh - 240px);
+    /* height:auto; */
+    max-height: 80vh; 
   }
   .empty{
       width: 100%;
@@ -118,52 +118,148 @@ const Container = styled.div`
       justify-content:center;
       align-items: center;
       font-size:100px;
+      animation: fadein 1s ease-in-out;
+
     }
+    .overContainer {
+      
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center;
+    position: absolute;
+    width: 25rem;
+    bottom:32px;
+    background-color: rgba(255, 255, 255, 0.5);
+    z-index: 10;
+  }
+  @keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 `;
+
+interface loadInfoType {
+  likeId:number;
+  updatedAt:string;
+}
 
 const Likes = () => {
   const [selectedRegions, setSelectedRegions] = useState<any[]>([]);
   const [selectedThemes, setSeletedThemes] = useState<any[]>([]);
   const [sortType,setSortType] = useState<SortType>(sortMenu[0]);
   const [searchText, setSearchText] = useState<string>("");
+  const [loadInfo, setLoadInfo] = useState<loadInfoType>({
+    likeId:0,
+    updatedAt:""
+  });
+  const [search,setSearch] = useState<boolean>(false);
+  const [hasNextPage, setHasNextPage] = useState<boolean>(true);
+  const [data,setData]= useState<any[]>([]);
+
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const observerTargetRef = useRef<HTMLDivElement | null>(null);
   const onChange =(e:React.ChangeEvent<HTMLInputElement>)=>{
-    const data = e.target.value;
-    setSearchText(data);
+    setSearchText(e.target.value);
   }
+
+  const onSubmit =(e)=>{
+    e.preventDefault();
+    setSearch((prev)=>!prev);
+  }
+  const refetch= ()=>{
+    setData([]);
+    setLoadInfo({
+      likeId:0,
+      updatedAt:""
+    });
+    setHasNextPage(true);
+  }
+  useEffect(()=>{
+    console.log(loadInfo,hasNextPage);
+    if(data.length===0 && loadInfo.likeId===0 && hasNextPage){
+      console.log("refetch")
+      fetchLikes();
+    }
+  },[data,loadInfo,hasNextPage])
+  const onScroll = useCallback(
+    debounce((event) => {
+      const { scrollTop, scrollHeight, clientHeight } = event.target;
+
+      if ((scrollHeight - scrollTop <= clientHeight + 100 )&& hasNextPage) {
+        fetchLikes();
+      }
+    }, 3000),
+    [hasNextPage,loadInfo]
+  )
   const fetchLikes = async () => {
-    const params = {
-      themes:selectedThemes,
-      regions: selectedRegions,
+    if (loading) {
+      console.log("로딩중");
+      return;
+    }
+   try{
+    setLoading(true);
+    const params:Record<string, any> =  {
       sortType: sortType.value,
     }
+    if(loadInfo.likeId !==0){
+      console.log(loadInfo);
+      params["likeId"] = loadInfo.likeId;
+      params["updatedAt"] = loadInfo.updatedAt;
+    }
+    if(selectedThemes.length>0){
+      params["themes"] =selectedThemes;
+    }
+    if(selectedRegions.length>0){
+      params["regions"] =selectedRegions;
+    }
+    if(searchText){
+      params["title"] =searchText;
+    }
+    // console.log(params);
     const response = await getLikeList(params);
     if (response.status === 200) {
-      return response.data;
+      const newData = response.data;
+      // console.log(newData);
+      if(newData.length===0){
+        setLoadInfo({
+          likeId:0,
+          updatedAt:""
+        });
+        setHasNextPage(false);
+      }
+      else{
+        
+        const lastItem = newData[newData.length-1];
+        // console.log(lastItem);
+        setData((prevData) => [...prevData, ...newData]);
+        setLoadInfo({
+          likeId :lastItem.likeId,
+          updatedAt :lastItem.updatedAt,
+        })
+      }
+    }else{
+      setError("data load failure");
     }
-    throw new Error("데이터 로드 실패");
+   
+   }catch(err:any){
+    console.error(err);
+   }finally{
+    setLoading(false);
+    // console.log("finally");
+   }
   };
   useEffect(()=>{
     refetch();
-  },[sortType, selectedThemes,selectedRegions])
-  const {
-    data: likes,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ["getLikes"],
-    queryFn: fetchLikes,
-    refetchInterval: 1000 * 1,
-  });
-  if (isLoading)
-    return (
-      <Loading>
-        <Landing />
-      </Loading>
-    );
-  if (isError) return <div>Error: {error.message}</div>;
-  console.log(likes);
+  },[sortType, selectedThemes,selectedRegions,search])
+
+  if (error) return <div>Error: {error}</div>;
+  
   return (
     <Container>
     <div className="header">
@@ -197,38 +293,48 @@ const Likes = () => {
               />))}
             </div>
             
-            <div className="likeInput">
-              <span className="icon"><BsSearchHeart size="20" /></span>
-              
-              <input type="text" placeholder="검색어를 입력하세요." onChange={onChange} value={searchText}/>
-              <button className="icon" onClick={()=>setSearchText("")}><LuDelete size="24"/></button>
-            </div>
+            
+              <form className="likeInput"onSubmit={onSubmit}>
+                <button type="submit" className="icon" ><BsSearchHeart size="20" /></button>
+                
+                <input type="text" placeholder="검색어를 입력하세요." onChange={onChange} value={searchText}/>
+                <button className="icon" onClick={()=>{setSearch((prev)=>!prev),setSearchText(""),console.log("click")}}><LuDelete size="24"/></button>
+              </form>
+           
+            
          </div>
         </div>
    
       </div>
     </div>
-    {likes.length===0 && <div className="empty">텅</div>}
-              {likes.length >0 && 
-    <div className="likes">
-      {searchText ? 
-       likes?.filter((recommend: Recommend)=>recommend.title.indexOf(searchText)!==-1 || recommend.addr.indexOf(searchText)!==-1 ).map((recommend: Recommend, index: number) => (
-           <Card
-  key={recommend.locationId + index}
-  recommend={recommend}
-  refetch={refetch}
-/>))
-      : likes?.map((recommend: Recommend, index: number) => (
+    {data?.length===0 && <div className="empty">텅</div>}
+    {data?.length >0 &&
+    <div className="likes" onScroll={onScroll}>
+{
+      data?.map(({locationResponse, likeId, updatedAt}:{locationResponse:Recommend, likeId:number,  updatedAt:string}, index: number) => (
         <Card
-          key={recommend.locationId + index}
-          recommend={recommend}
+          key={locationResponse.locationId + index}
+          recommend={locationResponse}
           refetch={refetch}
         />
-      ))}
-    </div>}
+      ))
+}
+    </div> }
+
+    {/* <div ref={observerTargetRef} style={{ height: "40px" }} /> */}
+
+    {loading && <div className="overContainer">
+      <ChatLoader /></div>}
+
+
   </Container>
   )
    
 };
 
 export default Likes;
+
+ 
+
+
+
