@@ -1,16 +1,16 @@
-import React, { SetStateAction, Dispatch, useState, useEffect } from "react";
-import styled from "styled-components";
-import Image from "next/image";
-import { IoHeartSharp } from "react-icons/io5"; //꽉찬하트
-import { Recommend, DataType } from "@/src/types/aboutMap";
-import main_logo from "@/src/_assets/icons/main_logo.png";
-import { colorTheme } from "@/src/_styles/common/commonColorStyles";
-import cx from "classnames";
-import useToggle from "@/src/hooks/Home/useToggle";
-import { userState, randomPinState } from "@/src/atom/stats";
-import { useRecoilState } from "recoil";
-import Toast from "@/src/_components/Common/Toast";
-import { modifyLike } from "@/pages/api/map";
+import React, { SetStateAction, Dispatch, useState, useEffect } from 'react';
+import styled from 'styled-components';
+import Image from 'next/image';
+import { IoHeartSharp } from 'react-icons/io5'; //꽉찬하트
+import { Recommend, DataType } from '@/src/types/aboutMap';
+import main_logo from '@/src/_assets/icons/main_logo.png';
+import { colorTheme } from '@/src/_styles/common/commonColorStyles';
+import cx from 'classnames';
+import useToggle from '@/src/hooks/Home/useToggle';
+import { userState, randomPinState } from '@/src/atom/stats';
+import { useRecoilState } from 'recoil';
+import Toast from '@/src/_components/Common/Toast';
+import { modifyLike } from '@/pages/api/map';
 
 const Container = styled.div`
   padding: 8px 4px;
@@ -146,9 +146,9 @@ const Likes = styled.div`
 `;
 const formatNumber = (num: number) => {
   if (num >= 1e6) {
-    return (num / 1e6).toFixed(1) + "M";
+    return (num / 1e6).toFixed(1) + 'M';
   } else if (num >= 1e3) {
-    return (num / 1e3).toFixed(1) + "K";
+    return (num / 1e3).toFixed(1) + 'K';
   } else {
     return num.toString();
   }
@@ -203,15 +203,15 @@ const Card = ({
           <span className="title">{title}</span>
           <div className="type">{DataType[dataType].type}</div>
           <div className="address">{addr}</div>
-          <div className="phone">{`☎️: ${tel || "준비중"} `}</div>
+          <div className="phone">{`☎️: ${tel || '준비중'} `}</div>
         </Description>
         <Likes>
           <button
             onClick={onClickLike}
             className={cx(
-              "likeBtn",
-              { ["active"]: liked },
-              { ["inactive"]: !liked }
+              'likeBtn',
+              { ['active']: liked },
+              { ['inactive']: !liked }
             )}
           >
             <IoHeartSharp fontSize={30} />
@@ -219,9 +219,9 @@ const Card = ({
           <div className="likesNumber">{formatNumber(countLikes)}</div>
         </Likes>
       </Info>
-      {user.userId===0 && (
+      {user.userId === 0 && (
         <Toast
-          content={"로그인하여 더 많은 기능을 이용해 보세요 !"}
+          content={'로그인하여 더 많은 기능을 이용해 보세요 !'}
           toast={toast}
           openToast={openToast}
         />
