@@ -10,10 +10,11 @@ import mainLogo from '@/src/_assets/icons/main_logo.png';
 // components
 import Modal from '@/src/_components/Common/Modal';
 import MakeReview from './MakeReview';
-import StarScore from './Star';
+import StarScore from './component/Star';
 import ChatLoader from '@/src/_components/Common/ChatLoader';
 import Landing from '@/src/_components/Common/Landing';
 import Toast from '@/src/_components/Common/Toast';
+import ReviewComponent from './component/ReviewComponent';
 
 // hooks
 import useToggle from '@/src/hooks/Home/useToggle';
@@ -25,10 +26,12 @@ import { LocationInfo, Review } from '@/src/types/aboutReview';
 import axios from 'axios';
 import {
   deleteImage,
+  deleteReview,
   getLocationData,
   getMyReview,
   getReviewData,
   makeReview,
+  setReviewLike,
   updateReview,
 } from '@/pages/api/review';
 import { modifyLike } from '@/pages/api/map';
@@ -36,7 +39,6 @@ import { modifyLike } from '@/pages/api/map';
 // atoms
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/src/atom/stats';
-import ReviewComponent from './ReviewComponent';
 
 interface PlaceInfoProps {
   openModal: () => void;
@@ -184,6 +186,15 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
     openReview();
   };
 
+  const onClickReviewLike = async (reviewId: number) => {
+    if (!user.userId) {
+      openToast();
+      return;
+    }
+    await setReviewLike(reviewId);
+    getReviews();
+  };
+
   useEffect(() => {
     getLocation();
   }, [locationId, openModal]);
@@ -212,9 +223,7 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
       images.forEach((image) => formData.append('files', image));
     }
     try {
-      console.log('make review');
       await makeReview(formData);
-      console.log('complete');
       getLocation();
       getReviews();
     } catch (error) {
@@ -240,7 +249,6 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
         try {
           const response = await deleteImage(imageId);
           console.log(response);
-          console.log('이미지 삭제 성공');
         } catch (error) {
           if (axios.isAxiosError(error)) {
             console.error('Axios error:', error);
@@ -261,12 +269,25 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
       new Blob([JSON.stringify(reviewRequest)], { type: 'application/json' })
     );
     if (images.length > 0) {
-      console.log('이미지 추가 할거임');
       images.forEach((image) => formData.append('files', image));
     }
     try {
       await updateReview(formData, reviewId);
       setIsUpdate(false);
+      getLocation();
+      getReviews();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error:', error);
+      } else {
+        console.error('Unexpected error:', error);
+      }
+    }
+  };
+
+  const handleDeleteReview = async (reviewId: number) => {
+    try {
+      await deleteReview(reviewId);
       getLocation();
       getReviews();
     } catch (error) {
@@ -315,9 +336,9 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
                       { [styles.inactive]: !location?.liked }
                     )}
                   >
-                    <IoHeartSharp size={'1.5rem'} className={styles.heart} />
+                    <IoHeartSharp size={'30px'} className={styles.heart} />
                   </div>
-                  {location?.countLikes}
+                  X {location?.countLikes}
                 </div>
               </div>
               <div className={styles.address}>{location?.addr}</div>
@@ -327,9 +348,13 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
             </div>
             {location?.totalReview && location?.totalReview > 0 ? (
               <div className={styles.rightSection}>
-                <div className={styles.titleText2}>평점</div>
-                <div className={styles.gradeText}>
-                  {Math.round(location?.averageScore * 10) / 10}
+                <div className={styles.scoreContainer}>
+                  <div className={styles.titleText2}>
+                    평점 {Math.round(location?.averageScore * 10) / 10}
+                  </div>
+                  <div className={styles.gradeText}>
+                    {`리뷰 ${location.totalReview}개`}
+                  </div>
                 </div>
                 <div className={styles.stars}>
                   <StarScore
@@ -338,7 +363,7 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
                         ? Math.round(location.averageScore * 10) / 10
                         : 0
                     }
-                    size={3}
+                    size={2.5}
                   />
                 </div>
               </div>
@@ -388,6 +413,8 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
                     review={myReview}
                     isMine={true}
                     onClickUpdate={onClickUpdate}
+                    onDeleteReview={handleDeleteReview}
+                    onClickReviewLike={onClickReviewLike}
                   />
                 )}
                 {reviews.length > 0 ? (
@@ -397,6 +424,8 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
                       review={review}
                       isMine={false}
                       onClickUpdate={onClickUpdate}
+                      onDeleteReview={handleDeleteReview}
+                      onClickReviewLike={onClickReviewLike}
                     />
                   ))
                 ) : myReview ? (

@@ -33,4 +33,5 @@ export type Review = {
   updatedAt: Date;
   content: string;
   images: ReviewImage[];
+  liked: boolean;
 };
