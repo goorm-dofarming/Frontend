@@ -2,18 +2,18 @@ import styled from "styled-components";
 import { colorTheme } from "@/src/_styles/common/commonColorStyles";
 import { Dispatch, SetStateAction } from "react";
 
-const ChipContainer = styled.button<{ isSelected:boolean }>`
+const ChipContainer = styled.button<{ isselected:string }>`
   /* width: 80px;
   height: 40px; */
   display: inline-block;
   padding: 0px 20px;
   letter-spacing: 2px;
-  background-color: ${({ isSelected }) =>
-    isSelected ? `${colorTheme.secondary}` : "white"};
-  border: ${({ isSelected }) =>
-    isSelected ? "1px solid white" : `1px solid ${colorTheme.secondary}`};
-  color: ${({ isSelected }) =>
-    isSelected ? "white" : `${colorTheme.secondary}`};
+  background-color: ${({ isselected }) =>
+    isselected==="true" ? `${colorTheme.secondary}` : "white"};
+  border: ${({ isselected }) =>
+    isselected==="true" ? "1px solid white" : `1px solid ${colorTheme.secondary}`};
+  color: ${({ isselected }) =>
+    isselected==="true" ? "white" : `${colorTheme.secondary}`};
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -39,7 +39,7 @@ const Chip = ({
   isSelected: boolean;
   id: number;
   value:any;
-  onClick: Dispatch<SetStateAction<any[]>>;
+  onClick:any;
 }) => {
     const onClickChip = ()=>{
         if(isSelected){
@@ -49,13 +49,14 @@ const Chip = ({
             })
         }else{
             onClick((prev:any)=>{
+              console.log(prev);
                 const newArr = [...prev,value];
                 return newArr;
             })
         }   
     }
   return (
-    <ChipContainer onClick={onClickChip} isSelected={isSelected}>
+    <ChipContainer onClick={onClickChip} isselected={isSelected.toString()}>
       {content}
     </ChipContainer>
   );
