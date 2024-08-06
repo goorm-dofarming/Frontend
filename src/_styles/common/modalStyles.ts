@@ -23,6 +23,11 @@ export const ModalContainer = styled.div<{
     background-color: white;
     border-radius: 0.5rem;
     padding: 8px;
+    transform: ${({ modal }) => (modal === 'true' ? 'scale(1)' : 'scale(0.3)')};
+    opacity: ${({ modal }) => (modal === 'true' ? '1' : '0')};
+    transition:
+      transform 0.5s ease-in-out,
+      opacity 0.3s ease-in-out;
   }
 
   .modalContents {
