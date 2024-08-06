@@ -7,7 +7,7 @@ import Profile from '@/src/_assets/main/userProfile.svg';
 import { FaImage } from 'react-icons/fa6';
 
 // componnents
-import StarScore from '@/src/_components/main/modal/review/Star';
+import StarScore from '@/src/_components/main/modal/review/component/Star';
 import Toast from '@/src/_components/Common/Toast';
 
 // atoms

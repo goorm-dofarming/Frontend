@@ -1,6 +1,14 @@
 import { LocationInfo } from '@/src/types/aboutReview';
 import apiClient from '../apiClient';
 
+export const getLocationData = async (
+  locationId: number
+): Promise<LocationInfo> => {
+  const response = await apiClient.get(`/location/${locationId}`);
+  const data = response.data;
+  return data;
+};
+
 export const getReviewData = async (params: {}) => {
   const response = await apiClient.get('/review', { params });
   const data = response.data;
@@ -30,10 +38,12 @@ export const deleteImage = async (imageId: number) => {
   return response;
 };
 
-export const getLocationData = async (
-  locationId: number
-): Promise<LocationInfo> => {
-  const response = await apiClient.get(`/location/${locationId}`);
-  const data = response.data;
-  return data;
+export const deleteReview = async (reviewId: number) => {
+  const response = await apiClient.delete(`/review/${reviewId}`);
+  return response;
+};
+
+export const setReviewLike = async (reviewId: number) => {
+  const response = await apiClient.post(`/reviewLike?reviewId=${reviewId}`);
+  return response;
 };
