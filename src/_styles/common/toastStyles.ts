@@ -8,7 +8,7 @@ export const ToastContainer = styled.div<{
   width: 100%;
   height: 10rem;
   visibility: ${({ toast }) => (toast === 'true' ? 'display' : 'hidden')};
-  z-index: 500;
+  z-index: 1001;
   display: flex;
   justify-content: center;
   align-items: flex-start;
