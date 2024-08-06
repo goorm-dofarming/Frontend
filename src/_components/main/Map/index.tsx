@@ -54,9 +54,10 @@ const Map = () => {
   };
   const onClickCard = (recommend: Recommend) => {
     setFocusPin(recommend);
-    console.log(recommend);
     setSelectedLocation(recommend);
-    openModal();
+    setTimeout(() => {
+      openModal();
+    }, 1000);
   };
   const setInitial = async () => {
     const response = await getLog();
@@ -260,7 +261,6 @@ const Map = () => {
       <Modal openModal={openModal} modal={modal} width="51rem" height="46rem">
         <PlaceInfo
           openModal={openModal}
-          // locationId={1}
           locationId={
             selectedLocation?.locationId ? selectedLocation?.locationId : 0
           }

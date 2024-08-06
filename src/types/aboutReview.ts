@@ -14,6 +14,11 @@ export type LocationInfo = {
   countLikes: number;
 };
 
+export type ReviewImage = {
+  imageId: number;
+  imageUrl: string;
+};
+
 export type Review = {
   user: {
     userId: number;
@@ -27,10 +32,5 @@ export type Review = {
   createdAt: Date;
   updatedAt: Date;
   content: string;
-  images: [
-    {
-      imageId: number;
-      imageUrl: string;
-    },
-  ];
+  images: ReviewImage[];
 };
