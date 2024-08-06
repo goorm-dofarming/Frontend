@@ -54,7 +54,10 @@ const Container = styled.div`
         display:flex;
     flex-direction:column;
     gap:12px;
-
+        .line{
+          border:1px solid ${colorTheme.secondary};
+          width:80% !important;
+        }
         .row{
           width:100%;
           display:flex;
@@ -67,7 +70,7 @@ const Container = styled.div`
           gap:8px;
           width: 100%;
           height: 40px;
-        }
+        }       
         .likeInput{
           z-index:10;
           padding:4px 8px;
@@ -281,6 +284,7 @@ const Likes = () => {
               </div>
               <Dropdown value={sortType.name} items={sortMenu} onClick={setSortType}/>
           </div>
+          <div className="row line"></div>
          <div className="row">
           <div className="chip">
             {themes.slice(1).map((theme:Theme)=>( <Chip
