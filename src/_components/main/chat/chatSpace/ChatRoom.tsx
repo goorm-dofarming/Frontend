@@ -189,7 +189,11 @@ const ChatRoom: React.FC<{
                   <div className={styles.textArea}>
                     <div className={styles.name}>{message.nickname}</div>
                     <div className={styles.textContainer}>
-                      <div className={styles.message}>{message.content}</div>
+                      <div className={styles.message}>
+                        {message.content.split('\n').map((line, index) => (
+                          <div key={index}>{line}</div>
+                        ))}
+                      </div>
                       <div className={styles.date}>
                         {getHour(message.createdAt)}
                       </div>

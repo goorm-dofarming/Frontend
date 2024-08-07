@@ -90,7 +90,6 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
         setIsLoading(true);
       }
       const response = await getLocationData(locationId);
-      console.log(response);
       setLocation(response);
       if (response.isReviewed) {
         const myResponse = await getMyReview(locationId);
@@ -127,12 +126,10 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
       setReviewLoading(true);
       if (location && location.isReviewed) {
         const myResponse = await getMyReview(locationId);
-        console.log('my review : ', myResponse);
         setMyReview(myResponse);
       }
       const response = await getReviewData(params);
       clearTimeout(timeoutId);
-      console.log('entire review : ', response);
       setReviews(response);
       setTimeout(() => {
         setReviewLoading(false);
@@ -170,7 +167,6 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
     try {
       setReviewFetchLoading(true);
       const response = await getReviewData(params);
-      console.log(response);
       if (response.length > 0) {
         const newReviews: Review[] = response;
         setReviews((prev) => [...prev, ...newReviews]);
@@ -309,7 +305,6 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
   ) => {
     // 이미지 삭제
     if (deleteImages && deleteImages.length > 0) {
-      console.log('이미지 삭제할거임');
       for (let imageId of deleteImages) {
         try {
           const response = await deleteImage(imageId);
@@ -375,7 +370,10 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
           <div
             className={styles.locationImg}
             style={{
-              backgroundImage: `url(${location?.image})`,
+              backgroundImage: location?.image
+                ? `url(${location.image})`
+                : 'none',
+              backgroundColor: location?.image ? 'transparent' : 'white',
             }}
           >
             {location?.image === '' && (

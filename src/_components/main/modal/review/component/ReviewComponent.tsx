@@ -209,7 +209,11 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({
               : `${getDate(review.updatedAt)} 수정됨`}
           </div>
         </div>
-        <div className="text">{review.content}</div>
+        <div className="text">
+          {review.content.split('\n').map((line, index) => (
+            <div key={index}>{line}</div>
+          ))}
+        </div>
         <div className="images">
           {review.images &&
             review.images.map((image, index) => (
