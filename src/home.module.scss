@@ -17,18 +17,15 @@
     -moz-user-select: none;
     -ms-user-select: none;
     .sliderSection {
-      @include m.flex(center, center, column);
       row-gap: 16px;
       column-gap: 16px;
       width: 100%;
-      height: 50%;
       animation: fadein ease-in-out 4s;
       .slider {
         width: 100%;
-        height: 80%;
       }
       .description {
-        @include m.flex(flex-start, center, column);
+        @include m.flex(flex-start,center,column);
         width: 100%;
         height: 50%;
         row-gap: 28px;
@@ -67,9 +64,11 @@
 
 @keyframes fadein {
   from {
+    pointer-events: none;
     opacity: 0;
   }
   to {
+    pointer-events: none;
     opacity: 1;
   }
 }

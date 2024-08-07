@@ -47,6 +47,12 @@ const Container = styled.div`
     gap: 20px;
     width: 100%;
     height: 140px;
+    @media (max-width: 1680px) {
+              height: 240px;
+            }
+            @media (max-width: 960px) {
+              height: 340px;
+      }
     > .title {
       width: 100%;
       font-size: 32px;
@@ -56,6 +62,12 @@ const Container = styled.div`
       height: 100px;
       display: flex;
       justify-content: space-between;
+      @media (max-width: 1440px) {
+        height:200px;
+      }
+      @media (max-width: 960px) {
+        height:300px;
+      }
       .chips {
         width: 100%;
         height: 100%;
@@ -76,10 +88,22 @@ const Container = styled.div`
             flex-direction: row;
             justify-content: flex-start;
             gap: 8px;
-            width: 100%;
+            width: 80%;
             height: 40px;
+            /* flex-wrap:wrap; */
+            @media (max-width: 1680px) {
+              flex-wrap:wrap;
+              height: 80px;
+            }
+            @media (max-width: 1680px) {
+              flex-wrap:wrap;
+              height: 120px;
+            }
+        
+            
           }
           .likeInput {
+            height:40px;
             z-index: 10;
             padding: 4px 8px;
             border: 1px solid ${colorTheme.secondary};
@@ -117,6 +141,12 @@ const Container = styled.div`
     height: calc(100vh - 240px);
     /* height:auto; */
     max-height: 80vh;
+    @media (max-width: 1680px) {
+      height: calc(100vh - 280px);
+            }
+            @media (max-width: 960px) {
+              height: calc(100vh - 480px);
+      }
   }
   .empty {
     width: 100%;
@@ -195,9 +225,7 @@ const Likes = () => {
     openModal();
   };
   useEffect(() => {
-    console.log(loadInfo, hasNextPage);
     if (data.length === 0 && loadInfo.likeId === 0 && hasNextPage) {
-      console.log('refetch');
       fetchLikes();
     }
   }, [data, loadInfo, hasNextPage]);
@@ -213,7 +241,6 @@ const Likes = () => {
   );
   const fetchLikes = async () => {
     if (loading) {
-      console.log('로딩중');
       return;
     }
     try {

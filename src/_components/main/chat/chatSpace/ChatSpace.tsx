@@ -37,7 +37,7 @@ const ChatSpace: React.FC<{
 }> = ({ refetchChatList, messageQuery, stompClientRef, leaveMessage }) => {
   const [user] = useRecoilState(userState);
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
-  const [input, setInput] = useState<string>('');
+  const [input, setInput] = useState<string>(``);
   const messageAlarm = useRecoilValue(messageAlarmState);
   const [participantCount, setParticipantCount] = useState<number>(
     selectedChat.participantCount
@@ -110,12 +110,12 @@ const ChatSpace: React.FC<{
       // 한글 또는 한자, 입력중이면 true였다가 false로 한번 더 실행됨
       return;
     }
-    if (event.key === 'Enter' && !event.ctrlKey) {
+    if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       sendMessage();
     }
-    if (event.key === 'Enter' && event.ctrlKey) {
-      setInput((prevInput) => prevInput + '\n');
+    if (event.key === 'Enter' && event.shiftKey) {
+      setInput((prevInput) => prevInput + `\n`);
     }
   };
 

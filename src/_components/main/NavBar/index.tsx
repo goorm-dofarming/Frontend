@@ -30,10 +30,10 @@ const menu = [
 ];
 const NavBar = ({
   className,
-  setInitial,
+  setFold,
 }: {
   className: string;
-  setInitial: React.Dispatch<React.SetStateAction<boolean>>;
+  setFold: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [user, setUser] = useRecoilState(userState);
   const [active, setPage] = useRecoilState(pageState);
@@ -55,7 +55,7 @@ const NavBar = ({
   const handleLogout = () => {
     removeCookie("token", "", { path: "/" });
     setUser({ userId: 0, email: "", nickname: "", imageUrl: "", role: "" });
-    setInitial(false);
+    setFold(false);
     setPage("home");
     setRandomPin({
       address: "",
@@ -67,6 +67,7 @@ const NavBar = ({
       logId: 0,
       recommends: [],
     })
+
   };
 
   useEffect(() => {
@@ -80,8 +81,8 @@ const NavBar = ({
         <button
           className={styles.logo}
           onClick={() => {
-            setInitial(false);
             setPage("home");
+            setFold(false);
           }}
         >
           <Image src={logo} width={68} height={60} alt="logo" />
@@ -106,11 +107,15 @@ const NavBar = ({
         ))}
       </div>
       <button className={styles.button}>
-        {user.userId > 0 ? (
+        {user.userId > 0 && (
           <IoMdLogOut fill="white" onClick={handleLogout} />
-        ) : (
-          <IoMdLogIn fill="white" />
-        )}
+        ) 
+        }
+        {/* {
+          : (
+            <IoMdLogIn fill="white" />
+          )
+        } */}
       </button>
       {user.userId === 0 && (
         <Toast

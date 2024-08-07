@@ -28,17 +28,31 @@ export const HomeContainer = styled.div<{
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    width:100%;
     height: 100%;
     background: rgba(255, 255, 255, 1); /* 반투명 흰색 */
-    filter: blur(12px); /* 블러 효과 */
+    /* filter: blur(12px); 블러 효과 */
     opacity: 0; /* 초기 투명도 */
-    transition: opacity 2s; /* 부드러운 전환 효과 */
   }
 
   .fog_show {
+    
     opacity: 1;
+    /* animation-delay:0.5s; */
+    animation:fadein 3s ease-in-out;
+    @keyframes fadein{
+        0%{
+          opacity:0;
+        }
+        70%{
+          opacity:0;
+        }
+        100%{
+opacity:1;
+        }
+    }
   }
+  
   .logoContainer {
     top: 35%;
     /* right: 24%; */
@@ -46,6 +60,21 @@ export const HomeContainer = styled.div<{
     display: flex;
     flex-direction: column;
     align-items: center;
+    opacity:1;
+  }
+  .hideLogo{
+    animation:fadeInLogo 3s ease-in-out;
+    @keyframes fadeInLogo{
+        0%{
+          opacity:1;
+        }
+        50%{
+          opacity:0;
+        }
+        100%{
+opacity:0;
+        }
+    }
   }
 
   .modal {
@@ -67,34 +96,57 @@ export const HomeContainer = styled.div<{
     justify-content: center;
     align-items: center;
   }
+
   .colorMap {
     position: relative;
   }
+  .vibration{
+    animation: vibration 0.1s infinite;
+    animation-delay:1.4s;
+  }
+  @keyframes vibration {
+  from {
+    transform: rotate(1deg);
+  }
+  to {
+    transform: rotate(-1deg);
+  }
+}
 
   .pin_show {
     position: absolute;
-    left: 0;
+    top:40%;
+    left: 65%;
     z-index: 100;
-    transform-style: preserve-3d;
-    animation: pinAnimation 1.6s ease-in-out;
-
-    @keyframes pinAnimation {
-      0% {
-        transform: translateX(0) translateZ(0) scale(0) rotateX(0) rotateY(0)
-          rotateZ(0);
+    opacity:1;
+      animation: pinAnimation 1.5s ease-out;
+      @keyframes pinAnimation {
+      from{
+        left: 65%;
+        top:0%;
+        opacity:0;
       }
-      50% {
-        transform: translateX(50vw) translateZ(-50px) scale(10) rotateX(30deg)
-          rotateY(30deg) rotateZ(30deg);
-      }
-      100% {
-        transform: translateX(65vw) translateZ(0) scale(0) rotateX(0) rotateY(0)
-          rotateZ(0);
+     /* 80%{
+      left: 65%;
+      top:45%;
+        opacity:1;
+      } */
+      to{
+        left: 65%;
+        top:40%;
+        opacity:1;
+        
       }
     }
+  
   }
   .pin_hide {
+    position: absolute;
+    left: 65%;
+    top:50%;
     display: none;
+    opacity:0;
+    z-index:-100 ;
   }
   .logo {
     width: 100%;

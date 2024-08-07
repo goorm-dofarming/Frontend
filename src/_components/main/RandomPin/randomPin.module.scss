@@ -1,9 +1,7 @@
 @use '../../../_styles/constants/color' as c;
 @use '../../../_styles/mixins/' as m;
 .container {
-  // @include m.flex(space-between, center, row);
   width: 100%;
-  height: 100%;
   padding: 0 60px;
   .arrow {
     width: 36px !important;
@@ -11,8 +9,7 @@
   }
 
   .pin {
-    @include m.flex(center, center, column);
-    width: 80%;
+    @include m.flex(center,center,column);
     height: 80%;
     padding: 20px 0;
     background-color: transparent;
@@ -31,6 +28,31 @@
     }
     animation: pin 1s ease-in-out infinite;
     cursor: pointer;
+    &:focus{
+      animation:pinSize 1s ease-in-out;
+      @keyframes pinSize {
+        0% {
+          transform: scale(1);
+        }
+        15%{
+          transform: scale(0.7);
+        }
+        75% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      @keyframes pinMove{
+        from{
+            transform:translateY(0);
+        }to{
+          transform:translateY(-30px);
+        }
+      }
+      
+    }
   }
 }
 
@@ -89,17 +111,17 @@
     transform: rotate(180deg);
   }
 }
-@keyframes pinMove {
-  0% {
-    transform: translateY(-20px) translateX(0%) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-20px) translateX(400px) rotate(180deg);
-  }
-  100% {
-    transform: translateY(20px) translateX(900px) rotate(360deg);
-  }
-}
+// @keyframes pinMove {
+//   0% {
+//     transform: translateY(-20px) translateX(0%) rotate(0deg);
+//   }
+//   50% {
+//     transform: translateY(-20px) translateX(400px) rotate(180deg);
+//   }
+//   100% {
+//     transform: translateY(20px) translateX(900px) rotate(360deg);
+//   }
+// }
 
 @keyframes throwDart {
   0% {

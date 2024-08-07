@@ -3,8 +3,9 @@ import { colorTheme } from "@/src/_styles/common/commonColorStyles";
 import { Dispatch, SetStateAction } from "react";
 
 const ChipContainer = styled.button<{ isselected:string }>`
-  /* width: 80px;
-  height: 40px; */
+  /* width: 80px;*/
+  height: 36px; 
+  white-space: nowrap;
   display: inline-block;
   padding: 0px 20px;
   letter-spacing: 2px;
