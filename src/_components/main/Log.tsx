@@ -23,7 +23,7 @@ import useToggle from '@/src/hooks/Home/useToggle';
 import Modal from '../Common/Modal';
 import PlaceInfo from './modal/review/PlaceInfo';
 
-const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=services,clusterer`;
+const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=clusterer`;
 
 const Log = () => {
   // 위치 이동
@@ -124,17 +124,15 @@ const Log = () => {
     // document.cookie = 'username=dofarming; SameSite=Strict; Secure';
     const script = document.createElement('script');
     script.src = KAKAO_SDK_URL;
-    script.async = true;
+    // script.async = true;
     script.id = 'kakao_sdk_script';
 
-    if (!document.querySelector('#kakao_sdk_script')) {
+    const prev = document.getElementById('kakao_sdk_script');
+    if (prev === null) {
       document.head.appendChild(script);
     } else {
-      const prev = document.querySelector('#kakao_sdk_script');
-      if (prev) {
-        document.head.removeChild(prev);
-        document.head.appendChild(script);
-      }
+      document.head.removeChild(prev);
+      document.head.appendChild(script);
     }
     const onLoadKakaoMap = () => {
       window.kakao.maps.load(() => {
@@ -156,6 +154,42 @@ const Log = () => {
           map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
           averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
           minLevel: 5, // 클러스터 할 최소 지도 레벨
+          styles: [
+            {
+              width: '36px',
+              height: '36px',
+              fontSize: '14px',
+              background: 'rgba(241, 135, 139, .9)',
+              borderRadius: '18px',
+              color: '#fff',
+              textAlign: 'center',
+              lineHeight: '36px',
+              boxShadow: '0px 0px 5px 2px rgba(241, 135, 139, .9)',
+            },
+            {
+              width: '48px',
+              height: '48px',
+              fontSize: '14px',
+              background: 'rgba(243, 85, 92, .9)',
+              borderRadius: '24px',
+              color: '#fff',
+              textAlign: 'center',
+              lineHeight: '48px',
+              boxShadow: '0px 0px 5px 2px rgba(243, 85, 92, .9)',
+            },
+            {
+              width: '60px',
+              height: '60px',
+              fontSize: '14px',
+              background: 'rgba(237, 74, 81, .9)',
+              borderRadius: '30px',
+              color: '#fff',
+              textAlign: 'center',
+              lineHeight: '60px',
+              boxShadow: '0px 0px 5px 2px rgba(237, 74, 81, .9)',
+            },
+          ],
+          calculator: [10, 50],
         });
 
         const imageSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/pin/pin_location.png`;

@@ -1,18 +1,17 @@
-import React, { SetStateAction, Dispatch, useState, useEffect } from "react";
-import styled from "styled-components";
-import Image from "next/image";
-import { IoHeartSharp } from "react-icons/io5"; //꽉찬하트
-import { Recommend, DataType } from "@/src/types/aboutMap";
-import main_logo from "@/src/_assets/icons/main_logo.png";
-import { colorTheme } from "@/src/_styles/common/commonColorStyles";
-import cx from "classnames";
-import useToggle from "@/src/hooks/Home/useToggle";
-import { userState, randomPinState } from "@/src/atom/stats";
-import { useRecoilState } from "recoil";
-import Toast from "@/src/_components/Common/Toast";
-import { modifyLike } from "@/pages/api/map";
-import { FaStar } from "react-icons/fa";
-
+import React, { SetStateAction, Dispatch, useState, useEffect } from 'react';
+import styled from 'styled-components';
+import Image from 'next/image';
+import { IoHeartSharp } from 'react-icons/io5'; //꽉찬하트
+import { Recommend, DataType } from '@/src/types/aboutMap';
+import main_logo from '@/src/_assets/icons/main_logo.png';
+import { colorTheme } from '@/src/_styles/common/commonColorStyles';
+import cx from 'classnames';
+import useToggle from '@/src/hooks/Home/useToggle';
+import { userState, randomPinState } from '@/src/atom/stats';
+import { useRecoilState } from 'recoil';
+import Toast from '@/src/_components/Common/Toast';
+import { modifyLike } from '@/pages/api/map';
+import { FaStar } from 'react-icons/fa';
 
 const Container = styled.div`
   padding: 8px 4px;
@@ -60,13 +59,12 @@ const Info = styled.div`
   /* gap:8px; */
   .btns {
     width: 20%;
-    height:100%;
+    height: 100%;
     display: flex;
-  flex-direction: row;
-  align-items:flex-start;
-  justify-content:  flex-start;
-  gap:8px;
-  
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 8px;
   }
 `;
 const Description = styled.div`
@@ -83,7 +81,8 @@ const Description = styled.div`
     font-size: 20px;
     height: 24px;
     width: 90%;
-    overflow-y: hidden;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
     /* text-overflow: hidden; */
   }
@@ -93,22 +92,18 @@ const Description = styled.div`
   .address {
     width: 100%;
     white-space: nowrap;
-    overflow-y: hidden;
+    overflow: hidden;
     text-overflow: ellipsis;
     display: block;
     /* transition: all 3s ease-in-out; */
-    &:hover {
-      text-overflow: initial;
-      white-space: nowrap;
-      overflow: visible;
-    }
   }
   .phone {
+    overflow: hidden;
     font-weight: 200;
   }
 `;
 
-const Star= styled.div`
+const Star = styled.div`
   width: 46%;
   height: 100%;
   display: flex;
@@ -116,11 +111,11 @@ const Star= styled.div`
   flex-direction: column;
   justify-content: flex-start;
   .starNumber {
-    margin-top:1px;
+    margin-top: 1px;
     font-weight: 600;
     font-size: 12px;
   }
-`
+`;
 const Likes = styled.div`
   width: 46%;
   height: 100%;
@@ -189,8 +184,18 @@ const Card = ({
   refetch?: () => void;
 }) => {
   // TODO: heart animation
-  const { locationId, image, title, dataType, addr, tel, countLikes, liked,averageScore } =
-    recommend;
+  const {
+    locationId,
+    image,
+    title,
+    dataType,
+    addr,
+    tel,
+    countLikes,
+    liked,
+    averageScore,
+    totalReview,
+  } = recommend;
   const [toast, setToast] = useState<boolean>(false);
   const openToast = useToggle(toast, setToast);
   const [user, setUser] = useRecoilState(userState);
@@ -231,25 +236,27 @@ const Card = ({
           <div className="address">{addr}</div>
           <div className="phone">{`☎️: ${tel || '준비중'} `}</div>
         </Description>
-      <div className="btns">
-        <Star>
-            <FaStar fontSize={29} fill={'#F9E400'}/>
-            <div className="starNumber">{averageScore}</div>
-          </Star>
+        <div className="btns">
+          {totalReview !== 0 && (
+            <Star>
+              <FaStar fontSize={29} fill={'#F9E400'} />
+              <div className="starNumber">{averageScore}</div>
+            </Star>
+          )}
           <Likes>
             <button
               onClick={onClickLike}
               className={cx(
-                "likeBtn",
-                { ["active"]: liked },
-                { ["inactive"]: !liked }
+                'likeBtn',
+                { ['active']: liked },
+                { ['inactive']: !liked }
               )}
             >
               <IoHeartSharp fontSize={30} />
             </button>
             <div className="likesNumber">{formatNumber(countLikes)}</div>
           </Likes>
-      </div>
+        </div>
       </Info>
       {user.userId === 0 && (
         <Toast
