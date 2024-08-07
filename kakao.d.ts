@@ -9,6 +9,7 @@ declare namespace kakao {
 
     class Map {
       constructor(container: HTMLElement, options: MapOptions);
+      setLevel(level:number):void;
       getCenter(): LatLng;
       setCenter(latlng: LatLng): void;
       relayout(): void;

@@ -79,15 +79,20 @@ export const messageAlarmState = atom<Alarm>({
 export const logEntireData = atom<logDataType[]>({
   key: "logEntireData",
   default: [
-    {
-      logId: 0,
-      userId: 0,
-      theme: "",
-      address: "",
-      latitude: "",
-      longitude: "",
-      createdAt: "",
-      status: false,
-    },
+    // {
+    //   logId: 0,
+    //   userId: 0,
+    //   theme: "",
+    //   address: "",
+    //   latitude: "",
+    //   longitude: "",
+    //   createdAt: "",
+    //   status: false,
+    // },
   ],
 });
+
+export const logMapState = atom<kakao.maps.Map | null>({
+  key: "logMapState",
+  default: null,
+})
