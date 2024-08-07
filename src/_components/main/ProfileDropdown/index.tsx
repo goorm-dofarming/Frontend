@@ -16,7 +16,12 @@ import { hideHomeIcons, showHomeIcons } from '@/src/_styles/keyframes';
 
 // atoms
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { alarmState, userState, pageState,randomPinState } from '@/src/atom/stats';
+import {
+  alarmState,
+  userState,
+  pageState,
+  randomPinState,
+} from '@/src/atom/stats';
 
 // components
 import Modal from '../../Common/Modal';
@@ -24,7 +29,7 @@ import EditUser from '../modal/EditUser';
 
 // api
 import { modifyUser } from '@/pages/api/user';
-import { useCookies } from "react-cookie";
+import { useCookies } from 'react-cookie';
 
 const IconContainer = styled.div<{
   dropdown: string;
@@ -96,10 +101,10 @@ const ProfileDropdown = ({
   setFold: React.Dispatch<React.SetStateAction<boolean>>;
   setPage: React.Dispatch<React.SetStateAction<string>>;
   refetchUser: () => void;
-  openToast?:()=>void;
+  openToast?: () => void;
 }) => {
-  const [cookies,setCookie, removeCookie] = useCookies(["token"]);
-  const [user,setUser] = useRecoilState(userState);
+  const [cookies, setCookie, removeCookie] = useCookies(['token']);
+  const [user, setUser] = useRecoilState(userState);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const showDropdown = useToggle(dropdown, setDropdown);
   const [alarm, setAlarm] = useRecoilState(alarmState);
@@ -109,36 +114,33 @@ const ProfileDropdown = ({
   const [modal, setModal] = useState<boolean>(false);
   const openModal = useToggle(modal, setModal);
   const handleLogout = () => {
-    removeCookie('token', { path: '/',
-      secure: true,
-   sameSite: 'none',
-     }); // path 설정 추가
-    
-    setUser({ userId: 0, email: "", nickname: "", imageUrl: "", role: "" });
-    setPage("home");
+    removeCookie('token', { path: '/', secure: true, sameSite: 'none' }); // path 설정 추가
+
+    setUser({ userId: 0, email: '', nickname: '', imageUrl: '', role: '' });
+    setPage('home');
     setRandomPin({
-      address: "",
+      address: '',
       lat: 0,
       lng: 0,
-      latDMS: "",
-      lngDMS: "",
-      theme: "Random",
+      latDMS: '',
+      lngDMS: '',
+      theme: 'Random',
       logId: 0,
       recommends: [],
-    })
+    });
     console.log(cookies);
   };
 
   const onClick = (id: string) => {
-    if(id==="logout"){
+    if (id === 'logout') {
       handleLogout();
       return;
     }
     if (id === 'settings') {
       openModal();
     } else {
-      if(randomPin.logId===0 && (id==="map" || id==="log")){
-        if(openToast){
+      if (randomPin.logId === 0 && (id === 'map' || id === 'log')) {
+        if (openToast) {
           openToast();
         }
         return;
@@ -219,22 +221,25 @@ const ProfileDropdown = ({
           style={{ objectFit: 'cover' }}
         />
       </div>
-      <div className="iconCol">
-        {homeDropdown.map((item, i) => {
-          const IconComponent = item.img;
-          return (
-            <div key={i} className="iconBg">
-              {item.id === 'chat' && alarm && <span className="alarm" />}
-              <IconComponent
-                className="icons"
-                size={25}
-                color={colorTheme.primary}
-                onClick={() => onClick(item.id)}
-              />
-            </div>
-          );
-        })}
-      </div>
+      {page === 'home' && (
+        <div className="iconCol">
+          {homeDropdown.map((item, i) => {
+            const IconComponent = item.img;
+            return (
+              <div key={i} className="iconBg">
+                {item.id === 'chat' && alarm && <span className="alarm" />}
+                <IconComponent
+                  className="icons"
+                  size={25}
+                  color={colorTheme.primary}
+                  onClick={() => onClick(item.id)}
+                />
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       <Modal openModal={openModal} modal={modal} width="35rem" height="40rem">
         <EditUser
           openModal={openModal}

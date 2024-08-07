@@ -48,11 +48,11 @@ const Container = styled.div`
     width: 100%;
     height: 140px;
     @media (max-width: 1680px) {
-              height: 240px;
-            }
-            @media (max-width: 960px) {
-              height: 340px;
-      }
+      height: 240px;
+    }
+    @media (max-width: 960px) {
+      height: 340px;
+    }
     > .title {
       width: 100%;
       font-size: 32px;
@@ -63,10 +63,10 @@ const Container = styled.div`
       display: flex;
       justify-content: space-between;
       @media (max-width: 1440px) {
-        height:200px;
+        height: 200px;
       }
       @media (max-width: 960px) {
-        height:300px;
+        height: 300px;
       }
       .chips {
         width: 100%;
@@ -92,18 +92,16 @@ const Container = styled.div`
             height: 40px;
             /* flex-wrap:wrap; */
             @media (max-width: 1680px) {
-              flex-wrap:wrap;
+              flex-wrap: wrap;
               height: 80px;
             }
             @media (max-width: 1680px) {
-              flex-wrap:wrap;
+              flex-wrap: wrap;
               height: 120px;
             }
-        
-            
           }
           .likeInput {
-            height:40px;
+            height: 40px;
             z-index: 10;
             padding: 4px 8px;
             border: 1px solid ${colorTheme.secondary};
@@ -143,10 +141,19 @@ const Container = styled.div`
     max-height: 80vh;
     @media (max-width: 1680px) {
       height: calc(100vh - 280px);
-            }
-            @media (max-width: 960px) {
-              height: calc(100vh - 480px);
-      }
+    }
+    @media (max-width: 960px) {
+      height: calc(100vh - 480px);
+    }
+
+    &::-webkit-scrollbar {
+      width: 5px; /* 스크롤바 너비 */
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: ${colorTheme.secondary}; /* 스크롤바 색상 */
+      border-radius: 6px; /* 스크롤바 모서리 둥글게 */
+    }
   }
   .empty {
     width: 100%;

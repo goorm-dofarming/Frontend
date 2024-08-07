@@ -100,7 +100,7 @@ const Log = () => {
     mutationFn: async (logId: number) => {
       if(logId===0){ return [];}
       const response = await getLogData(logId);
-      console.log("hi", logId);
+       //console.log("hi", logId);
       // console.log('get log data!!', response.data);
       // console.log(response);
       
@@ -143,10 +143,10 @@ const Log = () => {
     // script.async = true;
     script.id = 'kakao_sdk_script';
 
-    const prev=document.getElementById('kakao_sdk_script');
-    if (prev===null) {
+    const prev = document.getElementById('kakao_sdk_script');
+    if (prev === null) {
       document.head.appendChild(script);
-    }else{
+    } else {
       document.head.removeChild(prev);
       document.head.appendChild(script);
     }
@@ -164,14 +164,14 @@ const Log = () => {
         let map:any;
 
         if ( containerRef.current !== null && kakaoMap === null) {
-          console.log("null!!!!!!!");
+            //console.log("null!!!!!!!");
           const mapContainer = document.getElementById('logMapContainer');
           map = new window.kakao.maps.Map(mapContainer, options);
           map.setMaxLevel(13);
           
         }else{
           map=kakaoMap;
-          console.log("nullXXXXXXXX!!!!!!!");
+          //console.log("nullXXXXXXXX!!!!!!!");
         }
         
         if (!window.kakao.maps.MarkerClusterer) {
@@ -184,7 +184,6 @@ const Log = () => {
           averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
           minLevel: 5, // 클러스터 할 최소 지도 레벨
           ...clustererStyle,
-          
         });
 
         const imageSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/pin/pin_location.png`;
