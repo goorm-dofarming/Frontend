@@ -11,7 +11,7 @@ import useToggle from '@/src/hooks/Home/useToggle';
 import Toast from '@/src/_components/Common/Toast';
 import { getLog, getLogData } from '@/pages/api/log';
 import { decimalToDMS } from '../RandomPin/util';
-const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=services`;
+const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=clusterer`;
 
 const Map = () => {
   const [page, setPage] = useRecoilState(pageState);
@@ -115,14 +115,12 @@ const Map = () => {
     script.src = KAKAO_SDK_URL;
     script.id="kakao_sdk_script"
     // document.head.appendChild(script);
-    if(!document.querySelector("#kakao_sdk_script")){
+    const prev=document.getElementById('kakao_sdk_script');
+    if (prev===null) {
       document.head.appendChild(script);
     }else{
-      const prev = document.querySelector("#kakao_sdk_script");
-      if(prev){
-        document.head.removeChild(prev);
-        document.head.appendChild(script);
-      }
+      document.head.removeChild(prev);
+      document.head.appendChild(script);
     }
     const onLoadKakaoMap  = () => {
       window.kakao.maps.load(() => {

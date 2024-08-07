@@ -23,7 +23,7 @@ import useToggle from '@/src/hooks/Home/useToggle';
 import Modal from '../Common/Modal';
 import PlaceInfo from './modal/review/PlaceInfo';
 
-const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=services,clusterer`;
+const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=clusterer`;
 
 const Log = () => {
   // 위치 이동
@@ -124,17 +124,15 @@ const Log = () => {
     // document.cookie = 'username=dofarming; SameSite=Strict; Secure';
     const script = document.createElement('script');
     script.src = KAKAO_SDK_URL;
-    script.async = true;
+    // script.async = true;
     script.id = 'kakao_sdk_script';
 
-    if (!document.querySelector('#kakao_sdk_script')) {
+    const prev=document.getElementById('kakao_sdk_script');
+    if (prev===null) {
       document.head.appendChild(script);
-    } else {
-      const prev = document.querySelector('#kakao_sdk_script');
-      if (prev) {
-        document.head.removeChild(prev);
-        document.head.appendChild(script);
-      }
+    }else{
+      document.head.removeChild(prev);
+      document.head.appendChild(script);
     }
     const onLoadKakaoMap = () => {
       window.kakao.maps.load(() => {
