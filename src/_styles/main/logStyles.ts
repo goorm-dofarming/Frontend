@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { colorTheme } from "../common/commonColorStyles";
+import styled from 'styled-components';
+import { colorTheme } from '../common/commonColorStyles';
 
 export const LogContainer = styled.div`
   flex: 1;
@@ -51,18 +51,33 @@ export const LogContainer = styled.div`
     margin-bottom: 0.2rem;
     padding: 0.5rem;
     margin-bottom: 0.2rem;
+    cursor: pointer;
 
     &:hover {
-      border-radius: 0.5rem;
+      transition: 0.3s background-color ease-in-out;
+      border-radius: 0.3rem;
       background-color: ${colorTheme.teritiary};
       color: white;
     }
+  }
+  .log_selected {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 0.2rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 0.3rem;
+    background-color: ${colorTheme.teritiary};
+    color: white;
   }
   .logDate {
     font-size: 1rem;
     font-weight: 400;
     width: 100%;
-    font-family: "RedHatDisplay_Variable";
+    font-family: 'RedHatDisplay_Variable';
   }
   .logAddress {
     width: 100%;

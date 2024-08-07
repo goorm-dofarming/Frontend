@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { pageState, randomPinState, userState } from '@/src/atom/stats';
 import { useRecoilState } from 'recoil';
 import { DataType, Recommend, RandomPinType } from '@/src/types/aboutMap';
-import { makeCustomOverlay, makeInfoWindow } from './utils';
+import { makeCustomOverlay, makeInfoWindow, makeShareWindow } from './utils';
 import Modal from '../../Common/Modal';
 import PlaceInfo from '../modal/review/PlaceInfo';
 import useToggle from '@/src/hooks/Home/useToggle';
@@ -34,6 +34,8 @@ const Map = () => {
     null
   );
 
+  const [isKakaoInitialized, setIsKakaoInitialized] = useState(false);
+
   const refetch = async () => {
     //after like button click
     const logResponse = await getLogData(randomPin.logId);
@@ -59,6 +61,15 @@ const Map = () => {
       openModal();
     }, 1000);
   };
+
+  const onClickKakaoButton = () => {
+    if (user.userId === 0) {
+      openToast();
+      return;
+    }
+    makeShareWindow();
+  };
+
   const setInitial = async () => {
     const response = await getLog();
     // console.log("get logs", response.data);
@@ -97,6 +108,7 @@ const Map = () => {
       setInitial();
     }
   }, [randomPin]);
+
   useEffect(() => {
     document.cookie = 'username=dofarming; SameSite=Strict; Secure';
     const script = document.createElement('script');
@@ -144,7 +156,7 @@ const Map = () => {
           ?.addEventListener('click', onClickShareBtn);
         content
           .querySelector('#share-kakaotalk')
-          ?.addEventListener('click', onClickShareBtn);
+          ?.addEventListener('click', onClickKakaoButton);
 
         const customOverlay = new window.kakao.maps.CustomOverlay({
           // map: map,

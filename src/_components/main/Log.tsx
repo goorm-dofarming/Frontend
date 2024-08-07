@@ -1,26 +1,30 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 
 // styles
-import { LogContainer } from "@/src/_styles/main/logStyles";
+import { LogContainer } from '@/src/_styles/main/logStyles';
 
 // libraries
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { logEntireData, pageState } from "@/src/atom/stats";
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { logEntireData, pageState } from '@/src/atom/stats';
 
 // types
-import { logDataType, recommendsType } from "@/src/types/aboutLog";
+import { logDataType, recommendsType } from '@/src/types/aboutLog';
 
 // img
-import Card from "../Common/Card";
+import Card from '../Common/Card';
 
 // apis
-import { getLog, getLogData } from "@/pages/api/log";
-import { StaticImageData } from "next/image";
-import { pinType } from "@/src/constatns/PinSort";
-import { makeInfoWindow } from "./Map/utils";
+import { getLog, getLogData } from '@/pages/api/log';
+import { StaticImageData } from 'next/image';
+import { pinType } from '@/src/constatns/PinSort';
+import { makeInfoWindow } from './Map/utils';
+import useToggle from '@/src/hooks/Home/useToggle';
+import Modal from '../Common/Modal';
+import PlaceInfo from './modal/review/PlaceInfo';
 
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=clusterer`;
+
 const Log = () => {
   // 위치 이동
   const [location, setLocation] = useState({
@@ -28,8 +32,10 @@ const Log = () => {
     longitude: 128.25, // default longitude
     level: 13, // 14 레벨부터 지도가 끊김
   });
-  // 페이지 이동 감지
-  const page = useRecoilValue(pageState);
+
+  // 클릭된 로그 판별
+  const [selectedLogIndex, setSelectedLogIndex] = useState<number | null>(null);
+
   // kakao map dom 컨트롤
   const containerRef = useRef<HTMLElement>(null);
 
@@ -40,21 +46,32 @@ const Log = () => {
   const [selectedLogData, setSelectedLogData] = useState<recommendsType[]>([
     // {
     //   locationId: 0,
-    //   title: "",
-    //   addr: "",
+    //   title: '',
+    //   addr: '',
     //   dataType: 1,
-    //   tel: "",
-    //   image: "",
+    //   tel: '',
+    //   image: '',
     //   mapX: 0,
     //   mapY: 0,
     //   countLikes: 0,
     //   liked: false,
+    //   averageScore: '',
+    //   totalReview: 0,
+    //   isReviewed: false,
     // },
   ]);
 
+  // 로그 아이디
+  const [logId, setLogId] = useState<number>(0);
+
+  // 카드 클릭 시 정보 모달
+  const [modal, setModal] = useState<boolean>(false);
+  const openModal = useToggle(modal, setModal);
+  const [selectedLocationId, setSelectedLocationId] = useState<number>(0);
+
   // 전체 로그 데이터 불러오기
   const getLogs = useQuery({
-    queryKey: ["getLogs"],
+    queryKey: ['getLogs'],
     queryFn: async () => {
       const response = await getLog();
       // console.log("get logs", response.data);
@@ -69,7 +86,7 @@ const Log = () => {
   const getLogSubData = useMutation({
     mutationFn: async (logId: number) => {
       const response = await getLogData(logId);
-      // console.log("get log data!!", response.data);
+      console.log('get log data!!', response.data);
       // console.log(response);
       return response.data.recommendations;
     },
@@ -80,7 +97,7 @@ const Log = () => {
 
   // 이미지 URL을 문자열로 변환하는 함수
   const getImageSrc = (img: StaticImageData | string): string => {
-    if (typeof img === "string") {
+    if (typeof img === 'string') {
       return img;
     } else {
       return img.src;
@@ -90,7 +107,13 @@ const Log = () => {
   // 종류에 따른 핀 설정
   const sortingPins = (dataType: number): string => {
     const pin = pinType.find((type) => type.dataType === dataType);
-    return pin ? getImageSrc(pin.img) : "null";
+    return pin ? getImageSrc(pin.img) : 'null';
+  };
+
+  // 카드 클릭 시 정보 모달
+  const onClickCard = (locationId: number) => {
+    setSelectedLocationId(locationId);
+    openModal();
   };
 
   useEffect(() => {
@@ -98,8 +121,8 @@ const Log = () => {
   }, []);
 
   useEffect(() => {
-    document.cookie = "username=dofarming; SameSite=Strict; Secure";
-    const script = document.createElement("script");
+    document.cookie = 'username=dofarming; SameSite=Strict; Secure';
+    const script = document.createElement('script');
     script.src = KAKAO_SDK_URL;
     script.id="kakao_sdk_script"
     
@@ -162,13 +185,13 @@ const Log = () => {
 
           window.kakao.maps.event.addListener(
             marker,
-            "click",
+            'click',
             makeClickListener(logData[i])
           );
         }
 
         // 지도의 확대/축소 레벨을 제한하는 함수 추가
-        window.kakao.maps.event.addListener(map, "zoom_changed", function () {
+        window.kakao.maps.event.addListener(map, 'zoom_changed', function () {
           var level = map.getLevel();
           if (level > 13) {
             map.setLevel(13);
@@ -219,7 +242,7 @@ const Log = () => {
 
           let infowindowVisible = false; // 인포윈도우 표시 상태를 추적하는 변수
 
-          window.kakao.maps.event.addListener(marker, "click", () => {
+          window.kakao.maps.event.addListener(marker, 'click', () => {
             if (infowindowVisible) {
               infowindow.setMap(null); // 인포윈도우 숨기기
               infowindowVisible = false;
@@ -247,7 +270,6 @@ const Log = () => {
     script.addEventListener('load', onLoadKakaoMap);
   }, [selectedLogData, logData, location]);
 
-
   return (
     <LogContainer>
       <div className="logContainer">
@@ -257,7 +279,7 @@ const Log = () => {
         {logData.map((data, i) => (
           <div
             key={i}
-            style={{ marginBottom: "0.4rem" }}
+            style={{ marginBottom: '0.4rem' }}
             onClick={() => {
               getLogSubData.mutate(data.logId);
               setLocation({
@@ -265,10 +287,14 @@ const Log = () => {
                 longitude: Number(data.longitude),
                 level: 8,
               });
+              setSelectedLogIndex(i);
+              setLogId(data.logId);
             }}
           >
-            <div className="log">
-              <div className="logDate">{data.createdAt.split("T")[0]}</div>
+            <div
+              className={`${selectedLogIndex === i ? 'log_selected' : 'log'}`}
+            >
+              <div className="logDate">{data.createdAt.split('T')[0]}</div>
               <div className="logAddress">{data.address}</div>
               <div className="logTheme">{data.theme}</div>
             </div>
@@ -286,11 +312,22 @@ const Log = () => {
           {selectedLogData.length > 0 &&
             selectedLogData.map((recommend, i) => (
               <div key={i} className="Container">
-                <Card recommend={recommend} />
+                <Card
+                  recommend={recommend}
+                  refetch={() => getLogSubData.mutate(logId)}
+                  onClick={() => onClickCard(recommend.locationId)}
+                />
               </div>
             ))}
         </main>
       </div>
+      <Modal openModal={openModal} modal={modal} width="51rem" height="46rem">
+        <PlaceInfo
+          openModal={openModal}
+          locationId={selectedLocationId}
+          refetch={() => getLogSubData.mutate(logId)}
+        />
+      </Modal>
     </LogContainer>
   );
 };

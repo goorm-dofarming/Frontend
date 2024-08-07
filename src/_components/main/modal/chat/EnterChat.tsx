@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '@/src/_components/main/modal/chat/smallmodal.module.scss';
+import styles from '@/src/_components/main/modal/smallmodal.module.scss';
 
 // types
 import { Chat } from '@/src/types/aboutChat';

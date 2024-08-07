@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from '@/src/_components/main/modal/review/placeinfo.module.scss';
 import Image from 'next/image';
 import cx from 'classnames';
@@ -10,10 +10,11 @@ import mainLogo from '@/src/_assets/icons/main_logo.png';
 // components
 import Modal from '@/src/_components/Common/Modal';
 import MakeReview from './MakeReview';
-import StarScore from './Star';
+import StarScore from './component/Star';
 import ChatLoader from '@/src/_components/Common/ChatLoader';
 import Landing from '@/src/_components/Common/Landing';
 import Toast from '@/src/_components/Common/Toast';
+import ReviewComponent from './component/ReviewComponent';
 
 // hooks
 import useToggle from '@/src/hooks/Home/useToggle';
@@ -25,10 +26,12 @@ import { LocationInfo, Review } from '@/src/types/aboutReview';
 import axios from 'axios';
 import {
   deleteImage,
+  deleteReview,
   getLocationData,
   getMyReview,
   getReviewData,
   makeReview,
+  setReviewLike,
   updateReview,
 } from '@/pages/api/review';
 import { modifyLike } from '@/pages/api/map';
@@ -36,7 +39,6 @@ import { modifyLike } from '@/pages/api/map';
 // atoms
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/src/atom/stats';
-import ReviewComponent from './ReviewComponent';
 
 interface PlaceInfoProps {
   openModal: () => void;
@@ -73,10 +75,13 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
   const [reviews, setReviews] = useState<Review[]>([]);
   const [selectedSort, setSelectedSort] = useState<number>(0);
   const [reviewLoading, setReviewLoading] = useState<boolean>(false);
+  const [reviewFetchLoading, setReviewFetchLoading] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
   const [toast, setToast] = useState<boolean>(false);
   const openToast = useToggle(toast, setToast);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [hasMore, setHasMore] = useState<boolean>(true);
 
   const getLocation = async () => {
     try {
@@ -152,8 +157,42 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
     }
   };
 
+  const getMoreReviews = async () => {
+    const params = {
+      locationId,
+      reviewId: reviews[reviews.length - 1].reviewId,
+      createdAt: reviews[reviews.length - 1].createdAt,
+      sortType: sortTypes[selectedSort],
+    };
+
+    if (locationId === 0 || locationId === undefined) return;
+
+    try {
+      setReviewFetchLoading(true);
+      const response = await getReviewData(params);
+      console.log(response);
+      if (response.length > 0) {
+        const newReviews: Review[] = response;
+        setReviews((prev) => [...prev, ...newReviews]);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(error);
+      } else {
+        console.error('Unexpected error:', error);
+      }
+    } finally {
+      setReviewFetchLoading(false);
+    }
+  };
+
   const onClickSort = (number: number) => {
     setSelectedSort(number);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
   };
 
   const onClickLike = async (e: React.MouseEvent<HTMLDivElement>) => {
@@ -184,13 +223,50 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
     openReview();
   };
 
+  const onClickReviewLike = async (reviewId: number) => {
+    if (!user.userId) {
+      openToast();
+      return;
+    }
+    await setReviewLike(reviewId);
+    getReviews();
+  };
+
   useEffect(() => {
     getLocation();
   }, [locationId, openModal]);
 
   useEffect(() => {
+    setHasMore(true);
     getReviews();
   }, [selectedSort, locationId]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const currentScrollRef = scrollRef.current;
+
+    const handleScroll = () => {
+      if (currentScrollRef) {
+        const { scrollTop, scrollHeight, clientHeight } = currentScrollRef;
+        if (scrollTop + clientHeight >= scrollHeight - 1) {
+          if (isMounted && !reviewLoading && hasMore) {
+            getMoreReviews();
+          }
+        }
+      }
+    };
+
+    if (currentScrollRef) {
+      currentScrollRef.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      if (currentScrollRef) {
+        currentScrollRef.removeEventListener('scroll', handleScroll);
+      }
+      isMounted = false;
+    };
+  }, [reviewFetchLoading, hasMore, getMoreReviews]);
 
   const handleMakeReview = async (
     score: number,
@@ -212,9 +288,7 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
       images.forEach((image) => formData.append('files', image));
     }
     try {
-      console.log('make review');
       await makeReview(formData);
-      console.log('complete');
       getLocation();
       getReviews();
     } catch (error) {
@@ -240,7 +314,6 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
         try {
           const response = await deleteImage(imageId);
           console.log(response);
-          console.log('이미지 삭제 성공');
         } catch (error) {
           if (axios.isAxiosError(error)) {
             console.error('Axios error:', error);
@@ -261,12 +334,25 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
       new Blob([JSON.stringify(reviewRequest)], { type: 'application/json' })
     );
     if (images.length > 0) {
-      console.log('이미지 추가 할거임');
       images.forEach((image) => formData.append('files', image));
     }
     try {
       await updateReview(formData, reviewId);
       setIsUpdate(false);
+      getLocation();
+      getReviews();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error:', error);
+      } else {
+        console.error('Unexpected error:', error);
+      }
+    }
+  };
+
+  const handleDeleteReview = async (reviewId: number) => {
+    try {
+      await deleteReview(reviewId);
       getLocation();
       getReviews();
     } catch (error) {
@@ -315,9 +401,9 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
                       { [styles.inactive]: !location?.liked }
                     )}
                   >
-                    <IoHeartSharp size={'1.5rem'} className={styles.heart} />
+                    <IoHeartSharp size={'30px'} className={styles.heart} />
                   </div>
-                  {location?.countLikes}
+                  X {location?.countLikes}
                 </div>
               </div>
               <div className={styles.address}>{location?.addr}</div>
@@ -327,9 +413,13 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
             </div>
             {location?.totalReview && location?.totalReview > 0 ? (
               <div className={styles.rightSection}>
-                <div className={styles.titleText2}>평점</div>
-                <div className={styles.gradeText}>
-                  {Math.round(location?.averageScore * 10) / 10}
+                <div className={styles.scoreContainer}>
+                  <div className={styles.titleText2}>
+                    평점 {Math.round(location?.averageScore * 10) / 10}
+                  </div>
+                  <div className={styles.gradeText}>
+                    {`리뷰 ${location.totalReview}개`}
+                  </div>
                 </div>
                 <div className={styles.stars}>
                   <StarScore
@@ -338,7 +428,7 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
                         ? Math.round(location.averageScore * 10) / 10
                         : 0
                     }
-                    size={3}
+                    size={2.5}
                   />
                 </div>
               </div>
@@ -382,12 +472,14 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
                 <ChatLoader />
               </div>
             ) : (
-              <div className={styles.reviewArea}>
+              <div className={styles.reviewArea} ref={scrollRef}>
                 {myReview && (
                   <ReviewComponent
                     review={myReview}
                     isMine={true}
                     onClickUpdate={onClickUpdate}
+                    onDeleteReview={handleDeleteReview}
+                    onClickReviewLike={onClickReviewLike}
                   />
                 )}
                 {reviews.length > 0 ? (
@@ -397,6 +489,8 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
                       review={review}
                       isMine={false}
                       onClickUpdate={onClickUpdate}
+                      onDeleteReview={handleDeleteReview}
+                      onClickReviewLike={onClickReviewLike}
                     />
                   ))
                 ) : myReview ? (
@@ -405,6 +499,11 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
                   <div className={styles.loader}>
                     작성된 리뷰가 없습니다.
                     <br /> 장소를 방문하셨다면 리뷰를 남겨보세요 !
+                  </div>
+                )}
+                {reviewFetchLoading && (
+                  <div className={styles.overContainer}>
+                    <ChatLoader />
                   </div>
                 )}
               </div>

@@ -1,7 +1,7 @@
 import { getLikeList } from '@/pages/api/map';
 import { Recommend } from '@/src/types/aboutMap';
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Card from '@/src/_components/Common/Card';
 import Landing from '@/src/_components/Common/Landing';
@@ -112,7 +112,6 @@ const Container = styled.div`
             justify-content: space-between;
             align-items: center;
             gap: 8px;
-
             > .icon {
               cursor: pointer;
               background: none;
@@ -135,7 +134,6 @@ const Container = styled.div`
   }
   .likes {
     width: 100%;
-    /* height:100%; */
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 32px;
@@ -205,7 +203,7 @@ const Likes = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const observerTargetRef = useRef<HTMLDivElement | null>(null);
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
@@ -232,7 +230,7 @@ const Likes = () => {
     }
   }, [data, loadInfo, hasNextPage]);
   const onScroll = useCallback(
-    debounce((event:any) => {
+    debounce((event: any) => {
       const { scrollTop, scrollHeight, clientHeight } = event.target;
 
       if (scrollHeight - scrollTop <= clientHeight + 100 && hasNextPage) {

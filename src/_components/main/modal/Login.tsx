@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 // img
-import ShowPwd from "@/src/_assets/main/eye.svg";
-import HidePwd from "@/src/_assets/main/eye-closed.svg";
-import KakaoLogo from "@/src/_assets/main/kakao.svg";
-import NaverLogo from "@/src/_assets/main/N.svg";
-import { FcGoogle } from "react-icons/fc";
+import ShowPwd from '@/src/_assets/main/eye.svg';
+import HidePwd from '@/src/_assets/main/eye-closed.svg';
+import { FcGoogle } from 'react-icons/fc';
 
 //styles
 import {
@@ -13,26 +11,25 @@ import {
   KakaoButton,
   ModalLoginButton,
   NaverButton,
-} from "@/src/_styles/common/buttons";
-import { InputLoginBorder, InputPwdBorder } from "@/src/_styles/common/inputs";
-import { RiKakaoTalkFill } from "react-icons/ri";
-import { SiNaver } from "react-icons/si";
+} from '@/src/_styles/common/buttons';
+import { InputLoginBorder, InputPwdBorder } from '@/src/_styles/common/inputs';
+import { RiKakaoTalkFill } from 'react-icons/ri';
+import { SiNaver } from 'react-icons/si';
+
 // libraries
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { useCookies } from "react-cookie";
-import { useGoogleLogin } from "@react-oauth/google";
+import { useMutation } from '@tanstack/react-query';
+import { useCookies } from 'react-cookie';
+import { useGoogleLogin } from '@react-oauth/google';
 
 // types
-import { inputDataType } from "@/src/types/aboutMain";
+import { inputDataType } from '@/src/types/aboutMain';
 
 // hooks
-import useKaKaoLogin from "@/src/hooks/Home/useKaKaoLogin";
-import useNaverLogin from "@/src/hooks/Home/useNaverLogin";
+import useKaKaoLogin from '@/src/hooks/Home/useKaKaoLogin';
+import useNaverLogin from '@/src/hooks/Home/useNaverLogin';
 
 // apis
-import { getGoogleUserData, login, signupSocialLogin } from "@/pages/api/auth";
-import cx from "classnames";
+import { getGoogleUserData, login, signupSocialLogin } from '@/pages/api/auth';
 interface LoginType {
   inputData: inputDataType;
   pwdShow: boolean;
@@ -41,7 +38,7 @@ interface LoginType {
   handleComponent: () => void;
   openModal: () => void;
 }
-type ChangingType = "email" | "password";
+type ChangingType = 'email' | 'password';
 const Login = ({
   inputData,
   pwdShow,
@@ -50,14 +47,14 @@ const Login = ({
   handleComponent,
   openModal,
 }: LoginType) => {
-  const [, setCookies] = useCookies(["token"]);
+  const [, setCookies] = useCookies(['token']);
   // 구글 로그인 토큰
-  const [gToken, setGToken] = useState<string>("");
+  const [gToken, setGToken] = useState<string>('');
   const { email, password } = inputData;
   const [ischanging, setIsChanging] = useState<ChangingType | null>(null);
 
   const doLogin = useMutation({
-    mutationKey: ["login"],
+    mutationKey: ['login'],
     mutationFn: async () => {
       const body = {
         email,
@@ -70,7 +67,7 @@ const Login = ({
 
       if (response.status === 200) {
         // 성공 시 cookie에 token 추가
-        setCookies("token", response.data);
+        setCookies('token', response.data);
         openModal();
       }
     },
@@ -90,11 +87,11 @@ const Login = ({
 
       setGToken(tokenResponse.access_token);
     },
-    onError: (errorResponse) => console.log("Error: ", errorResponse),
+    onError: (errorResponse) => console.log('Error: ', errorResponse),
   });
 
   const googleLogin = useMutation({
-    mutationKey: ["googleLogin"],
+    mutationKey: ['googleLogin'],
     mutationFn: async () => {
       const headers = {
         Authorization: `Bearer ${gToken}`,
@@ -103,7 +100,7 @@ const Login = ({
       // console.log("userResponse:", userResponse);
 
       const body = {
-        socialType: "GOOGLE",
+        socialType: 'GOOGLE',
         data: userResponse.data,
       };
 
@@ -121,10 +118,9 @@ const Login = ({
       return signupGoogle.data;
     },
     onError: (error) => {
-      console.error("Error fetching access token:", error);
+      console.error('Error fetching access token:', error);
     },
   });
-
   const KakaoLogin = () => {
     const kLogin = useKaKaoLogin();
     kLogin();
@@ -138,15 +134,15 @@ const Login = ({
   }, [gToken]);
   /* eslint-enable react-hooks/exhaustive-deps */
   return (
-    <div className="modalContents" style={{ gap: "16px" }}>
+    <div className="modalContents" style={{ gap: '16px' }}>
       <InputLoginBorder ischanging={ischanging}>
         <div
           style={{
-            width: "90%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            gap: "4px",
+            width: '90%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: '4px',
           }}
           // className={ischanging === "email" ? "activeInput" : ""}
         >
@@ -156,7 +152,7 @@ const Login = ({
               name="email"
               onChange={(e) => {
                 handleInputData(e.target.name, e.target.value);
-                setIsChanging("email");
+                setIsChanging('email');
               }}
               onBlur={() => setIsChanging(null)}
             />
@@ -166,21 +162,21 @@ const Login = ({
       <InputPwdBorder ischanging={ischanging}>
         <div
           style={{
-            width: "90%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            gap: "4px",
+            width: '90%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: '4px',
           }}
         >
           <div className="inputInMent">Password</div>
           <div className="inputRow">
             <input
-              type={pwdShow === true ? "text" : "password"}
+              type={pwdShow === true ? 'text' : 'password'}
               name="password"
               onChange={(e) => {
                 handleInputData(e.target.name, e.target.value);
-                setIsChanging("password");
+                setIsChanging('password');
               }}
               onBlur={() => setIsChanging(null)}
             />
@@ -192,7 +188,7 @@ const Login = ({
           width={30}
           height={30}
           onClick={handlePwd}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: 'pointer' }}
         />
       </InputPwdBorder>
       <ModalLoginButton onClick={() => doLogin.mutate()}>
@@ -230,7 +226,7 @@ const Login = ({
           <span></span>
         </GoogleButton>
       </div>
-      <div style={{ paddingTop: "1rem" }}>
+      <div style={{ paddingTop: '1rem' }}>
         <span className="ment">아직 회원이 아니신가요?</span>
         <span className="ment2" onClick={handleComponent}>
           회원가입

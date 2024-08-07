@@ -13,6 +13,7 @@ import Toast from "@/src/_components/Common/Toast";
 import { modifyLike } from "@/pages/api/map";
 import { FaStar } from "react-icons/fa";
 
+
 const Container = styled.div`
   padding: 8px 4px;
   width: 300px;
@@ -171,9 +172,9 @@ const Likes = styled.div`
 `;
 const formatNumber = (num: number) => {
   if (num >= 1e6) {
-    return (num / 1e6).toFixed(1) + "M";
+    return (num / 1e6).toFixed(1) + 'M';
   } else if (num >= 1e3) {
-    return (num / 1e3).toFixed(1) + "K";
+    return (num / 1e3).toFixed(1) + 'K';
   } else {
     return num.toString();
   }
@@ -228,7 +229,7 @@ const Card = ({
           <span className="title">{title}</span>
           <div className="type">{DataType[dataType].type}</div>
           <div className="address">{addr}</div>
-          <div className="phone">{`☎️: ${tel || "준비중"} `}</div>
+          <div className="phone">{`☎️: ${tel || '준비중'} `}</div>
         </Description>
       <div className="btns">
         <Star>
@@ -250,9 +251,9 @@ const Card = ({
           </Likes>
       </div>
       </Info>
-      {user.userId===0 && (
+      {user.userId === 0 && (
         <Toast
-          content={"로그인하여 더 많은 기능을 이용해 보세요 !"}
+          content={'로그인하여 더 많은 기능을 이용해 보세요 !'}
           toast={toast}
           openToast={openToast}
         />

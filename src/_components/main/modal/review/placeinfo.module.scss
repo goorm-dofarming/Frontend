@@ -18,7 +18,7 @@
   .locationImg {
     position: relative;
     width: 100%;
-    height: 30%;
+    height: 33%;
     border-radius: 0.5rem 0.5rem 0 0;
     background-size: cover;
     background-position: center;
@@ -28,27 +28,28 @@
   .infoContainer {
     @include m.flex(space-between, center, row);
     width: 100%;
-    height: 20%;
+    height: 17%;
 
     .leftSection {
       @include m.flex(space-between, flex-start, column);
       font-weight: 600;
-      font-size: 1.2rem;
+      font-size: 1rem;
       padding: 0.5rem;
-      gap: 1rem;
+      gap: 0.5rem;
 
       .title {
         @include m.flex(space-between, center, row);
         gap: 1rem;
 
         .titleText1 {
-          font-size: 2rem;
+          font-size: 1.5rem;
           font-weight: 900;
         }
 
         .liked {
-          @include m.flex(flex-start, center, column);
-          font-size: 0.8rem;
+          @include m.flex(flex-start, center, row);
+          font-size: 1rem;
+          gap: 0.2rem;
 
           .heartBtn {
             width: 30px;
@@ -86,6 +87,11 @@
           }
         }
       }
+
+      .address,
+      .telephone {
+        color: c.$C_BORDER_INPUT;
+      }
     }
 
     .rightSection {
@@ -95,13 +101,26 @@
       font-weight: 600;
       gap: 0.2rem;
 
+      .scoreContainer {
+        @include m.flex(space-between, center, row);
+        width: 100%;
+
+        .titleText2 {
+          font-weight: 900;
+        }
+
+        .gradeText {
+          font-size: 1rem;
+          color: c.$C_BORDER_INPUT;
+        }
+      }
+
       .titleText2 {
-        font-size: 1.5rem;
         font-weight: 900;
       }
 
       .gradeText {
-        padding-left: 0.2rem;
+        font-size: 1rem;
         color: c.$C_BORDER_INPUT;
       }
     }
@@ -116,12 +135,13 @@
     .buttonArea {
       @include m.flex(flex-start, flex-start, column);
       width: 98%;
-      padding: 1rem 1rem 0.5rem;
+      padding: 0.8rem 0rem;
+      border-top: 1px solid c.$C_DIVIDER;
       border-bottom: 1px solid c.$C_DIVIDER;
       gap: 0.5rem;
 
       .titleText {
-        font-size: 1.2rem;
+        font-size: 1rem;
         font-weight: 100;
       }
 
@@ -139,7 +159,7 @@
             border: 1.5px solid c.$C_BORDER_INPUT;
             border-radius: 20px;
             color: c.$C_BORDER_INPUT;
-            padding: 0.4rem 0.8rem;
+            padding: 0.3rem 0.6rem;
             transition:
               background-color,
               color 0.3s ease-in-out;
@@ -161,7 +181,7 @@
           border: 1.5px solid c.$C_BORDER_GRAY;
           color: c.$C_BORDER_GRAY;
           border-radius: 20px;
-          padding: 0.4rem 0.8rem;
+          padding: 0.3rem 0.6rem;
         }
 
         .reviewBtn {
@@ -169,7 +189,7 @@
           border: 1.5px solid c.$C_SECONDARY;
           border-radius: 20px;
           color: c.$C_SECONDARY;
-          padding: 0.4rem 0.8rem;
+          padding: 0.3rem 0.6rem;
 
           transition:
             background-color,
@@ -204,6 +224,15 @@
       &::-webkit-scrollbar-thumb {
         background: c.$C_BORDER_INPUT; /* 스크롤바 색상 */
         border-radius: 6px; /* 스크롤바 모서리 둥글게 */
+      }
+
+      .overContainer {
+        @include m.flex(center, center, row);
+        position: fixed;
+        width: 98%;
+        height: 39%;
+        background-color: rgba(255, 255, 255, 0.5);
+        z-index: 10;
       }
     }
   }
