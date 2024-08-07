@@ -121,7 +121,7 @@ const Log = () => {
   }, []);
 
   useEffect(() => {
-    document.cookie = 'username=dofarming; SameSite=Strict; Secure';
+    // document.cookie = 'username=dofarming; SameSite=Strict; Secure';
     const script = document.createElement('script');
     script.src = KAKAO_SDK_URL;
     script.id="kakao_sdk_script"
