@@ -25,7 +25,7 @@ import Landing from '@/src/_components/Common/Landing';
 
 const Page = () => {
   const router = useRouter();
-  const [, setCookies] = useCookies(['token']);
+  const [cookies, setCookie,removeCookie] = useCookies(['token']);
 
   const getAccesstoken = useMutation({
     mutationKey: ['getAccesstoken'],
@@ -62,10 +62,10 @@ const Page = () => {
 
       const signupKakao = await signupSocialLogin(signupKakaoBody);
 
-      setCookies('token', signupKakao.data, {
+      setCookie('token', signupKakao.data, {
         path: '/',
-        sameSite: 'none',
-        secure: true,
+        // sameSite: 'none',
+        // secure: true,
       });
        // console.log('signupKakao: ', signupKakao);
 

@@ -57,8 +57,8 @@ const Page = () => {
     onSuccess: (data) => {
       setCookies('token', data.access_token, {
         path: '/',
-        sameSite: 'none',
-        secure: true,
+        // sameSite: 'none',
+        // secure: true,
       });
     },
     onError: (error) => {

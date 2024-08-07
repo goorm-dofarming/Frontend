@@ -98,7 +98,7 @@ const ProfileDropdown = ({
   refetchUser: () => void;
   openToast?:()=>void;
 }) => {
-  const [cookies, removeCookie] = useCookies(["token"]);
+  const [cookies,setCookie, removeCookie] = useCookies(["token"]);
   const [user,setUser] = useRecoilState(userState);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const showDropdown = useToggle(dropdown, setDropdown);
@@ -109,7 +109,11 @@ const ProfileDropdown = ({
   const [modal, setModal] = useState<boolean>(false);
   const openModal = useToggle(modal, setModal);
   const handleLogout = () => {
-    removeCookie("token", "", { path: "/" });
+    removeCookie('token', { path: '/',
+      secure: true,
+   sameSite: 'none',
+     }); // path 설정 추가
+    
     setUser({ userId: 0, email: "", nickname: "", imageUrl: "", role: "" });
     setPage("home");
     setRandomPin({
@@ -122,8 +126,9 @@ const ProfileDropdown = ({
       logId: 0,
       recommends: [],
     })
-
+    console.log(cookies);
   };
+
   const onClick = (id: string) => {
     if(id==="logout"){
       handleLogout();

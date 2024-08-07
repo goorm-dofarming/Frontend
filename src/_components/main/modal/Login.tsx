@@ -67,7 +67,11 @@ const Login = ({
 
       if (response.status === 200) {
         // 성공 시 cookie에 token 추가
-        setCookies('token', response.data);
+        setCookies('token', response.data,{
+          path: '/',
+          // sameSite: 'none',
+          // secure: true,
+        });
         openModal();
       }
     },
@@ -107,8 +111,8 @@ const Login = ({
       const signupGoogle = await signupSocialLogin(body);
       setCookies('token', signupGoogle.data, {
         path: '/',
-        sameSite: 'none',
-        secure: true,
+        // sameSite: 'none',
+        // secure: true,
       });
       //console.log('signupGoogle: ', signupGoogle);
 
