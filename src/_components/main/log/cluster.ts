@@ -52,3 +52,42 @@ export const unclusteredPointLayer: LayerProps = {
     'circle-stroke-color': '#fff',
   },
 };
+
+export const clustererStyle = {
+  styles: [
+    {
+      width: '40px',
+      height: '40px',
+      fontSize: '14px',
+      background: 'rgba(241, 135, 139, .9)',
+      borderRadius: '18px',
+      color: '#fff',
+      textAlign: 'center',
+      lineHeight: '40px',
+      boxShadow: '0px 0px 5px 2px rgba(241, 135, 139, .9)',
+    },
+    {
+      width: '52px',
+      height: '52px',
+      fontSize: '14px',
+      background: 'rgba(243, 85, 92, .9)',
+      borderRadius: '24px',
+      color: '#fff',
+      textAlign: 'center',
+      lineHeight: '52px',
+      boxShadow: '0px 0px 5px 2px rgba(243, 85, 92, .9)',
+    },
+    {
+      width: '60px',
+      height: '60px',
+      fontSize: '14px',
+      background: 'rgba(237, 74, 81, .9)',
+      borderRadius: '30px',
+      color: '#fff',
+      textAlign: 'center',
+      lineHeight: '60px',
+      boxShadow: '0px 0px 5px 2px rgba(237, 74, 81, .9)',
+    },
+  ],
+  calculator: [10, 50],
+}
