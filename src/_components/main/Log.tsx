@@ -147,6 +147,7 @@ const Log = () => {
           level: location.level,
         };
         const map = new window.kakao.maps.Map(containerRef.current, options);
+        // map.setMaxLevel(13);
         if (!window.kakao.maps.MarkerClusterer) {
           console.log('MarkerClusterer 로드 실패');
           // return;

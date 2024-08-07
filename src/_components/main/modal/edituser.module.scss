@@ -87,7 +87,7 @@
       height: 100%;
       padding: 0.4rem;
       border: 1px solid c.$C_BORDER_INPUT;
-      border-radius: 10px;
+      border-radius: 8px;
       @include m.flex(space-between, center, row);
 
       &.focused,
