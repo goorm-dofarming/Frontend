@@ -56,6 +56,7 @@ const Home = () => {
     queryKey: ['me'],
     queryFn: getMe,
     enabled: false,
+    refetchInterval: 1000,
   });
 
   useEffect(() => {
@@ -63,7 +64,11 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (isClient && userInfo) {
+    // if (isClient && userInfo) {
+    //   setUser(userInfo);
+    //   setInitial();
+    // }
+    if ( userInfo) {
       setUser(userInfo);
       setInitial();
     }
@@ -103,9 +108,13 @@ const Home = () => {
     }
   };
   useEffect(() => {
-    if (isClient && cookies.token) {
+    if(cookies.token){
       refetchUser();
     }
+    // if (isClient && cookies.token) {
+    //   refetchUser();
+    //   console.log(cookies.token);
+    // }
   }, [isClient, cookies]);
 
   // SSE 연결
@@ -173,7 +182,7 @@ const Home = () => {
         )}
       <section className={fold ? styles.navBar : styles.pinSection}>
         {fold ? (
-          <NavBar className={styles.navbar} setInitial={setFold} />
+          <NavBar className={styles.navbar} setFold={setFold} />
         ) : (
           <div className={styles.sliderSection}>
             <div className={styles.slider}>

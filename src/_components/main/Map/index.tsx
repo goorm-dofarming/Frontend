@@ -101,9 +101,18 @@ const Map = () => {
     document.cookie = 'username=dofarming; SameSite=Strict; Secure';
     const script = document.createElement('script');
     script.src = KAKAO_SDK_URL;
-    document.head.appendChild(script);
-
-    script.onload = () => {
+    script.id="kakao_sdk_script"
+    // document.head.appendChild(script);
+    if(!document.querySelector("#kakao_sdk_script")){
+      document.head.appendChild(script);
+    }else{
+      const prev = document.querySelector("#kakao_sdk_script");
+      if(prev){
+        document.head.removeChild(prev);
+        document.head.appendChild(script);
+      }
+    }
+    const onLoadKakaoMap  = () => {
       window.kakao.maps.load(() => {
         const center = new window.kakao.maps.LatLng(
           randomPin.lat,
@@ -189,6 +198,7 @@ const Map = () => {
         setKakaoMap(map);
       });
     };
+    script.addEventListener('load', onLoadKakaoMap);
   }, [randomPin.lng, randomPin.lat, randomPin.recommends, randomPin.address]);
   useEffect(() => {
     if (kakaoMap && pinInfo.length > 0) {

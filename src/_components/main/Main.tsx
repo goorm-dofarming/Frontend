@@ -59,27 +59,27 @@ const Main = ({ pin }: { pin: string }) => {
     setIsClient(true); // 클라이언트 렌더링 시점에 상태 업데이트
   }, []);
 
-  useEffect(() => {
-    const pinElement = pinRef.current;
-    if (pinElement) {
-      const handleAnimationEnd = () => {
-        setShowFog(true);
-      };
-      pinElement.addEventListener('animationend', handleAnimationEnd);
-      return () => {
-        pinElement.removeEventListener('animationend', handleAnimationEnd);
-        setShowFog(false);
-      };
-    }
-  }, []);
+  // useEffect(() => {
+  //   const pinElement = pinRef.current;
+  //   if (pinElement) {
+  //     const handleAnimationEnd = () => {
+  //       setShowFog(true);
+  //     };
+  //     pinElement.addEventListener('animationend', handleAnimationEnd);
+  //     return () => {
+  //       pinElement.removeEventListener('animationend', handleAnimationEnd);
+  //       setShowFog(false);
+  //     };
+  //   }
+  // }, []);
 
   return (
     <HomeContainer modal={modal.toString()}>
-      <div className={`fog ${showFog ? 'fog_show' : ''}`}></div>
-      <main className="mainSection">
-        <Image className="colorMap" src={ColorMap} alt="맵" width={360} />
-        <div className="logoContainer">
-          <div className="logo">
+      <div className={`fog  ${pin==="pin_show" ? "fog_show":""}`}></div>
+      <main className={`mainSection`}>
+        <Image className={`colorMap ${pin==="pin_show" ? "vibration":""}`} src={ColorMap} alt="맵" width={360} />
+        <div className={`logoContainer  ${pin==="pin_show" ? "hideLogo":""}`}>
+          <div className={`logo`}>
             <Image className="hatLogo" src={Logo} alt="로고" width={200} />
             {/* <div className="textLogo">DOFARMING</div> */}
             <svg className="textLogo" viewBox="0 0 500 100">
@@ -104,7 +104,7 @@ const Main = ({ pin }: { pin: string }) => {
             </svg>
           </div>
           {isClient &&
-            !user.userId && ( // 클라이언트 렌더링 시점에 쿠키를 확인
+            user.userId ===0 && ( // 클라이언트 렌더링 시점에 쿠키를 확인
               <LoginButton onClick={openModal}>로그인</LoginButton>
             )}
         </div>
@@ -113,7 +113,7 @@ const Main = ({ pin }: { pin: string }) => {
           className={pin === 'pin_hide' ? 'pin_hide' : 'pin_show'}
           src={pin_location}
           alt="pin"
-          width={40}
+          width={60}
         />
       </main>
       <Modal openModal={openModal} modal={modal} width="35vw" height="75vh">

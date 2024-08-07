@@ -130,16 +130,18 @@ const RandomPin = ({
 
   const onClick = (e: React.MouseEvent<HTMLElement>, theme: Theme) => {
     e.stopPropagation();
+   setTimeout(()=>{
     setPin("pin_show");
+   },1500);
     setPage("map");
     setTimeout(() => {
       setPin("pin_hide");
-    }, 1600);
+    }, 4500);
     if (user.userId>0) {
-      console.log("user");
+      // console.log("user");
       getResponse(theme);
     } else {
-      console.log("guest");
+      // console.log("guest");
       getResponseGuest();
     }
 

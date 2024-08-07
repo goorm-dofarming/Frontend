@@ -50,6 +50,9 @@ const Container = styled.div`
     @media (max-width: 1680px) {
               height: 240px;
             }
+            @media (max-width: 960px) {
+              height: 340px;
+      }
     > .title {
       width: 100%;
       font-size: 32px;
@@ -61,6 +64,9 @@ const Container = styled.div`
       justify-content: space-between;
       @media (max-width: 1440px) {
         height:200px;
+      }
+      @media (max-width: 960px) {
+        height:300px;
       }
       .chips {
         width: 100%;
@@ -88,6 +94,10 @@ const Container = styled.div`
             @media (max-width: 1680px) {
               flex-wrap:wrap;
               height: 80px;
+            }
+            @media (max-width: 1680px) {
+              flex-wrap:wrap;
+              height: 120px;
             }
         
             
@@ -136,6 +146,9 @@ const Container = styled.div`
     @media (max-width: 1680px) {
       height: calc(100vh - 280px);
             }
+            @media (max-width: 960px) {
+              height: calc(100vh - 480px);
+      }
   }
   .empty {
     width: 100%;

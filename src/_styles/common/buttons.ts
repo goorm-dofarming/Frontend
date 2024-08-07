@@ -9,11 +9,12 @@ export const LoginButton = styled.button`
   background-color: white;
   border-radius: 0.2rem;
   font-size: 20px;
+  cursor: pointer;
   &:hover {
     color: white;
     border: 1px solid ${colorTheme.secondary};
     background-color: ${colorTheme.primary};
-    cursor: pointer;
+    /* cursor: pointer; */
   }
   transition:  background-color, color 0.3s ease-in-out;
 `;
@@ -54,12 +55,12 @@ export const ModalLoginButton = styled.button`
   border: none;
   font-size: 1.2rem;
   border-radius: 0.3rem;
-
+  cursor: pointer;
   &:hover {
     border: 1px solid ${colorTheme.secondary};
     background-color: white;
     color: ${colorTheme.secondary};
-    cursor: pointer;
+
   }
   transition:  background-color, color 0.3s ease-in-out;
 `;

@@ -24,6 +24,7 @@ import EditUser from '../modal/EditUser';
 
 // api
 import { modifyUser } from '@/pages/api/user';
+import { useCookies } from "react-cookie";
 
 const IconContainer = styled.div<{
   dropdown: string;
@@ -90,24 +91,44 @@ const ProfileDropdown = ({
   setFold,
   setPage,
   refetchUser,
-  openToast
+  openToast,
 }: {
   setFold: React.Dispatch<React.SetStateAction<boolean>>;
   setPage: React.Dispatch<React.SetStateAction<string>>;
   refetchUser: () => void;
   openToast?:()=>void;
 }) => {
+  const [cookies, removeCookie] = useCookies(["token"]);
+  const [user,setUser] = useRecoilState(userState);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const showDropdown = useToggle(dropdown, setDropdown);
   const [alarm, setAlarm] = useRecoilState(alarmState);
-  const user = useRecoilValue(userState);
   const page = useRecoilValue(pageState);
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   // 프로필 수정 모달
   const [modal, setModal] = useState<boolean>(false);
   const openModal = useToggle(modal, setModal);
+  const handleLogout = () => {
+    removeCookie("token", "", { path: "/" });
+    setUser({ userId: 0, email: "", nickname: "", imageUrl: "", role: "" });
+    setPage("home");
+    setRandomPin({
+      address: "",
+      lat: 0,
+      lng: 0,
+      latDMS: "",
+      lngDMS: "",
+      theme: "Random",
+      logId: 0,
+      recommends: [],
+    })
 
+  };
   const onClick = (id: string) => {
+    if(id==="logout"){
+      handleLogout();
+      return;
+    }
     if (id === 'settings') {
       openModal();
     } else {

@@ -2,6 +2,7 @@ import { FaRegClock } from "react-icons/fa";
 import { IoChatbubbleEllipsesSharp, IoHeartSharp } from "react-icons/io5";
 import { IoMdSettings } from "react-icons/io";
 import { FaMapMarkedAlt } from "react-icons/fa";
+import { IoMdLogOut } from "react-icons/io";
 
 export const homeDropdown = [
   {
@@ -24,4 +25,8 @@ export const homeDropdown = [
     id: "settings",
     img: IoMdSettings,
   },
+  {
+    id:"logout",
+    img:IoMdLogOut,
+  }
 ];

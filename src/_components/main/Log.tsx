@@ -101,9 +101,19 @@ const Log = () => {
     document.cookie = "username=dofarming; SameSite=Strict; Secure";
     const script = document.createElement("script");
     script.src = KAKAO_SDK_URL;
-    document.head.appendChild(script);
+    script.id="kakao_sdk_script"
+    
+    if(!document.querySelector("#kakao_sdk_script")){
+      document.head.appendChild(script);
+    }else{
+      const prev = document.querySelector("#kakao_sdk_script");
+      if(prev){
+        document.head.removeChild(prev);
+        document.head.appendChild(script);
+      }
+    }
+    const onLoadKakaoMap = () => {
 
-    script.onload = () => {
       window.kakao.maps.load(() => {
         const center = new window.kakao.maps.LatLng(
           location.latitude,
@@ -114,13 +124,16 @@ const Log = () => {
           level: location.level,
         };
         const map = new window.kakao.maps.Map(containerRef.current, options);
-
+        if (!window.kakao.maps.MarkerClusterer) {
+          console.log("MarkerClusterer 로드 실패");
+          // return;
+        }
         const clusterer = new window.kakao.maps.MarkerClusterer({
           map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
           averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
           minLevel: 5, // 클러스터 할 최소 지도 레벨
         });
-
+       
         const imageSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/pin/pin_location.png`;
         const imageSize = new window.kakao.maps.Size(24, 32); // 마커이미지의 크기입니다
         const imageOption = {
@@ -231,6 +244,7 @@ const Log = () => {
         };
       }
     };
+    script.addEventListener('load', onLoadKakaoMap);
   }, [selectedLogData, logData, location]);
 
 

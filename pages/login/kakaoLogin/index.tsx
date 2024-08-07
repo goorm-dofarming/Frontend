@@ -75,7 +75,7 @@ const Page = () => {
           router.push('/');
         }, 1500);
       }
-      return token;
+      return signupKakao.data;
     },
   });
 
