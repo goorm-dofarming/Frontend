@@ -23,7 +23,7 @@ import useToggle from '@/src/hooks/Home/useToggle';
 import Modal from '../Common/Modal';
 import PlaceInfo from './modal/review/PlaceInfo';
 
-const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=clusterer`;
+const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=services,clusterer`;
 
 const Log = () => {
   // 위치 이동
@@ -124,19 +124,19 @@ const Log = () => {
     // document.cookie = 'username=dofarming; SameSite=Strict; Secure';
     const script = document.createElement('script');
     script.src = KAKAO_SDK_URL;
-    script.id="kakao_sdk_script"
-    
-    if(!document.querySelector("#kakao_sdk_script")){
+    script.async = true;
+    script.id = 'kakao_sdk_script';
+
+    if (!document.querySelector('#kakao_sdk_script')) {
       document.head.appendChild(script);
-    }else{
-      const prev = document.querySelector("#kakao_sdk_script");
-      if(prev){
+    } else {
+      const prev = document.querySelector('#kakao_sdk_script');
+      if (prev) {
         document.head.removeChild(prev);
         document.head.appendChild(script);
       }
     }
     const onLoadKakaoMap = () => {
-
       window.kakao.maps.load(() => {
         const center = new window.kakao.maps.LatLng(
           location.latitude,
@@ -148,7 +148,7 @@ const Log = () => {
         };
         const map = new window.kakao.maps.Map(containerRef.current, options);
         if (!window.kakao.maps.MarkerClusterer) {
-          console.log("MarkerClusterer 로드 실패");
+          console.log('MarkerClusterer 로드 실패');
           // return;
         }
         const clusterer = new window.kakao.maps.MarkerClusterer({
@@ -156,7 +156,7 @@ const Log = () => {
           averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
           minLevel: 5, // 클러스터 할 최소 지도 레벨
         });
-       
+
         const imageSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/pin/pin_location.png`;
         const imageSize = new window.kakao.maps.Size(24, 32); // 마커이미지의 크기입니다
         const imageOption = {
