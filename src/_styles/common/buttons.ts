@@ -27,7 +27,7 @@ export const SignupButton = styled.button`
   background-color: ${colorTheme.secondary};
   border-radius: 0.2rem;
   cursor: pointer;
-
+  font-size: 16px;
   &:hover {
     color: ${colorTheme.secondary};
     border: 1px solid ${colorTheme.secondary};
@@ -44,6 +44,7 @@ export const SignupDisActiveButton = styled.button`
   background-color: #d2d1d1;
   border-radius: 0.2rem;
   font-weight: 700;
+  font-size: 16px;
 `;
 
 export const ModalLoginButton = styled.button`

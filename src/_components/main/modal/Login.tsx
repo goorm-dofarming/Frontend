@@ -187,7 +187,7 @@ const Login = ({
           </div>
         </div>
         <Image
-          src={pwdShow === true ? HidePwd : ShowPwd}
+          src={pwdShow === true ?  ShowPwd :HidePwd}
           alt="비밀번호 확인"
           width={30}
           height={30}

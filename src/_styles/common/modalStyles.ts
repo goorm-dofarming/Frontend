@@ -36,7 +36,7 @@ export const ModalContainer = styled.div<{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-family: 'RedHatDisplay_Variable';
+    /* font-family: 'RedHatDisplay_Variable'; */
   }
 
   .limitTime {
@@ -48,7 +48,7 @@ export const ModalContainer = styled.div<{
 
     span {
       color: ${colorTheme.primary};
-      font-family: 'RedHatDisplay_Variable';
+      /* font-family: 'RedHatDisplay_Variable'; */
     }
   }
   .socialContainer {
@@ -74,20 +74,20 @@ export const ModalContainer = styled.div<{
   .ment {
     color: #8e8e8e;
     font-size: 0.8rem;
-    font-family: 'RedHatDisplay_Variable';
+    /* font-family: 'RedHatDisplay_Variable'; */
   }
   .ment2 {
     color: #8e8e8e;
     font-weight: 800;
     font-size: 0.9rem;
-    font-family: 'RedHatDisplay_Variable';
+    /* font-family: 'RedHatDisplay_Variable'; */
     margin-left: 0.3rem;
     cursor: pointer;
   }
   .ment3 {
     color: ${colorTheme.primary};
     font-size: 0.8rem;
-    font-family: 'RedHatDisplay_Variable';
+    /* font-family: 'RedHatDisplay_Variable'; */
   }
 
   .signupSocialContainer {

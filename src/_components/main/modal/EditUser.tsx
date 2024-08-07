@@ -230,7 +230,7 @@ const EditUser: React.FC<EditUserProps> = ({
                 onChange={handlePasswordChange}
               />
               <Image
-                src={pwdShow === true ? HidePwd : ShowPwd}
+                src={pwdShow === true ?  ShowPwd:HidePwd}
                 alt="비밀번호 확인"
                 width={25}
                 height={25}

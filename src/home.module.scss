@@ -1,5 +1,8 @@
 @use "./_styles/constants/color" as c;
 @use "./_styles/mixins/" as m;
+
+
+
 .main {
   @include m.flex(space-between, flex-start, row);
   width: 100vw;
@@ -20,9 +23,10 @@
       row-gap: 16px;
       column-gap: 16px;
       width: 100%;
-      animation: fadein ease-in-out 4s;
+      animation: fadein ease-in-out 1.5s;
       .slider {
         width: 100%;
+        
       }
       .description {
         @include m.flex(flex-start,center,column);
@@ -63,11 +67,14 @@
 }
 
 @keyframes fadein {
-  from {
+  0% {
+    pointer-events: none;
+    opacity: 0;
+  }50%{
     pointer-events: none;
     opacity: 0;
   }
-  to {
+  100% {
     pointer-events: none;
     opacity: 1;
   }
