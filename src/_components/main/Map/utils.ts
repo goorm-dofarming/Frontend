@@ -79,7 +79,7 @@ drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
         "
       >
         <p style="width:100%; white-space: nowrap;
-    overflow-y: hidden;
+    overflow: hidden;
     text-overflow: ellipsis; margin: 0; font-size: 12px;">${randomPin.address}</p>
         <p style="margin: 0; font-size: 12px; color: #ccc;">
           ${randomPin?.theme}
