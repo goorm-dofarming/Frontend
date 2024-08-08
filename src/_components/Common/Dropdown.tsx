@@ -5,8 +5,8 @@ import cx from 'classnames';
 import { colorTheme } from '@/src/_styles/common/commonColorStyles';
 import { SortType } from '@/src/types/aboutLikes';
 
-const DropdownContainer = styled.div`
-  width: 142px;
+const DropdownContainer = styled.div<{width?:string; fontsize?:string, padding?:string}>`
+  width:${({ width }) => (width  ? width : '142px')};
   height: 40px;
   position: relative;
   border: 1px solid ${colorTheme.secondary};
@@ -57,13 +57,13 @@ const DropdownContainer = styled.div`
     }
 
     .item {
-      font-size: 14px;
+      font-size:${({ fontsize }) => (fontsize  ? fontsize : '14px')};
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
       align-items: center;
       /* text-align: right; */
-      padding: 12px;
+      padding:${({ padding }) => (padding  ? padding : '12px')};
       background-color: ${colorTheme.secondary};
       border-left: 1px solid white;
       border-right: 1px solid white;
@@ -74,17 +74,33 @@ const DropdownContainer = styled.div`
         background-color: white;
         color: ${colorTheme.secondary};
       }
+      &:nth-of-type(1){
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
+      }
+      &:nth-of-type(4){
+        border-bottom-left-radius: 2px;
+        border-bottom-right-radius: 2px;
+      }
     }
   }
 `;
 const Dropdown = ({
+  type,
   value,
   items,
   onClick,
+  width,
+  fontSize,
+  padding,
 }: {
+  type?: string;
   value: string;
-  items: SortType[];
-  onClick: (item: SortType) => void;
+  items: any[];
+  onClick: (item: any) => void;
+  width?:string;
+  fontSize?:string;
+  padding?:string;
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -112,7 +128,7 @@ const Dropdown = ({
   }, [isOpen]);
 
   return (
-    <DropdownContainer>
+    <DropdownContainer width={width} fontsize={fontSize} padding={padding} >
       <div ref={ref} onClick={onClickDropdown} className={cx('dropdownInfo')}>
         {value}
         {isOpen ? (
@@ -125,11 +141,11 @@ const Dropdown = ({
         {items.map((item) => {
           return (
             <li
-              key={item.id + item.name}
+              key={item.id +item.value}
               className="item"
               onClick={() => onClick(item)}
             >
-              {item.name}
+              {type ==="chat" ? item.value : item.content}
             </li>
           );
         })}

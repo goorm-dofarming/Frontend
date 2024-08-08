@@ -98,26 +98,26 @@ export interface RegionType {
 export const sortMenu:SortType[] = [{
     id:1,
     value:"Latest",
-    name:"최신순"
+    content:"최신순"
   },
   {
     id:2,
     value:"Earliest",
-    name:"오래된순"
+    content:"오래된순"
   },
   {
     id:3,
     value:"HighLike",
-    name:"좋아요 많은 순"
+    content:"좋아요 많은 순"
   },
   {
     id:4,
     value:"LowLike",
-    name:"좋아요 적은 순"
+    content:"좋아요 적은 순"
   },
   ]
 export interface SortType{
     id:number;
     value:string;
-    name:string;
+    content:string;
 }

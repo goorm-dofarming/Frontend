@@ -36,22 +36,21 @@ export const HomeContainer = styled.div<{
   }
 
   .fog_show {
-    
-    opacity: 1;
-    /* animation-delay:0.5s; */
-    animation:fadein 3s ease-in-out;
-    @keyframes fadein{
-        0%{
-          opacity:0;
-        }
-        70%{
-          opacity:0;
-        }
-        100%{
-opacity:1;
-        }
+    animation: fadein 3s ease-in;
+    animation-delay: 1.4s;
+    @keyframes fadein {
+      0% {
+        opacity: 0;
+      }
+      30% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 1;
+      }
     }
   }
+
   
   .logoContainer {
     top: 35%;
@@ -62,20 +61,22 @@ opacity:1;
     align-items: center;
     opacity:1;
   }
-  .hideLogo{
-    animation:fadeInLogo 3s ease-in-out;
-    @keyframes fadeInLogo{
-        0%{
-          opacity:1;
-        }
-        50%{
-          opacity:0;
-        }
-        100%{
-opacity:0;
-        }
+  .hideLogo {
+    animation: fadeInLogo 3s ease-in-out;
+    @keyframes fadeInLogo {
+      0% {
+        opacity: 1;
+      }
+      30% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 0;
+      }
     }
   }
+
+
 
   .modal {
     position: absolute;
@@ -100,18 +101,18 @@ opacity:0;
   .colorMap {
     position: relative;
   }
-  .vibration{
-    animation: vibration 0.1s infinite;
-    animation-delay:1.4s;
+  .scaleOutMap {
+    animation: outMap 2s;
+    animation-delay: 1.4s;
   }
-  @keyframes vibration {
-  from {
-    transform: rotate(1deg);
+  @keyframes outMap {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(3);
+    }
   }
-  to {
-    transform: rotate(-1deg);
-  }
-}
 
   .pin_show {
     position: absolute;
