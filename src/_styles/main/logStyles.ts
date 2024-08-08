@@ -23,7 +23,7 @@ export const LogContainer = styled.div`
   }
 
   .logContainer {
-    width: 16rem;
+    width: 20%;
     height: 100vh;
     display: flex;
     flex-direction: column;

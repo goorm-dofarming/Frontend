@@ -51,8 +51,8 @@ const Log = () => {
   const [selectedLocationId, setSelectedLocationId] = useState<number>(0);
   const [pins, setPins] = useState<any[]>([]);
   const [infoWindows, setInfoWindows] = useState<any[]>([]);
-  const [markers, setMarkers] = useState<any[]>([]);
-
+  const [markers, setMarkers] = useState<kakao.maps.Marker[]>([]);
+  const[cluster, setCluster] = useState<any>(null);
   // 로그 아이디
   const [logId, setLogId] = useState<number>(0);
 
@@ -179,52 +179,10 @@ const Log = () => {
           console.log('MarkerClusterer 로드 실패');
           // return;
         }
-        if (markers.length === 0) {
-          const clusterer = new window.kakao.maps.MarkerClusterer({
-            map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
-            averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
-            minLevel: 5, // 클러스터 할 최소 지도 레벨
-            ...clustererStyle,
-          });
-
-          const imageSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/pin/pin_location.png`;
-          const imageSize = new window.kakao.maps.Size(36, 48); // 마커이미지의 크기입니다
-          const imageOption = {
-            offset: new window.kakao.maps.Point(0, 0),
-          }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-
-          const markerImage = new window.kakao.maps.MarkerImage(
-            imageSrc,
-            imageSize
-            // imageOption
-          );
-
-          const new_markers = [];
-
-          for (let i = 0; i < logData.length; i++) {
-            let marker = new kakao.maps.Marker({
-              map: map, // 마커를 표시할 지도
-              position: new kakao.maps.LatLng(
-                Number(logData[i].latitude),
-                Number(logData[i].longitude)
-              ), // 마커를 표시할 위치
-              image: markerImage, // 마커 이미지
-            });
-
-            new_markers.push(marker);
-
-            window.kakao.maps.event.addListener(
-              marker,
-              'click',
-              makeClickListener(logData[i])
-            );
-          }
-          clusterer.addMarkers(new_markers);
-          setMarkers([...new_markers]);
-        }
-
-        if (pins.length > 0 && infoWindows.length > 0) {
-          for (let i = 0; i < pins.length; i++) {
+        // setMarkers([]);
+        // setCluster(null);
+        if(pins.length > 0 && infoWindows.length>0){
+          for(let i=0;i<pins.length;i++){
             pins[i].setMap(null);
             infoWindows[i].setMap(null);
           }
@@ -247,6 +205,7 @@ const Log = () => {
               selectedLogData[i].mapX
             ), // 마커를 표시할 위치
             image: markerImage, // 마커 이미지
+            // zIndex:1
           });
 
           const latlng = new kakao.maps.LatLng(
@@ -284,6 +243,58 @@ const Log = () => {
         }
         setPins([...new_pins]);
         setInfoWindows([...new_infoWindows]);
+
+
+        if(markers.length===0 && cluster===null){
+
+          const imageSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/pin/pin_location.png`;
+          const imageSize = new window.kakao.maps.Size(36, 48); // 마커이미지의 크기입니다
+          const imageOption = {
+            offset: new window.kakao.maps.Point(0, 0),
+          }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+  
+          const markerImage = new window.kakao.maps.MarkerImage(
+            imageSrc,
+            imageSize,
+            // imageOption
+          );
+  
+          const new_markers = [];
+  
+          for (let i = 0; i < logData.length; i++) {
+            let marker = new kakao.maps.Marker({
+              map: map, // 마커를 표시할 지도
+              position: new kakao.maps.LatLng(
+                Number(logData[i].latitude),
+                Number(logData[i].longitude)
+              ), // 마커를 표시할 위치
+              image: markerImage, // 마커 이미지
+            });
+  
+            new_markers.push(marker);
+  
+            window.kakao.maps.event.addListener(
+              marker,
+              'click',
+              makeClickListener(logData[i])
+            );
+          }
+
+          const clusterer = new window.kakao.maps.MarkerClusterer({
+            map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
+            averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+            minLevel: 5, // 클러스터 할 최소 지도 레벨
+            zIndex:10,
+            ...clustererStyle,    
+          });
+          clusterer.addMarkers(new_markers);
+          setCluster(clusterer);
+          setMarkers([...new_markers]);    
+        }else{
+          cluster.redraw();
+        }
+
+  
 
         // 클러스터러에 마커들을 추가합니다
 
@@ -338,7 +349,7 @@ const Log = () => {
     <LogContainer>
       <div className="logContainer">
         <h3>
-          <span>전체 기록 - {logData.length}개</span>
+          <span>전체 기록</span>
         </h3>
         <div className="logs">
           {logData.map((data, i) => (
