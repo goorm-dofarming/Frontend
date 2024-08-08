@@ -22,7 +22,7 @@ import { makeInfoWindow } from './Map/utils';
 import useToggle from '@/src/hooks/Home/useToggle';
 import Modal from '../Common/Modal';
 import PlaceInfo from './modal/review/PlaceInfo';
-import { DataType } from '@/src/types/aboutMap';
+import { DataType, Recommend } from '@/src/types/aboutMap';
 import { clustererStyle } from './log/cluster';
 
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=clusterer`;
@@ -53,6 +53,7 @@ const Log = () => {
   const [infoWindows, setInfoWindows] = useState<any[]>([]);
   const [markers, setMarkers] = useState<kakao.maps.Marker[]>([]);
   const[cluster, setCluster] = useState<any>(null);
+  const [focusPin, setFocusPin] = useState<Recommend | null>(null);
   // 로그 아이디
   const [logId, setLogId] = useState<number>(0);
 
@@ -129,11 +130,18 @@ const Log = () => {
   };
 
   // 카드 클릭 시 정보 모달
-  const onClickCard = (locationId: number) => {
-    setSelectedLocationId(locationId);
-    openModal();
-  };
+  // const onClickCard = (locationId: number) => {
+  //   setSelectedLocationId(locationId);
+  //   openModal();
+  // };
 
+  const onClickCard = (recommend: Recommend) => {
+    setFocusPin(recommend);
+    setSelectedLocationId(recommend.locationId);
+    setTimeout(() => {
+      openModal();
+    }, 1000);
+  };
   useEffect(() => {
     if (selectedLogData.length === 0) {
       return;
@@ -329,7 +337,7 @@ const Log = () => {
     console.log('kakaoMap', kakaoMap);
     kakaoMap.setLevel(6);
     kakaoMap.setCenter(center);
-    kakaoMap.relayout();
+    // kakaoMap.relayout();
   }, [kakaoMap, location]);
 
   // 스크롤바 이동
@@ -345,6 +353,21 @@ const Log = () => {
       }, 200);
     }
   }, [selectedLogIndex]);
+
+  useEffect(() => {
+    if (kakaoMap === null || containerRef.current === null) {
+      return;
+    }
+    
+    if (focusPin !== null) {
+      const center = new window.kakao.maps.LatLng(focusPin?.mapY, focusPin?.mapX);
+      kakaoMap.setLevel(2);
+      kakaoMap.setCenter(center);
+      
+      // kakaoMap.relayout();
+    }
+ 
+  }, [focusPin]);
   return (
     <LogContainer>
       <div className="logContainer">
@@ -393,7 +416,7 @@ const Log = () => {
                 <Card
                   recommend={recommend}
                   refetch={() => getLogSubData.mutate(logId)}
-                  onClick={() => onClickCard(recommend.locationId)}
+                  onClick={() => onClickCard(recommend)}
                 />
               </div>
             ))}

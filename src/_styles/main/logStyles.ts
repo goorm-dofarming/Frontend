@@ -7,7 +7,7 @@ export const LogContainer = styled.div`
   flex-direction: row;
   width: calc(100vw - 72px);
   height: 100vh;
-  animation: fadein 2.5s ease-in-out;
+  animation: fadein 2s ease-in-out;
   @keyframes fadein {
     from {
       opacity: 0;
