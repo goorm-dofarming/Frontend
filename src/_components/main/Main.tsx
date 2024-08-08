@@ -59,19 +59,6 @@ const Main = ({ pin }: { pin: string }) => {
     setIsClient(true); // 클라이언트 렌더링 시점에 상태 업데이트
   }, []);
 
-  // useEffect(() => {
-  //   const pinElement = pinRef.current;
-  //   if (pinElement) {
-  //     const handleAnimationEnd = () => {
-  //       setShowFog(true);
-  //     };
-  //     pinElement.addEventListener('animationend', handleAnimationEnd);
-  //     return () => {
-  //       pinElement.removeEventListener('animationend', handleAnimationEnd);
-  //       setShowFog(false);
-  //     };
-  //   }
-  // }, []);
 
   return (
     <HomeContainer modal={modal.toString()}>
