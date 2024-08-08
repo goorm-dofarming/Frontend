@@ -1,8 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 // styles
 import styles from './createchat.module.scss';
-
+import Dropdown from '@/src/_components/Common/Dropdown';
+import { regions,RegionType } from '@/src/types/aboutLikes';
+import useToggle from '@/src/hooks/Home/useToggle';
+import Toast from '@/src/_components/Common/Toast';
 interface CreateChatProps {
   openModal: () => void;
   onCreateChat: (data: {
@@ -16,9 +19,10 @@ const CreateChat: React.FC<CreateChatProps> = ({ openModal, onCreateChat }) => {
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState<string>('');
   const [title, setTitle] = useState<string>('');
-  const [region, setRegion] = useState<string>('');
+  const [region, setRegion] = useState<RegionType | null>(null);
   const tagInputRef = useRef<HTMLInputElement>(null);
-
+  const [toast, setToast] = useState<boolean>(false);
+  const openToast = useToggle(toast, setToast);
   const formatTag = (value: string) => {
     if (!value.startsWith('#')) {
       value = `#${value}`;
@@ -56,7 +60,7 @@ const CreateChat: React.FC<CreateChatProps> = ({ openModal, onCreateChat }) => {
     if ((e.key === ' ' || e.key === 'Enter') && tagInput.trim() !== '') {
       e.preventDefault();
       const formattedInput = formatTag(tagInput.trim());
-      if (!tags.includes(formattedInput)) {
+      if (!tags.includes(formattedInput) && tags.length<7) {
         setTags((prevTags) => [...prevTags, formattedInput]);
       }
       setTagInput('');
@@ -81,18 +85,27 @@ const CreateChat: React.FC<CreateChatProps> = ({ openModal, onCreateChat }) => {
     setTitle(e.target.value);
   };
 
-  const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setRegion(e.target.value);
-  };
-
+  // const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setRegion(e.target.value);
+  // };
+  // const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setRegion(e.target.value);
+  // };
   const handleCreateChat = () => {
     if (title && region && tags.length > 0) {
-      onCreateChat({ title, region, tags });
+      const regionValue = region.value === "전북특별자치도" ? "전라북도" : region.value
+      onCreateChat({
+        title:title,
+        region: regionValue,
+        tags:tags,
+       });
       setTitle('');
-      setRegion('');
+      setRegion(null);
       setTags([]);
       setTagInput('');
       openModal();
+    }else{
+      openToast();
     }
   };
 
@@ -107,30 +120,15 @@ const CreateChat: React.FC<CreateChatProps> = ({ openModal, onCreateChat }) => {
       />
       <div className={styles.selectRegion}>
         <span>지역 선택</span>
-        <select
-          className={styles.toggleRegion}
-          value={region}
-          onChange={handleRegionChange}
-        >
-          <option value="" disabled hidden></option>
-          <option value="서울특별시">서울특별시</option>
-          <option value="인천광역시">인천광역시</option>
-          <option value="울산광역시">울산광역시</option>
-          <option value="부산광역시">부산광역시</option>
-          <option value="대구광역시">대구광역시</option>
-          <option value="광주광역시">광주광역시</option>
-          <option value="대전광역시">대전광역시</option>
-          <option value="세종특별자치시">세종특별자치시</option>
-          <option value="경기도">경기도</option>
-          <option value="충청북도">충청북도</option>
-          <option value="충청남도">충청남도</option>
-          <option value="경상남도">경상남도</option>
-          <option value="경상북도">경상북도</option>
-          <option value="전라남도">전라남도</option>
-          <option value="전라북도">전라북도</option>
-          <option value="제주특별자치도">제주특별자치도</option>
-          <option value="강원특별자치도">강원특별자치도</option>
-        </select>
+        <Dropdown
+        type="chat"
+          value={region ? region.value : `지역을 선택해주세요.`}
+          items={regions}
+          onClick={setRegion}
+          width={"100%"}
+          fontSize={"0.8rem"}
+          padding={"6px"}
+        />
       </div>
       <div className={styles.blank} />
       <div className={styles.hashtag}>
@@ -159,6 +157,12 @@ const CreateChat: React.FC<CreateChatProps> = ({ openModal, onCreateChat }) => {
       <button className={styles.makeChatBtn} onClick={handleCreateChat}>
         채팅방 만들기
       </button>
+      <Toast
+          content={`입력칸을 모두 채워주세요.`}
+          toast={toast}
+          openToast={openToast}
+          toastType="warning"
+        />
     </div>
   );
 };

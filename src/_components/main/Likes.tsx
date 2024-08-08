@@ -109,6 +109,7 @@ const Container = styled.div`
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
+            border-radius:2px;
             gap: 8px;
             > .icon {
               cursor: pointer;
@@ -325,7 +326,7 @@ const Likes = () => {
                 ))}
               </div>
               <Dropdown
-                value={sortType.name}
+                value={sortType.content}
                 items={sortMenu}
                 onClick={setSortType}
               />

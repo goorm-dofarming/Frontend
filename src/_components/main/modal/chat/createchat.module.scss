@@ -32,7 +32,7 @@
   .toggleRegion {
     width: 100%;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 2px;
     font-size: 1rem;
     border: 1.2px solid c.$C_SECONDARY;
     cursor: pointer;
@@ -64,13 +64,13 @@
   margin-bottom: 2rem;
   padding: 1rem;
   border: 1.2px solid c.$C_SECONDARY;
-  border-radius: 5px;
+  border-radius: 2px;
 
   .hashtagContainer {
     @include m.flex(flex-start, flex-start, row);
     align-content: flex-start;
     width: auto;
-    height: 10rem;
+    height: 8rem;
     font-size: 0.8rem;
     resize: none;
     flex-wrap: wrap;
@@ -81,11 +81,11 @@
       color: c.$C_SECONDARY;
       font-weight: 500;
       border: 2px solid c.$C_SECONDARY;
-      border-radius: 10px;
+      border-radius: 16px;
 
       .removeTagBtn {
         cursor: pointer;
-
+        font-size:12px;
         border: none;
         border-radius: 50%;
         color: c.$C_WHITE;

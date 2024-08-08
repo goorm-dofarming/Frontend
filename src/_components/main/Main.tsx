@@ -77,7 +77,7 @@ const Main = ({ pin }: { pin: string }) => {
     <HomeContainer modal={modal.toString()}>
       <div className={`fog  ${pin==="pin_show" ? "fog_show":""}`}></div>
       <main className={`mainSection`}>
-        <Image className={`colorMap ${pin==="pin_show" ? "vibration":""}`} src={ColorMap} alt="맵" width={360} />
+        <Image className={`colorMap ${pin==="pin_show" ? "scaleOutMap":""}`} src={ColorMap} alt="맵" width={360} />
         <div className={`logoContainer  ${pin==="pin_show" ? "hideLogo":""}`}>
           <div className={`logo`}>
             <Image className="hatLogo" src={Logo} alt="로고" width={200} />

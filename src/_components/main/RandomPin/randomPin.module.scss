@@ -29,31 +29,37 @@
     }
     animation: pin 1s ease-in-out infinite;
     cursor: pointer;
-    &:focus{
-      animation:pinSize 1s ease-in-out;
+    &:focus {
+      animation: pinSize 1.5s ease-in-out;
       @keyframes pinSize {
         0% {
-          transform: scale(1);
+          transform: scaleY(1) scaleX(1);
         }
-        15%{
-          transform: scale(0.7);
+        55% {
+          transform: scaleY(0.7) scaleX(1.3);
+        }
+        60% {
+          transform: scaleY(1.2) scaleX(0.8);
+        }
+        70% {
+          transform: scaleY(0.85) scaleX(1.15);
         }
         75% {
-          transform: scale(1.2);
+          transform: scaleY(1.1) scaleX(0.9);
+        }
+        80% {
+          transform: scaleY(1.05) scaleX(0.95);
+        }
+        85% {
+          transform: scaleY(0.97) scaleX(1.03);
+        }
+        90% {
+          transform: scaleY(1.01) scaleX(0.99);
         }
         100% {
-          transform: scale(1);
+          transform: scaleY(1) scaleX(1);
         }
-      }
-      @keyframes pinMove{
-        from{
-            transform:translateY(0);
-        }to{
-          transform:translateY(-30px);
-        }
-      }
-      
-    }
+      }}
   }
 }
 

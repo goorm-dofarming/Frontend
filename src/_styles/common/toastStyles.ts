@@ -25,7 +25,9 @@ export const ToastContainer = styled.div<{
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 1px 4px 5px 1px ${colorTheme.divider};
+    /* box-shadow: 1px 4px 5px 1px rgba(0,0,0,0.5); */
+    filter: drop-shadow(0 20px 13px rgb(0 0 0 / 0.03))
+    drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
   }
 
   .toast > svg {
