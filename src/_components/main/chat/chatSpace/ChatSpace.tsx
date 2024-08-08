@@ -19,6 +19,7 @@ import ChatRoom from './ChatRoom';
 import Modal from '@/src/_components/Common/Modal';
 import LeaveChat from '../../modal/chat/LeaveChat';
 import Landing from '@/src/_components/Common/Landing';
+import MainLogo from '@/src/_assets/icons/main_logo.png';
 
 // hooks
 import useToggle from '@/src/hooks/Home/useToggle';
@@ -140,7 +141,15 @@ const ChatSpace: React.FC<{
   if (selectedChat.title === '') {
     return (
       <div className="chatSpace">
-        <Landing />
+        <div className={styles.logoImage}>
+          <Image
+            src={MainLogo}
+            alt="DOFARMING"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            style={{ objectFit: 'contain' }}
+          />
+        </div>
       </div>
     );
   } else {
