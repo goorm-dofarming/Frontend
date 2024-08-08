@@ -29,6 +29,7 @@ declare namespace kakao {
       map: Map;
       position: LatLng;
       image?: MarkerImage;
+      zIndex?:number;
     }
 
     class MarkerImage {
@@ -83,6 +84,7 @@ declare namespace kakao {
       disableClickZoom?: boolean;
       gridSize?: number;
       styles?: object[];
+      zIndex?:number;
     }
   }
 }

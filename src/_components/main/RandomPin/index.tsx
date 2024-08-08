@@ -79,7 +79,7 @@ const RandomPin = ({
         const { latDMS, lngDMS } = decimalToDMS(lat, lng);
         console.log(response);
         const logData = response.data.logResponse;
-        const recommendList = response.data.recommendations.slice(1);
+        const recommendList = response.data.recommendations;
         setRandomPin((prev: RandomPinType) => ({
           address: logData.address,
           logId: logData.logId,

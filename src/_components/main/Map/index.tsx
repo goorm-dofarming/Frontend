@@ -130,7 +130,7 @@ const Map = () => {
         );
         const options = {
           center,
-          level: 3,
+          level: 4,
         };
         const map = new window.kakao.maps.Map(container.current, options);
         map.setMaxLevel(13);
@@ -173,20 +173,24 @@ const Map = () => {
         setShowPinInfo([...arr]);
         const infoWindows: any[] = [];
         for (let i = 0; i < randomPin.recommends.length; i++) {
+          let show = true;
           const curr = randomPin.recommends[i];
+        if((curr.dataType ===1 ||curr.dataType===2) && i===0){
+          show = false;
+        }
           const pinSize = new kakao.maps.Size(48, 60);
           const pinImg = DataType[curr.dataType].img;
           const newMarkerImg = new kakao.maps.MarkerImage(pinImg, pinSize);
           const latlng = new kakao.maps.LatLng(curr.mapY, curr.mapX);
           // 마커를 생성합니다
           const pin = new kakao.maps.Marker({
-            map: map, // 마커를 표시할 지도
+            map: show ? map : null,
             position: latlng, // 마커를 표시할 위치
             image: newMarkerImg, // 마커 이미지
           });
           const infowindowContent = makeInfoWindow(curr.title);
           const infowindow = new window.kakao.maps.CustomOverlay({
-            map: map,
+            map: show ? map : null,
             clickable: true,
             position: latlng,
             content: infowindowContent,
@@ -258,6 +262,7 @@ const Map = () => {
       center = new window.kakao.maps.LatLng(randomPin.lat, randomPin.lng);
     }
     kakaoMap.setCenter(center);
+    kakaoMap.setLevel(2);
     kakaoMap.relayout();
   }, [focusPin]);
   return (
