@@ -231,7 +231,7 @@ const Map = () => {
     }
     const center = new window.kakao.maps.LatLng(randomPin.lat, randomPin.lng);
     kakaoMap.setCenter(center);
-    kakaoMap.relayout();
+    // kakaoMap.relayout();
   }, [kakaoMap]);
 
   useEffect(() => {
@@ -249,7 +249,7 @@ const Map = () => {
     }
     const center = new window.kakao.maps.LatLng(randomPin.lat, randomPin.lng);
     kakaoMap.setCenter(center);
-    kakaoMap.relayout();
+    // kakaoMap.relayout();
   }, [page]);
   useEffect(() => {
     if (kakaoMap === null || container.current === null) {
@@ -261,9 +261,10 @@ const Map = () => {
     } else {
       center = new window.kakao.maps.LatLng(randomPin.lat, randomPin.lng);
     }
-    kakaoMap.setCenter(center);
     kakaoMap.setLevel(2);
-    kakaoMap.relayout();
+    kakaoMap.setCenter(center);
+    
+    // kakaoMap.relayout();
   }, [focusPin]);
   return (
     <main className={styles.main}>
