@@ -23,18 +23,22 @@ export const LogContainer = styled.div`
   }
 
   .logContainer {
-    width: 20%;
+    width: 16rem;
     height: 100vh;
     display: flex;
     flex-direction: column;
     box-shadow: 1px 4px 5px 1px gray;
     padding: 0.5rem;
+  }
+
+  .logs {
     overflow-y: scroll;
   }
 
-  .logContainer::-webkit-scrollbar {
+  .logs::-webkit-scrollbar {
     display: none;
   }
+
   .logContent {
     flex: 1;
     display: flex;
