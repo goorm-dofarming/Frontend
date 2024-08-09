@@ -14,11 +14,7 @@ permissions:
     mode: 755
 
 hooks:
-  BeforeInstall:
-    - location: scripts/clean_node_modules.sh
-      runas: ubuntu
-      timeout: 180
   AfterInstall:
     - location: scripts/deploy.sh
-      timeout: 3000
+      timeout: 600
       runas: ubuntu
