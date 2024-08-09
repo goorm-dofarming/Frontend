@@ -16,7 +16,12 @@ import { getMe } from './api/user';
 
 // atoms
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { alarmState, messageAlarmState, userState,randomPinState } from '@/src/atom/stats';
+import {
+  alarmState,
+  messageAlarmState,
+  userState,
+  randomPinState,
+} from '@/src/atom/stats';
 import { pageState } from '@/src/atom/stats';
 
 // types
@@ -64,30 +69,25 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    // if (isClient && userInfo) {
-    //   setUser(userInfo);
-    //   setInitial();
-    // }
-    if ( userInfo) {
+    if (userInfo) {
       setUser(userInfo);
       setInitial();
     }
   }, [isClient, userInfo, refetchUser]);
-
 
   const setInitial = async () => {
     const response = await getLog();
     // console.log("get logs", response.data);
     if (response.status === 200) {
       const data = response.data;
-  if(!data.length){
-    return;
-  }
+      if (!data.length) {
+        return;
+      }
       const logResponse = await getLogData(data[0].logId);
       if (logResponse.status === 200) {
         const logData = logResponse.data.logResponse;
         let recommendList = logResponse.data.recommendations;
-        if (logData.theme === "ocean" || logData.theme === "mountain") {
+        if (logData.theme === 'ocean' || logData.theme === 'mountain') {
           recommendList = recommendList.slice(1);
         }
         const { latDMS, lngDMS } = decimalToDMS(
@@ -108,13 +108,9 @@ const Home = () => {
     }
   };
   useEffect(() => {
-    if(cookies.token){
+    if (cookies.token) {
       refetchUser();
     }
-    // if (isClient && cookies.token) {
-    //   refetchUser();
-    //   console.log(cookies.token);
-    // }
   }, [isClient, cookies]);
 
   // SSE 연결
@@ -172,7 +168,7 @@ const Home = () => {
     <main className={styles.main}>
       <div id="modal-container"></div>
       {isClient &&
-        user.userId>0 && ( // 클라이언트 렌더링 시점에 쿠키를 확인
+        user.userId > 0 && ( // 클라이언트 렌더링 시점에 쿠키를 확인
           <ProfileDropdown
             setFold={setFold}
             setPage={setPage}
@@ -200,9 +196,9 @@ const Home = () => {
       <section className={fold ? styles.page : styles.home}>
         {fold ? <>{element}</> : <Main pin={pin} />}
       </section>
-      {user.userId>0 && (
+      {user.userId > 0 && (
         <Toast
-          content={"랜덤핀을 던져보세요!"}
+          content={'랜덤핀을 던져보세요!'}
           toast={toast}
           openToast={openToast}
           toastType="warning"

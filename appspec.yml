@@ -9,17 +9,16 @@ file_exists_behavior: OVERWRITE
 
 permissions:
   - object: /home/ubuntu/deploy
-    owner: root
-    group: root
+    owner: ubuntu
+    group: ubuntu
     mode: 755
 
 hooks:
   BeforeInstall:
     - location: scripts/clean_node_modules.sh
-      runas: root
-    - location: scripts/clean_node_modules.sh
+      runas: ubuntu
       timeout: 180
   AfterInstall:
     - location: scripts/deploy.sh
       timeout: 600
-      runas: root
+      runas: ubuntu
