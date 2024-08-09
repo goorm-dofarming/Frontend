@@ -204,9 +204,9 @@ const MyChatList: React.FC<MyChatListProps> = ({ myChatQuery }) => {
               </div>
               <div className={styles.preview}>
                 {formatLastMessage(
-                  chat.latestMessage.nickname,
-                  chat.latestMessage.content,
-                  chat.latestMessage.messageType
+                  chat.latestMessage?.nickname,
+                  chat.latestMessage?.content,
+                  chat.latestMessage?.messageType
                 )}
               </div>
             </div>

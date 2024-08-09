@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { QueryObserverResult } from '@tanstack/react-query';
-import { useIsFetching } from '@tanstack/react-query';
 
 // styles
 import styles from './chatlist.module.scss';
@@ -45,9 +44,9 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
     data: mainChats = [],
     error,
     isLoading,
+    isFetching,
     refetch: refetchMainChats,
   } = mainQuery;
-  const isFetching = useIsFetching();
 
   // 무한 스크롤 관련
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -165,20 +164,18 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
   }, [fetchLoading, hasMore, fetchMoreChats]);
 
   // 5초동안 로딩 시 refetch
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (isFetching > 0) {
-      timer = setTimeout(() => {
-        if (isFetching > 0) {
-          refetchMainChats();
-        }
-      }, 5000);
-    }
+  // useEffect(() => {
+  //   let timer: NodeJS.Timeout;
+  //   if (isLoading) {
+  //     timer = setTimeout(() => {
 
-    return () => clearTimeout(timer);
-  }, [isFetching, refetchMainChats]);
+  //     }, 3000);
+  //   }
 
-  if (isLoading) {
+  //   return () => clearTimeout(timer);
+  // }, [isLoading, refetchMainChats]);
+
+  if (isFetching) {
     return (
       <div className={styles.container}>
         <ChatLoader />

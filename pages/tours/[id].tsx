@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import styles from "./share.module.scss";
-import Image from "next/image";
-import cloud from "@/src/_assets/main/map/cloud.png";
-import { ImQuotesLeft, ImQuotesRight } from "react-icons/im";
-import { useQuery } from "@tanstack/react-query";
-import { getLogDataGuest } from "@/pages/api/map";
-import CardListItem from "@/src/_components/Common/CardListItem";
-import { Recommend } from "@/src/types/aboutMap";
-import { decimalToDMS } from "@/src/_components/main/RandomPin/util";
-import Landing from "@/src/_components/Common/Landing";
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import styles from './share.module.scss';
+import Image from 'next/image';
+import cloud from '@/src/_assets/main/map/cloud.png';
+import { ImQuotesLeft, ImQuotesRight } from 'react-icons/im';
+import { useQuery } from '@tanstack/react-query';
+import { getLogDataGuest } from '@/pages/api/map';
+import CardListItem from '@/src/_components/Common/CardListItem';
+import { Recommend } from '@/src/types/aboutMap';
+import { decimalToDMS } from '@/src/_components/main/RandomPin/util';
+import Landing from '@/src/_components/Common/Landing';
 const LinkShare = () => {
   const router = useRouter();
   const [logId, setLogId] = useState<number>(0);
   const fetchLog = async () => {
     const response = await getLogDataGuest(logId);
     const data = response.data;
-    console.log(data);
+    // console.log(data);
     const logData = data.logResponse;
     if (response.status === 200) {
       const { latDMS, lngDMS } = decimalToDMS(
@@ -30,7 +30,7 @@ const LinkShare = () => {
         latDMS: latDMS,
       };
     }
-    throw new Error("데이터 로드 실패");
+    throw new Error('데이터 로드 실패');
   };
 
   const {
@@ -40,11 +40,11 @@ const LinkShare = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["getLog"],
+    queryKey: ['getLog'],
     queryFn: fetchLog,
     refetchInterval: 1000 * 60, // 1분마다 데이터 갱신
   });
-  
+
   useEffect(() => {
     if (router) {
       setLogId(Number(router?.query?.id));

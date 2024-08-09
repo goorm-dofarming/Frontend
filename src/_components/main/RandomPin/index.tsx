@@ -1,11 +1,11 @@
-import React, { MouseEventHandler, useState } from "react";
-import Image from "next/image";
-import styles from "./randomPin.module.scss";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
-import { getRandomCoord, decimalToDMS } from "./util";
+import React, { MouseEventHandler, useState } from 'react';
+import Image from 'next/image';
+import styles from './randomPin.module.scss';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import { BsFillCaretLeftFill, BsFillCaretRightFill } from 'react-icons/bs';
+import { getRandomCoord, decimalToDMS } from './util';
 import {
   getRandomGuest,
   getMountainRecommends,
@@ -13,15 +13,15 @@ import {
   getRandomRecommends,
   getThemeRecommends,
   getAddress,
-} from "@/pages/api/map";
-import { themes, Theme } from "@/src/types/aboutMap";
-import { useRecoilState } from "recoil";
-import { randomPinState, userState } from "@/src/atom/stats";
-import { RandomPinType } from "@/src/types/aboutMap";
-import { useCookies } from "react-cookie";
-import cx from "classnames";
-import Toast from "../../Common/Toast";
-import useToggle from "@/src/hooks/Home/useToggle";
+} from '@/pages/api/map';
+import { themes, Theme } from '@/src/types/aboutMap';
+import { useRecoilState } from 'recoil';
+import { randomPinState, userState } from '@/src/atom/stats';
+import { RandomPinType } from '@/src/types/aboutMap';
+import { useCookies } from 'react-cookie';
+import cx from 'classnames';
+import Toast from '../../Common/Toast';
+import useToggle from '@/src/hooks/Home/useToggle';
 
 const RandomPin = ({
   setFold,
@@ -48,13 +48,13 @@ const RandomPin = ({
         fullAddress.region_1depth_name,
         fullAddress.region_2depth_name,
         fullAddress.region_3depth_name,
-      ].join(" ");
+      ].join(' ');
       const { latDMS, lngDMS } = decimalToDMS(lat, lng);
       const response = await getRandomGuest(lng, lat, address);
       const logData = response.data.logResponse;
       const recommendList = response.data.recommendations;
       setRandomPin((prev: RandomPinType) => ({
-        theme: "Random",
+        theme: 'Random',
         logId: 0,
         address: logData.address,
         lat: logData.latitude,
@@ -68,16 +68,16 @@ const RandomPin = ({
   const getResponse = async (theme: Theme) => {
     try {
       let response: any;
-      if (theme.id === "Ocean" || theme.id === "Mountain") {
+      if (theme.id === 'Ocean' || theme.id === 'Mountain') {
         response =
-          theme.id === "Ocean"
+          theme.id === 'Ocean'
             ? await getOceanRecommends()
             : await getMountainRecommends();
         const location = { ...response.data.recommendations[0] };
         const lat = location.mapY;
         const lng = location.mapX;
         const { latDMS, lngDMS } = decimalToDMS(lat, lng);
-        console.log(response);
+        // console.log(response);
         const logData = response.data.logResponse;
         const recommendList = response.data.recommendations;
         setRandomPin((prev: RandomPinType) => ({
@@ -98,16 +98,16 @@ const RandomPin = ({
           fullAddress.region_1depth_name,
           fullAddress.region_2depth_name,
           fullAddress.region_3depth_name,
-        ].join(" ");
-        console.log(address);
+        ].join(' ');
+        // console.log(address);
         const { latDMS, lngDMS } = decimalToDMS(lat, lng);
 
-        if (theme.id === "Random") {
+        if (theme.id === 'Random') {
           response = await getRandomRecommends(lng, lat, address);
         } else {
           response = await getThemeRecommends(lng, lat, theme.themeId, address);
         }
-        console.log(response);
+        // console.log(response);
         if (response.status === 200) {
           const logData = response.data.logResponse;
           const recommendList = response.data.recommendations;
@@ -130,14 +130,14 @@ const RandomPin = ({
 
   const onClick = (e: React.MouseEvent<HTMLElement>, theme: Theme) => {
     e.stopPropagation();
-   setTimeout(()=>{
-    setPin("pin_show");
-   },1500);
-    setPage("map");
     setTimeout(() => {
-      setPin("pin_hide");
+      setPin('pin_show');
+    }, 1500);
+    setPage('map');
+    setTimeout(() => {
+      setPin('pin_hide');
     }, 4500);
-    if (user.userId>0) {
+    if (user.userId > 0) {
       // console.log("user");
       getResponse(theme);
     } else {
@@ -156,10 +156,10 @@ const RandomPin = ({
       <>
         <BsFillCaretRightFill
           className={className}
-          style={{ ...style, width: "40px", height: "40px", zIndex: "1" }}
-          fontSize={"40px"}
+          style={{ ...style, width: '40px', height: '40px', zIndex: '1' }}
+          fontSize={'40px'}
           fill="white"
-          onClick={user.userId>0 ? onClick : openToast}
+          onClick={user.userId > 0 ? onClick : openToast}
         />
       </>
     );
@@ -171,10 +171,10 @@ const RandomPin = ({
       <>
         <BsFillCaretLeftFill
           className={className}
-          style={{ ...style, width: "40px", height: "40px" }}
-          fontSize={"40px"}
+          style={{ ...style, width: '40px', height: '40px' }}
+          fontSize={'40px'}
           fill="white"
-          onClick={user.userId>0 ? onClick : openToast}
+          onClick={user.userId > 0 ? onClick : openToast}
         />
       </>
     );
@@ -207,9 +207,9 @@ const RandomPin = ({
           </button>
         ))}
       </Slider>
-      {user.userId===0 && (
+      {user.userId === 0 && (
         <Toast
-          content={"로그인하여 더 많은 테마를 이용해 보세요 !"}
+          content={'로그인하여 더 많은 테마를 이용해 보세요 !'}
           toast={toast}
           openToast={openToast}
         />

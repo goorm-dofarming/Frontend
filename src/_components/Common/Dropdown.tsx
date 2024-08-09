@@ -5,8 +5,12 @@ import cx from 'classnames';
 import { colorTheme } from '@/src/_styles/common/commonColorStyles';
 import { SortType } from '@/src/types/aboutLikes';
 
-const DropdownContainer = styled.div<{width?:string; fontsize?:string, padding?:string}>`
-  width:${({ width }) => (width  ? width : '142px')};
+const DropdownContainer = styled.div<{
+  width?: string;
+  fontSize?: string;
+  padding?: string;
+}>`
+  width: ${({ width }) => (width ? width : '142px')};
   height: 40px;
   position: relative;
   border: 1px solid ${colorTheme.secondary};
@@ -57,13 +61,13 @@ const DropdownContainer = styled.div<{width?:string; fontsize?:string, padding?:
     }
 
     .item {
-      font-size:${({ fontsize }) => (fontsize  ? fontsize : '14px')};
+      font-size: ${({ fontSize }) => (fontSize ? fontSize : '14px')};
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
       align-items: center;
       /* text-align: right; */
-      padding:${({ padding }) => (padding  ? padding : '12px')};
+      padding: ${({ padding }) => (padding ? padding : '12px')};
       background-color: ${colorTheme.secondary};
       border-left: 1px solid white;
       border-right: 1px solid white;
@@ -74,11 +78,11 @@ const DropdownContainer = styled.div<{width?:string; fontsize?:string, padding?:
         background-color: white;
         color: ${colorTheme.secondary};
       }
-      &:nth-of-type(1){
+      &:nth-of-type(1) {
         border-top-left-radius: 2px;
         border-top-right-radius: 2px;
       }
-      &:nth-of-type(4){
+      &:nth-of-type(4) {
         border-bottom-left-radius: 2px;
         border-bottom-right-radius: 2px;
       }
@@ -98,14 +102,14 @@ const Dropdown = ({
   value: string;
   items: any[];
   onClick: (item: any) => void;
-  width?:string;
-  fontSize?:string;
-  padding?:string;
+  width?: string;
+  fontSize?: string;
+  padding?: string;
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const onClickDropdown = (e: React.MouseEvent<HTMLDivElement>) => {
-    console.log('onClickDropdown');
+    // console.log('onClickDropdown');
     if ((e.target as HTMLElement).classList.contains('icon')) {
       e.stopPropagation();
     }
@@ -128,7 +132,7 @@ const Dropdown = ({
   }, [isOpen]);
 
   return (
-    <DropdownContainer width={width} fontsize={fontSize} padding={padding} >
+    <DropdownContainer width={width} fontSize={fontSize} padding={padding}>
       <div ref={ref} onClick={onClickDropdown} className={cx('dropdownInfo')}>
         {value}
         {isOpen ? (
@@ -141,11 +145,11 @@ const Dropdown = ({
         {items.map((item) => {
           return (
             <li
-              key={item.id +item.value}
+              key={item.id + item.value}
               className="item"
               onClick={() => onClick(item)}
             >
-              {type ==="chat" ? item.value : item.content}
+              {type === 'chat' ? item.value : item.content}
             </li>
           );
         })}

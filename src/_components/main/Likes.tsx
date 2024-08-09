@@ -109,7 +109,7 @@ const Container = styled.div`
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            border-radius:2px;
+            border-radius: 2px;
             gap: 8px;
             > .icon {
               cursor: pointer;
@@ -257,7 +257,7 @@ const Likes = () => {
         sortType: sortType.value,
       };
       if (loadInfo.likeId !== 0) {
-        console.log(loadInfo);
+        // console.log(loadInfo);
         params['likeId'] = loadInfo.likeId;
         params['updatedAt'] = loadInfo.updatedAt;
       }
