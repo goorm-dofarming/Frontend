@@ -93,7 +93,7 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
       setLocation(response);
       if (response.isReviewed) {
         const myResponse = await getMyReview(locationId);
-        console.log('my review : ', myResponse);
+        // console.log('my review : ', myResponse);
         setMyReview(myResponse);
       } else {
         setMyReview(null);
@@ -308,7 +308,7 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
       for (let imageId of deleteImages) {
         try {
           const response = await deleteImage(imageId);
-          console.log(response);
+          // console.log(response);
         } catch (error) {
           if (axios.isAxiosError(error)) {
             console.error('Axios error:', error);

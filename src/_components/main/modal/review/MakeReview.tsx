@@ -88,7 +88,7 @@ const MakeReview: React.FC<MakeReviewProps> = ({
 
   const handleImageAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
-    console.log('이미지 추가');
+    // console.log('이미지 추가');
 
     if (file) {
       setImages((prevImages) => [...prevImages, file]);
@@ -132,10 +132,10 @@ const MakeReview: React.FC<MakeReviewProps> = ({
       openToast();
       return;
     }
-    console.log('isUpdate ', isUpdate);
+    // console.log('isUpdate ', isUpdate);
     if (isUpdate) {
       if (myReview?.reviewId) {
-        console.log(myReview?.reviewId, score, content, images, deleteImageIds);
+        // console.log(myReview?.reviewId, score, content, images, deleteImageIds);
         onUpdateReview(
           myReview?.reviewId,
           score,

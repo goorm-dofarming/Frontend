@@ -128,7 +128,7 @@ const ProfileDropdown = ({
       logId: 0,
       recommends: [],
     });
-    console.log(cookies);
+    // console.log(cookies);
   };
 
   const onClick = (id: string) => {

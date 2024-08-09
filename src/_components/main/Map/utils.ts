@@ -132,7 +132,7 @@ export const makeShareWindow = () => {
     if (window.Kakao) {
       if (!window.Kakao.isInitialized()) {
         window.Kakao.init('8340178facebe8ebb2f804b95925836b');
-        console.log('script:', window.Kakao);
+        // console.log('script:', window.Kakao);
 
         window.Kakao.Share.createDefaultButton({
           container: '#share-kakaotalk', // 공유 버튼을 삽입할 HTML 요소의 ID
