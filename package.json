@@ -19,6 +19,7 @@
     "classnames": "^2.5.1",
     "client-only": "^0.0.1",
     "event-source-polyfill": "^1.0.31",
+    "graceful-fs": "^4.2.11",
     "lodash": "^4.17.21",
     "next": "14.2.4",
     "postcss": "^8.4.41",
