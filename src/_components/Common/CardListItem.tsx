@@ -1,10 +1,10 @@
-import React, { SetStateAction, Dispatch, useState } from "react";
-import styled from "styled-components";
-import Image from "next/image";
-import { IoHeartSharp } from "react-icons/io5"; //꽉찬하트
-import { Recommend, DataType } from "@/src/types/aboutMap";
-import main_logo from "@/src/_assets/icons/main_logo.png";
-import { colorTheme } from "@/src/_styles/common/commonColorStyles";
+import React, { SetStateAction, Dispatch, useState } from 'react';
+import styled from 'styled-components';
+import Image from 'next/image';
+import { IoHeartSharp } from 'react-icons/io5'; //꽉찬하트
+import { Recommend, DataType } from '@/src/types/aboutMap';
+import main_logo from '@/src/_assets/icons/main_logo.png';
+import { colorTheme } from '@/src/_styles/common/commonColorStyles';
 const Container = styled.div`
   padding: 8px;
   width: 344px;
@@ -46,6 +46,7 @@ const Description = styled.div`
   font-size: 12px;
   gap: 1px;
   overflow: hidden;
+
   .title {
     width: 100%;
     overflow-y: hidden;
@@ -60,13 +61,17 @@ const Description = styled.div`
     width: 100%;
     white-space: nowrap;
     overflow-y: hidden;
-    text-overflow: ellipsis;
+    /* text-overflow: ellipsis; */
     display: block;
     /* transition: all 3s ease-in-out; */
     &:hover {
       text-overflow: initial;
       white-space: nowrap;
       overflow: visible;
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
     }
   }
   .phone {
@@ -94,9 +99,9 @@ const Likes = styled.div`
 
 const formatNumber = (num: number) => {
   if (num >= 1e6) {
-    return (num / 1e6).toFixed(1) + "M";
+    return (num / 1e6).toFixed(1) + 'M';
   } else if (num >= 1e3) {
-    return (num / 1e3).toFixed(1) + "K";
+    return (num / 1e3).toFixed(1) + 'K';
   } else {
     return num.toString();
   }
@@ -132,7 +137,7 @@ const CardListItem = ({
         <p className="title">{title}</p>
         <div className="type">{DataType[dataType].type}</div>
         <div className="address">{addr}</div>
-        <div className="phone">{`☎️: ${tel || "준비중"} `}</div>
+        <div className="phone">{`☎️: ${tel || '준비중'} `}</div>
       </Description>
       <Likes>
         <IoHeartSharp
