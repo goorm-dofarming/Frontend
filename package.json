@@ -10,6 +10,7 @@
     "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
+    "@next/env": "^14.2.5",
     "@stomp/stompjs": "^7.0.0",
     "@types/lodash": "^4.17.7",
     "@types/qs": "^6.9.15",
