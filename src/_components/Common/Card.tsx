@@ -35,15 +35,12 @@ const Container = styled.div`
 const LocationImage = styled.div`
   width: 96%;
   height: 160px;
+  position: relative;
   > img {
-    object-fit: fill;
-    width: 100%;
-    height: 160px;
+    object-fit: cover;
   }
   .logo {
     object-fit: contain;
-    width: 100%;
-    height: 160px;
   }
 `;
 
@@ -218,14 +215,19 @@ const Card = ({
     <Container onClick={() => onClick && onClick(recommend)}>
       <LocationImage>
         {image ? (
-          <Image width={280} height={240} src={image} alt={title} />
+          <Image
+            src={image}
+            alt={title}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
         ) : (
           <Image
-            width={280}
-            height={240}
-            className="logo"
             src={main_logo}
             alt={title}
+            className="logo"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
           />
         )}
       </LocationImage>

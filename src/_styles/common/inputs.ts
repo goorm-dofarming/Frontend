@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { colorTheme } from "./commonColorStyles";
+import styled from 'styled-components';
+import { colorTheme } from './commonColorStyles';
 
 export const InputBorder = styled.div`
   height: 7vh;
@@ -12,7 +12,7 @@ export const InputBorder = styled.div`
     width: 100%;
     outline: none !important;
     border: none !important;
-    font-family: "RedHatDisplay_Variable";
+    font-family: 'RedHatDisplay_Variable';
     color: #5a5a5a;
     font-weight: 500;
   }
@@ -20,7 +20,7 @@ export const InputBorder = styled.div`
     outline: none !important;
     /* border: none !important; */
     font-size: 0.8rem;
-    font-family: "RedHatDisplay_Variable";
+    font-family: 'RedHatDisplay_Variable';
   }
   &:hover {
     border: 2px solid ${colorTheme.primary};
@@ -33,17 +33,19 @@ export const InputBorder = styled.div`
   }
 `;
 
-export const InputLoginBorder = styled(InputBorder)<{
-  ischanging?: string | null;
-}>`
+interface InputBorderStringProps {
+  $ischanging?: string | null;
+}
+
+export const InputLoginBorder = styled(InputBorder)<InputBorderStringProps>`
   width: 23vw;
   /* border-radius: 0.3rem 0.3rem 0 0; */
 
   padding: 0.2rem 0.2rem 0.2rem 0.4rem;
   border: ${(props) =>
-    props.ischanging === "email" && `2px solid ${colorTheme.primary}`};
+    props.$ischanging === 'email' && `2px solid ${colorTheme.primary}`};
   .inputInMent {
-    font-family: "NanumBarunGothic";
+    font-family: 'NanumBarunGothic';
     color: #a09f9f;
     font-weight: 545;
   }
@@ -52,16 +54,14 @@ export const InputLoginBorder = styled(InputBorder)<{
   }
 `;
 
-export const InputPwdBorder = styled(InputBorder)<{
-  ischanging?: string | null;
-}>`
+export const InputPwdBorder = styled(InputBorder)<InputBorderStringProps>`
   width: 23vw;
   /* border-radius: 0 0 0.3rem 0.3rem; */
   padding: 0.2rem 0.2rem 0.2rem 0.4rem;
   border: ${(props) =>
-    props.ischanging === "password" && `2px solid ${colorTheme.primary}`};
+    props.$ischanging === 'password' && `2px solid ${colorTheme.primary}`};
   .inputInMent {
-    font-family: "NanumBarunGothic";
+    font-family: 'NanumBarunGothic';
     color: #a09f9f;
     font-weight: 545;
   }
@@ -70,16 +70,18 @@ export const InputPwdBorder = styled(InputBorder)<{
   }
 `;
 
-export const InputSignupBorder = styled(InputBorder)<{
-  ischanging?: boolean;
-}>`
+interface InputBorderBooleanProps {
+  $ischanging?: boolean;
+}
+
+export const InputSignupBorder = styled(InputBorder)<InputBorderBooleanProps>`
   width: 23vw;
   /* border-radius: 0.5rem; */
   padding: 0.2rem 0.2rem 0.2rem 0.4rem;
   margin-bottom: 1rem;
-  border: ${(props) => props.ischanging && `2px solid ${colorTheme.primary}`};
+  border: ${(props) => props.$ischanging && `2px solid ${colorTheme.primary}`};
   .inputInMent {
-    font-family: "NanumBarunGothic";
+    font-family: 'NanumBarunGothic';
     color: #a09f9f;
     font-weight: 545;
   }
@@ -88,15 +90,15 @@ export const InputSignupBorder = styled(InputBorder)<{
   }
 `;
 
-export const InputSignupAuthpBorder = styled(InputBorder)<{
-  ischanging?: boolean;
-}>`
+export const InputSignupAuthpBorder = styled(
+  InputBorder
+)<InputBorderBooleanProps>`
   width: 19vw;
   /* border-radius: 0.5rem; */
   padding: 0.2rem 0.2rem 0.2rem 0.4rem;
-  border: ${(props) => props.ischanging && `2px solid ${colorTheme.primary}`};
+  border: ${(props) => props.$ischanging && `2px solid ${colorTheme.primary}`};
   .inputInMent {
-    font-family: "NanumBarunGothic";
+    font-family: 'NanumBarunGothic';
     color: #a09f9f;
     font-weight: 545;
   }

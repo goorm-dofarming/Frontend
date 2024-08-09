@@ -8,13 +8,18 @@ const StarContainer = styled.div`
   user-select: none;
 `;
 
-const Star = styled.div<{ filled: number; size: number }>`
-  width: ${({ size }) => size}rem;
-  height: ${({ size }) => size}rem;
-  background: ${({ filled }) =>
-    filled === 1
+interface StarProps {
+  $filled: number;
+  $size: number;
+}
+
+const Star = styled.div<StarProps>`
+  width: ${(props) => props.$size}rem;
+  height: ${(props) => props.$size}rem;
+  background: ${(props) =>
+    props.$filled === 1
       ? '#FFD700'
-      : `linear-gradient(90deg, #FFD700 ${filled * 100}%, #e4e5e9 ${filled * 100}%)`};
+      : `linear-gradient(90deg, #FFD700 ${props.$filled * 100}%, #e4e5e9 ${props.$filled * 100}%)`};
   clip-path: polygon(
     50% 0%,
     61% 35%,
@@ -79,7 +84,7 @@ const StarScore: React.FC<StarScoreProps> = ({ value, size, onChange }) => {
     >
       {Array.from({ length: 5 }, (_, i) => {
         const starFilled = Math.min(Math.max(hoverValue - i, 0), 1); // 0에서 1 사이의 값을 가져옴
-        return <Star key={i} filled={starFilled} size={size} />;
+        return <Star key={i} $filled={starFilled} $size={size} />;
       })}
     </StarContainer>
   );

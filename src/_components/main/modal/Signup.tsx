@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 // img
-import ShowPwd from "@/src/_assets/main/eye.svg";
-import HidePwd from "@/src/_assets/main/eye-closed.svg";
-import KakaoLogo from "@/src/_assets/main/kakao.svg";
-import NaverLogo from "@/src/_assets/main/N.svg";
-import GoogleLogo from "@/src/_assets/main/g-logo.svg";
-import { FcGoogle } from "react-icons/fc";
-import { RiKakaoTalkFill } from "react-icons/ri";
-import { SiNaver } from "react-icons/si";
+import ShowPwd from '@/src/_assets/main/eye.svg';
+import HidePwd from '@/src/_assets/main/eye-closed.svg';
+import KakaoLogo from '@/src/_assets/main/kakao.svg';
+import NaverLogo from '@/src/_assets/main/N.svg';
+import GoogleLogo from '@/src/_assets/main/g-logo.svg';
+import { FcGoogle } from 'react-icons/fc';
+import { RiKakaoTalkFill } from 'react-icons/ri';
+import { SiNaver } from 'react-icons/si';
 // styles
 import {
   GoogleCircleButton,
@@ -17,21 +17,21 @@ import {
   NAverCircleButton,
   SignupButton,
   SignupDisActiveButton,
-} from "@/src/_styles/common/buttons";
+} from '@/src/_styles/common/buttons';
 
 // styles
 import {
   InputSignupAuthpBorder,
   InputSignupBorder,
-} from "@/src/_styles/common/inputs";
+} from '@/src/_styles/common/inputs';
 
 // libraries
-import { useMutation } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
-import { inputDataType } from "@/src/types/aboutMain";
+import { useMutation } from '@tanstack/react-query';
+import axios, { AxiosError } from 'axios';
+import { inputDataType } from '@/src/types/aboutMain';
 
 // apis
-import { checkEmail, sendEmail, signUp } from "@/pages/api/auth";
+import { checkEmail, sendEmail, signUp } from '@/pages/api/auth';
 
 interface SignupType {
   inputData: inputDataType;
@@ -41,7 +41,7 @@ interface SignupType {
   handleComponent: () => void;
   setPageState: React.Dispatch<React.SetStateAction<boolean>>;
 }
-type ChangingType = "email" | "password" | "confirmPassword" | "authentication";
+type ChangingType = 'email' | 'password' | 'confirmPassword' | 'authentication';
 const Signup = ({
   inputData,
   pwdShow,
@@ -84,12 +84,12 @@ const Signup = ({
 
   const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(
     2,
-    "0"
+    '0'
   );
-  const second = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, "0");
+  const second = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, '0');
 
   const doSignup = useMutation({
-    mutationKey: ["signup"],
+    mutationKey: ['signup'],
     mutationFn: async () => {
       const body = {
         email,
@@ -111,7 +111,7 @@ const Signup = ({
   });
 
   const certification = useMutation({
-    mutationKey: ["certification"],
+    mutationKey: ['certification'],
     mutationFn: async () => {
       const body = {
         email,
@@ -131,7 +131,7 @@ const Signup = ({
   });
 
   const signup = useMutation({
-    mutationKey: ["signup"],
+    mutationKey: ['signup'],
     mutationFn: async () => {
       const body = {
         email,
@@ -151,14 +151,14 @@ const Signup = ({
   });
   return (
     <div className="modalContents">
-      <InputSignupBorder ischanging={ischanging === "email" ? true : false}>
+      <InputSignupBorder $ischanging={ischanging === 'email' ? true : false}>
         <div
           style={{
-            width: "90%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            gap: "4px",
+            width: '90%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: '4px',
           }}
         >
           <div className="inputInMent">Email</div>
@@ -167,7 +167,7 @@ const Signup = ({
               name="email"
               onChange={(e) => {
                 handleInputData(e.target.name, e.target.value);
-                setIsChanging("email");
+                setIsChanging('email');
               }}
               onBlur={() => setIsChanging(null)}
               placeholder="이메일을 입력해주세요"
@@ -175,24 +175,24 @@ const Signup = ({
           </div>
         </div>
       </InputSignupBorder>
-      <InputSignupBorder ischanging={ischanging === "password" ? true : false}>
+      <InputSignupBorder $ischanging={ischanging === 'password' ? true : false}>
         <div
           style={{
-            width: "90%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            gap: "4px",
+            width: '90%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: '4px',
           }}
         >
           <div className="inputInMent">Password</div>
           <div className="inputRow">
             <input
-              type={pwdShow === true ? "text" : "password"}
+              type={pwdShow === true ? 'text' : 'password'}
               name="password"
               onChange={(e) => {
                 handleInputData(e.target.name, e.target.value);
-                setIsChanging("password");
+                setIsChanging('password');
               }}
               onBlur={() => setIsChanging(null)}
               placeholder="비밀번호를 입력해주세요(8~12자)"
@@ -200,36 +200,36 @@ const Signup = ({
           </div>
         </div>
         <Image
-          src={pwdShow === true ?  ShowPwd:HidePwd}
+          src={pwdShow === true ? ShowPwd : HidePwd}
           alt="비밀번호 확인"
           width={25}
           height={25}
           onClick={handlePwd}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: 'pointer' }}
         />
       </InputSignupBorder>
       <InputSignupBorder
-        ischanging={ischanging === "confirmPassword" ? true : false}
+        $ischanging={ischanging === 'confirmPassword' ? true : false}
       >
         <div
           style={{
-            width: "90%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            gap: "4px",
+            width: '90%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: '4px',
           }}
         >
-          <div className="inputInMent" style={{ marginBottom: "0.3rem" }}>
+          <div className="inputInMent" style={{ marginBottom: '0.3rem' }}>
             Check Password
           </div>
           <div className="inputRow">
             <input
-              type={pwdShow === true ? "text" : "password"}
+              type={pwdShow === true ? 'text' : 'password'}
               name="confirmPassword"
               onChange={(e) => {
                 handleInputData(e.target.name, e.target.value);
-                setIsChanging("confirmPassword");
+                setIsChanging('confirmPassword');
               }}
               onBlur={() => setIsChanging(null)}
               placeholder="비밀번호 확인"
@@ -239,15 +239,15 @@ const Signup = ({
       </InputSignupBorder>
       <div className="authContainer">
         <InputSignupAuthpBorder
-          ischanging={ischanging === "authentication" ? true : false}
+          $ischanging={ischanging === 'authentication' ? true : false}
         >
           <div
             style={{
-              width: "90%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              gap: "4px",
+              width: '90%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              gap: '4px',
             }}
           >
             <div className="inputInMent">Authentication</div>
@@ -256,7 +256,7 @@ const Signup = ({
                 name="authentication"
                 onChange={(e) => {
                   handleInputData(e.target.name, e.target.value);
-                  setIsChanging("authentication");
+                  setIsChanging('authentication');
                 }}
                 onBlur={() => setIsChanging(null)}
               />
@@ -272,7 +272,7 @@ const Signup = ({
       <div className="limitTime">
         <span>
           {password !== confirmPassword && password.length > 7
-            ? "비밀번호가 일치하지 않습니다."
+            ? '비밀번호가 일치하지 않습니다.'
             : null}
         </span>
         <span>{isCertificate === true && `${minutes}:${second}`}</span>

@@ -55,21 +55,31 @@ const LogoContainer = styled.div`
     gap: 5px;
   }
 
+  .hatContainer {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
   .hat {
-    object-fit: cover;
+    object-fit: contain;
     position: relative;
   }
 `;
 
-const Letter = styled.span<{ index: number }>`
+interface LetterProps {
+  $index: number;
+}
+
+const Letter = styled.span<LetterProps>`
   width: 3rem;
   text-align: center;
-  ${({ index }) => css`
-    transform: translateY(${getTranslationY(index)}px)
-      translateX(${getTranslationX(index)}px)
-      rotate(${getRotationAngle(index)}deg);
-    animation: ${bounce(index)} 3s linear infinite;
-    animation-delay: ${index * 0.2}s; // 인덱스에 따라 지연 시간 추가
+  ${(props) => css`
+    transform: translateY(${getTranslationY(props.$index)}px)
+      translateX(${getTranslationX(props.$index)}px)
+      rotate(${getRotationAngle(props.$index)}deg);
+    animation: ${bounce(props.$index)} 3s linear infinite;
+    animation-delay: ${props.$index * 0.2}s; // 인덱스에 따라 지연 시간 추가
     animation-fill-mode: forwards; // 애니메이션 완료 후 마지막 상태 유지
   `}
 `;
@@ -80,18 +90,21 @@ const Landing = () => {
     <LogoContainer>
       <div className="logo">
         {text.split('').map((letter, index) => (
-          <Letter key={index} index={index}>
+          <Letter key={index} $index={index}>
             {letter}
           </Letter>
         ))}
       </div>
-      <Image
-        src={Hat}
-        alt="hat"
-        className="hat"
-        layout="intrinsic"
-        sizes="(max-width: 500px) 100vw, 50vw"
-      />
+      <div className="hatContainer">
+        <Image
+          src={Hat}
+          alt="hat"
+          className="hat"
+          fill
+          sizes="(max-width: 500px) 100vw, 50vw"
+          priority
+        />
+      </div>
     </LogoContainer>
   );
 };
