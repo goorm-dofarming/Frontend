@@ -33,12 +33,14 @@ const Chat = () => {
     queryKey: ['myChats'],
     queryFn: () => getMyChatRooms({}),
     retry: 3,
+    refetchInterval: 60000,
   });
 
   const entireChatQuery = useQuery({
     queryKey: ['entireChats'],
     queryFn: () => getChatRoomList({}),
     retry: 3,
+    refetchInterval: 60000,
   });
 
   const refetchChatList = () => {
