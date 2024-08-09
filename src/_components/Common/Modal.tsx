@@ -34,8 +34,13 @@ const Modal: React.FC<MainModalType> = ({
   if (!modalRoot) return null;
 
   return ReactDOM.createPortal(
-    <ModalContainer $modal={modal.toString()} $width={width} $height={height}>
-      <div className="modal">
+    <ModalContainer
+      $modal={modal.toString()}
+      $width={width}
+      $height={height}
+      onClick={openModal}
+    >
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
         {/* 모달 헤더 */}
         <div className="modalHeader">
           <div onClick={openModal} className="logo">

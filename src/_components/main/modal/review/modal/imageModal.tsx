@@ -65,8 +65,18 @@ const ImageModal: React.FC<ImageModalProps> = ({
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    nextArrow: <NextArrow style={{ left: '-35px' }} />,
-    prevArrow: <PrevArrow style={{ rigth: '-35px' }} />,
+    nextArrow: (
+      <NextArrow
+        style={{ left: '-35px' }}
+        onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
+      />
+    ),
+    prevArrow: (
+      <PrevArrow
+        style={{ rigth: '-35px' }}
+        onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
+      />
+    ),
   };
 
   useEffect(() => {
@@ -82,21 +92,27 @@ const ImageModal: React.FC<ImageModalProps> = ({
     <div
       className={styles.container}
       style={{ visibility: imageModal ? 'visible' : 'hidden' }}
+      onClick={openImage}
     >
-      <div className={styles.modal}>
-        <div className={styles.header} onClick={openImage}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        {/* <div className={styles.header} onClick={openImage}>
           <MdClose fill="white" size={'28px'} />
-        </div>
+        </div> */}
         {review && review.images.length > 1 ? (
           <Slider {...settings} className={styles.slider}>
             {review.images.map((image) => (
-              <div key={image.imageId} className={styles.imageContainer}>
+              <div
+                key={image.imageId}
+                className={styles.imageContainer}
+                onClick={openImage}
+              >
                 <Image
                   src={image.imageUrl}
                   alt={'이미지'}
                   className={styles.image}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
+                  onClick={(e) => e.stopPropagation()}
                 />
               </div>
             ))}
@@ -104,13 +120,14 @@ const ImageModal: React.FC<ImageModalProps> = ({
         ) : (
           review &&
           review.images.length > 0 && (
-            <div className={styles.imageContainer}>
+            <div className={styles.imageContainer} onClick={openImage}>
               <Image
                 src={review.images[0].imageUrl}
-                alt={'이미지를 로드하는데에 실패했습니다.'}
+                alt={'이미지'}
                 className={styles.image}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
+                onClick={(e) => e.stopPropagation()}
               />
             </div>
           )
