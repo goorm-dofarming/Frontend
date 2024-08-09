@@ -8,6 +8,10 @@ cd $REPOSITORY
 # Install packages
 pnpm install --force
 
+# 권한 부여
+sudo chown -R ubuntu:ubuntu /home/ubuntu/deploy/.next
+sudo chmod -R 755 /home/ubuntu/deploy/.next
+
 # build
 pnpm build
 
