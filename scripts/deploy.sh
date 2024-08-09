@@ -12,7 +12,7 @@ pnpm install
 sudo chown -R ubuntu:ubuntu /home/ubuntu/deploy/.next
 sudo chmod -R 755 /home/ubuntu/deploy/.next
 
-# build step
+# build steps
 pnpm build --verbose | tee build_log.txt
 
 # Start or restart the application
