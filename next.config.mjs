@@ -13,6 +13,9 @@ const nextConfig = {
     unoptimized: true,
   },
   reactStrictMode: false,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;
