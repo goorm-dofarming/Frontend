@@ -17,6 +17,7 @@ import { IoHeartSharp } from 'react-icons/io5';
 import StarScore from './Star';
 import Modal from '@/src/_components/Common/Modal';
 import DeleteReview from './DeleteReview';
+import ImageModal from '../modal/imageModal';
 
 // hooks
 import useToggle from '@/src/hooks/Home/useToggle';
@@ -81,6 +82,7 @@ const ReviewContainer = styled.div`
       gap: 0.5rem;
 
       .image {
+        cursor: pointer;
         position: relative;
         width: 6rem;
         height: 6rem;
@@ -155,6 +157,9 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({
 }) => {
   const [modal, setModal] = useState<boolean>(false);
   const openModal = useToggle(modal, setModal);
+  const [imageModal, setImageModal] = useState<boolean>(false);
+  const openImage = useToggle(imageModal, setImageModal);
+  const [selectedReview, setSelectedReview] = useState<Review>();
 
   const getImageUrl = (url: string) => {
     if (url && !url.startsWith('http') && !url.startsWith('https')) {
@@ -175,6 +180,11 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({
     const day = date.getDate();
 
     return `${year}년 ${month}월 ${day}일`;
+  };
+
+  const onClickImage = (review: Review) => {
+    setSelectedReview(review);
+    openImage();
   };
 
   const iconClass = cx({
@@ -217,7 +227,11 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({
         <div className="images">
           {review.images &&
             review.images.map((image, index) => (
-              <div className="image" key={index}>
+              <div
+                className="image"
+                key={index}
+                onClick={() => onClickImage(review)}
+              >
                 <Image
                   src={image.imageUrl}
                   alt="이미지"
@@ -259,6 +273,11 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({
           onDeleteReview={onDeleteReview}
         />
       </Modal>
+      <ImageModal
+        review={selectedReview}
+        imageModal={imageModal}
+        openImage={openImage}
+      />
     </ReviewContainer>
   );
 };

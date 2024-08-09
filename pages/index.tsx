@@ -126,7 +126,7 @@ const Home = () => {
           Connection: 'keep-alive',
           Accept: 'text/event-stream',
         },
-        heartbeatTimeout: 86400000, // 24시간
+        heartbeatTimeout: 1800000, // 30분
       }
     );
 
