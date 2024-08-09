@@ -6,8 +6,9 @@ REPOSITORY=/home/ubuntu/deploy
 cd $REPOSITORY
 
 # Install packages
-pnpm install
+pnpm install --force
 
+# build
 pnpm build
 
 # Start or restart the application

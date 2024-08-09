@@ -31,7 +31,7 @@
     "sharp": "^0.33.4",
     "slick-carousel": "^1.8.1",
     "sockjs-client": "^1.6.1",
-    "styled-jsx": "^5.1.6"
+    "styled-jsx": "5.1.1"
   },
   "devDependencies": {
     "@react-oauth/google": "^0.12.1",
