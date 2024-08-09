@@ -17,6 +17,7 @@
     "@types/qs": "^6.9.15",
     "@types/react-slick": "^0.23.13",
     "classnames": "^2.5.1",
+    "client-only": "^0.0.1",
     "event-source-polyfill": "^1.0.31",
     "lodash": "^4.17.21",
     "next": "14.2.4",

@@ -29,6 +29,9 @@ importers:
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
+      client-only:
+        specifier: ^0.0.1
+        version: 0.0.1
       event-source-polyfill:
         specifier: ^1.0.31
         version: 1.0.31
