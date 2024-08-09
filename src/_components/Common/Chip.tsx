@@ -2,21 +2,25 @@ import styled from 'styled-components';
 import { colorTheme } from '@/src/_styles/common/commonColorStyles';
 import { Dispatch, SetStateAction } from 'react';
 
-const ChipContainer = styled.button<{ isselected: string }>`
+interface ChipContainerProps {
+  $isselected: string;
+}
+
+const ChipContainer = styled.button<ChipContainerProps>`
   /* width: 80px;*/
   height: 36px;
   white-space: nowrap;
   display: inline-block;
   padding: 0px 20px;
   letter-spacing: 2px;
-  background-color: ${({ isselected }) =>
-    isselected === 'true' ? `${colorTheme.secondary}` : 'white'};
-  border: ${({ isselected }) =>
-    isselected === 'true'
+  background-color: ${(props) =>
+    props.$isselected === 'true' ? `${colorTheme.secondary}` : 'white'};
+  border: ${(props) =>
+    props.$isselected === 'true'
       ? '1px solid white'
       : `1px solid ${colorTheme.secondary}`};
-  color: ${({ isselected }) =>
-    isselected === 'true' ? 'white' : `${colorTheme.secondary}`};
+  color: ${(props) =>
+    props.$isselected === 'true' ? 'white' : `${colorTheme.secondary}`};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -59,7 +63,7 @@ const Chip = ({
     }
   };
   return (
-    <ChipContainer onClick={onClickChip} isselected={isSelected.toString()}>
+    <ChipContainer onClick={onClickChip} $isselected={isSelected.toString()}>
       {content}
     </ChipContainer>
   );

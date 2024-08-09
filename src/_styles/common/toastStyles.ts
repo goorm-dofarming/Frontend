@@ -1,19 +1,21 @@
 import styled, { keyframes } from 'styled-components';
 import { colorTheme } from '@/src/_styles/common/commonColorStyles';
 
-export const ToastContainer = styled.div<{
-  toast: string;
-}>`
+interface ToastContainerProps {
+  $toast: string;
+}
+
+export const ToastContainer = styled.div<ToastContainerProps>`
   position: fixed;
   width: 100%;
   height: 10rem;
-  visibility: ${({ toast }) => (toast === 'true' ? 'display' : 'hidden')};
+  visibility: ${(props) => (props.$toast === 'true' ? 'display' : 'hidden')};
   z-index: 1001;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  animation: ${({ toast }) =>
-    toast === 'true' ? 'fade 3s ease-in-out' : 'none'};
+  animation: ${(props) =>
+    props.$toast === 'true' ? 'fade 3s ease-in-out' : 'none'};
 
   .toast {
     width: auto;
@@ -27,7 +29,7 @@ export const ToastContainer = styled.div<{
     align-items: center;
     /* box-shadow: 1px 4px 5px 1px rgba(0,0,0,0.5); */
     filter: drop-shadow(0 20px 13px rgb(0 0 0 / 0.03))
-    drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
+      drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
   }
 
   .toast > svg {

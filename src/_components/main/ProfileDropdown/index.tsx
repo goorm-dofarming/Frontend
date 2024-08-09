@@ -31,9 +31,11 @@ import EditUser from '../modal/EditUser';
 import { modifyUser } from '@/pages/api/user';
 import { useCookies } from 'react-cookie';
 
-const IconContainer = styled.div<{
-  dropdown: string;
-}>`
+interface IconContainerProps {
+  $dropdown: string;
+}
+
+const IconContainer = styled.div<IconContainerProps>`
   z-index: 10;
   position: absolute;
   top: 2%;
@@ -61,13 +63,13 @@ const IconContainer = styled.div<{
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    animation: ${({ dropdown }) =>
-      dropdown === 'true'
+    animation: ${(props) =>
+      props.$dropdown === 'true'
         ? css`0.5s ${showHomeIcons} ease-in-out`
         : css`0.5s ${hideHomeIcons} ease-in-out`};
     transition: 0.3s visibility;
-    visibility: ${({ dropdown }) =>
-      dropdown === 'true' ? 'visible' : 'hidden'};
+    visibility: ${(props) =>
+      props.$dropdown === 'true' ? 'visible' : 'hidden'};
   }
   .iconBg {
     width: 3rem;
@@ -203,7 +205,7 @@ const ProfileDropdown = ({
 
   return (
     <IconContainer
-      dropdown={dropdown.toString()}
+      $dropdown={dropdown.toString()}
       style={{
         display: 'flex',
         flexDirection: 'column',

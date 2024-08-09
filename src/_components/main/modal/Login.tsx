@@ -67,7 +67,7 @@ const Login = ({
 
       if (response.status === 200) {
         // 성공 시 cookie에 token 추가
-        setCookies('token', response.data,{
+        setCookies('token', response.data, {
           path: '/',
           // sameSite: 'none',
           // secure: true,
@@ -139,7 +139,7 @@ const Login = ({
   /* eslint-enable react-hooks/exhaustive-deps */
   return (
     <div className="modalContents" style={{ gap: '16px' }}>
-      <InputLoginBorder ischanging={ischanging}>
+      <InputLoginBorder $ischanging={ischanging}>
         <div
           style={{
             width: '90%',
@@ -163,7 +163,7 @@ const Login = ({
           </div>
         </div>
       </InputLoginBorder>
-      <InputPwdBorder ischanging={ischanging}>
+      <InputPwdBorder $ischanging={ischanging}>
         <div
           style={{
             width: '90%',
@@ -187,7 +187,7 @@ const Login = ({
           </div>
         </div>
         <Image
-          src={pwdShow === true ?  ShowPwd :HidePwd}
+          src={pwdShow === true ? ShowPwd : HidePwd}
           alt="비밀번호 확인"
           width={30}
           height={30}

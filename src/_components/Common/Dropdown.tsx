@@ -5,12 +5,14 @@ import cx from 'classnames';
 import { colorTheme } from '@/src/_styles/common/commonColorStyles';
 import { SortType } from '@/src/types/aboutLikes';
 
-const DropdownContainer = styled.div<{
-  width?: string;
-  fontSize?: string;
-  padding?: string;
-}>`
-  width: ${({ width }) => (width ? width : '142px')};
+interface DropdownContainerProps {
+  $width?: string;
+  $fontSize?: string;
+  $padding?: string;
+}
+
+const DropdownContainer = styled.div<DropdownContainerProps>`
+  width: ${(props) => (props.$width ? props.$width : '142px')};
   height: 40px;
   position: relative;
   border: 1px solid ${colorTheme.secondary};
@@ -61,13 +63,13 @@ const DropdownContainer = styled.div<{
     }
 
     .item {
-      font-size: ${({ fontSize }) => (fontSize ? fontSize : '14px')};
+      font-size: ${(props) => (props.$fontSize ? props.$fontSize : '14px')};
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
       align-items: center;
       /* text-align: right; */
-      padding: ${({ padding }) => (padding ? padding : '12px')};
+      padding: ${(props) => (props.$padding ? props.$padding : '12px')};
       background-color: ${colorTheme.secondary};
       border-left: 1px solid white;
       border-right: 1px solid white;
@@ -132,7 +134,7 @@ const Dropdown = ({
   }, [isOpen]);
 
   return (
-    <DropdownContainer width={width} fontSize={fontSize} padding={padding}>
+    <DropdownContainer $width={width} $fontSize={fontSize} $padding={padding}>
       <div ref={ref} onClick={onClickDropdown} className={cx('dropdownInfo')}>
         {value}
         {isOpen ? (

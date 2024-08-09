@@ -1,15 +1,17 @@
 import styled from 'styled-components';
 import { colorTheme } from '@/src/_styles/common/commonColorStyles';
 
-export const ModalContainer = styled.div<{
-  modal: string;
-  width: string;
-  height: string;
-}>`
+interface ModalContainerProps {
+  $modal: string;
+  $width: string;
+  $height: string;
+}
+
+export const ModalContainer = styled.div<ModalContainerProps>`
   position: fixed;
   width: 100%;
   height: 100%;
-  visibility: ${({ modal }) => (modal === 'true' ? 'visible' : 'hidden')};
+  visibility: ${(props) => (props.$modal === 'true' ? 'visible' : 'hidden')};
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
   display: flex;
@@ -17,14 +19,15 @@ export const ModalContainer = styled.div<{
   align-items: center;
 
   .modal {
-    width: ${({ width }) => width};
-    height: ${({ height }) => height};
+    width: ${(props) => props.$width};
+    height: ${(props) => props.$height};
     z-index: 1;
     background-color: white;
     border-radius: 0.5rem;
     padding: 8px;
-    transform: ${({ modal }) => (modal === 'true' ? 'scale(1)' : 'scale(0.3)')};
-    opacity: ${({ modal }) => (modal === 'true' ? '1' : '0')};
+    transform: ${(props) =>
+      props.$modal === 'true' ? 'scale(1)' : 'scale(0.3)'};
+    opacity: ${(props) => (props.$modal === 'true' ? '1' : '0')};
     transition:
       transform 0.5s ease-in-out,
       opacity 0.3s ease-in-out;
