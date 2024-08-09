@@ -1,5 +1,5 @@
-@use "../../src/_styles/constants/color" as c;
-@use "../../src/_styles/mixins/" as m;
+@use '../../src/_styles/constants/color' as c;
+@use '../../src/_styles/mixins/' as m;
 .landing {
   background-color: c.$C_TERTIARY;
   width: 100vw;
@@ -73,7 +73,11 @@
     @include m.flex(flex-start, center, column);
     gap: 8px;
     overflow: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 
