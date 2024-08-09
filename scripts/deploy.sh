@@ -8,6 +8,8 @@ cd $REPOSITORY
 # Install packages
 sudo pnpm install
 
+sudo pnpm add styled-jsx
+
 sudo pnpm build
 
 # Start or restart the application
