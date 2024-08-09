@@ -59,7 +59,7 @@ const Map = () => {
     setSelectedLocation(recommend);
     setTimeout(() => {
       openModal();
-    }, 1000);
+    }, 500);
   };
 
   const onClickKakaoButton = () => {
