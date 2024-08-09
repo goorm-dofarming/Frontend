@@ -1,4 +1,4 @@
-import { RandomPinType } from '@/src/types/aboutMap';
+import { DataType, RandomPinType } from '@/src/types/aboutMap';
 import kakaotalk from '@/src/_assets/main/map/kakaotalk.png';
 import link from '@/src/_assets/main/map/link.png';
 const imgSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/share/`;
@@ -122,29 +122,70 @@ text-overflow:ellipsis;  filter: drop-shadow(0 20px 13px rgb(0 0 0 / 0.03))
     drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));">${title}</div>`;
 };
 
-export const makeShareWindow = () => {
+export const makeShareWindow = (
+  randomPin: RandomPinType,
+  userName: string,
+  userImage: string
+) => {
   const script = document.createElement('script');
   const KAKAO_JS_SDK_URL = `https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js`;
   script.src = KAKAO_JS_SDK_URL;
   document.head.appendChild(script);
 
+  const makeKakaoImg = (randomPin: RandomPinType) => {
+    const images = [];
+    for (let i = 0; i < randomPin.recommends.length; i++) {
+      if (images.length === 3) break;
+      const recommend = randomPin.recommends[i];
+      if (recommend.image) {
+        images.push(recommend.image);
+      }
+    }
+    return images;
+  };
+  const makeLocation = (randomPin: RandomPinType) => {
+    const location = [];
+    for (let i = 0; i < randomPin.recommends.length; i++) {
+      if (location.length === 4) break;
+      const recommend = randomPin.recommends[i];
+      location.push({
+        theme: DataType[recommend.dataType].type,
+        title: recommend.title,
+      });
+    }
+    return location;
+  };
+
   script.onload = () => {
     if (window.Kakao) {
       if (!window.Kakao.isInitialized()) {
         window.Kakao.init('8340178facebe8ebb2f804b95925836b');
-        console.log('script:', window.Kakao);
 
-        window.Kakao.Share.createDefaultButton({
-          container: '#share-kakaotalk', // 공유 버튼을 삽입할 HTML 요소의 ID
-          objectType: 'feed',
-          content: {
-            title: '디지털농업투어',
-            description: '농업 관련 다양한 투어를 즐겨보세요!',
-            imageUrl: `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/sample.jpg`,
-            link: {
-              mobileWebUrl: `${window.location.href}`,
-              webUrl: `${window.location.href}`,
-            },
+        const images = makeKakaoImg(randomPin);
+        const locations = makeLocation(randomPin);
+        window.Kakao.Share.createCustomButton({
+          container: '#share-kakaotalk', // 공유 버튼을 삽입할 HTML ,
+          templateId: 110964,
+          templateArgs: {
+            '${IMG1}': `${images[0]}`,
+            '${IMG2}': `${images[1]}`,
+            '${IMG3}': `${images[2]}`,
+            '${THEME}': `${randomPin.theme}`,
+            '${ADDRESS}': `${randomPin.address}`,
+            '${latDMS}': `${randomPin.latDMS}`,
+            '${lngDMS}': `${randomPin.lngDMS}`,
+            '${THEME_1}': `${locations.length > 0 ? locations[0].theme : ''}`,
+            '${THEME_2}': `${locations.length > 1 ? locations[1].theme : ''}`,
+            '${THEME_3}': `${locations.length > 2 ? locations[2].theme : ''}`,
+            '${THEME_4}': `${locations.length > 3 ? locations[3].theme : ''}`,
+            '${TITLE_1}': `${locations.length > 0 ? locations[0].title : ''}`,
+            '${TITLE_2}': `${locations.length > 1 ? locations[1].title : ''}`,
+            '${TITLE_3}': `${locations.length > 2 ? locations[2].title : ''}`,
+            '${TITLE_4}': `${locations.length > 3 ? locations[3].title : ''}`,
+            '${LOG_ID}': `${randomPin.logId}`,
+            '${userImage}': `${userImage !== null ? userImage : `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/profile/user.png`}`,
+            '${userName}': `${userName}`,
+            '${REGI_WEB_DOMAIN}': `${window.location.href}`,
           },
         });
       }

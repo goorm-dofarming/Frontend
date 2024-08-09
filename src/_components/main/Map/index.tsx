@@ -67,7 +67,7 @@ const Map = () => {
       openToast();
       return;
     }
-    makeShareWindow();
+    makeShareWindow(randomPin, user.nickname, user.imageUrl);
   };
 
   const setInitial = async () => {
@@ -113,16 +113,16 @@ const Map = () => {
     // document.cookie = 'username=dofarming; SameSite=Strict; Secure';
     const script = document.createElement('script');
     script.src = KAKAO_SDK_URL;
-    script.id="kakao_sdk_script"
+    script.id = 'kakao_sdk_script';
     // document.head.appendChild(script);
-    const prev=document.getElementById('kakao_sdk_script');
-    if (prev===null) {
+    const prev = document.getElementById('kakao_sdk_script');
+    if (prev === null) {
       document.head.appendChild(script);
-    }else{
+    } else {
       document.head.removeChild(prev);
       document.head.appendChild(script);
     }
-    const onLoadKakaoMap  = () => {
+    const onLoadKakaoMap = () => {
       window.kakao.maps.load(() => {
         const center = new window.kakao.maps.LatLng(
           randomPin.lat,
@@ -175,9 +175,9 @@ const Map = () => {
         for (let i = 0; i < randomPin.recommends.length; i++) {
           let show = true;
           const curr = randomPin.recommends[i];
-        if((curr.dataType ===1 ||curr.dataType===2) && i===0){
-          show = false;
-        }
+          if ((curr.dataType === 1 || curr.dataType === 2) && i === 0) {
+            show = false;
+          }
           const pinSize = new kakao.maps.Size(48, 60);
           const pinImg = DataType[curr.dataType].img;
           const newMarkerImg = new kakao.maps.MarkerImage(pinImg, pinSize);
@@ -263,7 +263,7 @@ const Map = () => {
     }
     kakaoMap.setLevel(2);
     kakaoMap.setCenter(center);
-    
+
     // kakaoMap.relayout();
   }, [focusPin]);
   return (
