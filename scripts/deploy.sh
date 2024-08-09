@@ -5,6 +5,9 @@ REPOSITORY=/home/ubuntu/deploy
 
 cd $REPOSITORY
 
+# 기존 node_modules 삭제
+rm -rf node_modules pnpm-lock.yaml
+
 # Install packages
 pnpm install
 
