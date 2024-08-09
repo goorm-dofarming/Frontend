@@ -1,6 +1,5 @@
 import { DataType, RandomPinType } from '@/src/types/aboutMap';
-import kakaotalk from '@/src/_assets/main/map/kakaotalk.png';
-import link from '@/src/_assets/main/map/link.png';
+
 const imgSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/share/`;
 
 const makeCOImages = (randomPin: RandomPinType) => {
@@ -183,7 +182,7 @@ export const makeShareWindow = (
             '${TITLE_3}': `${locations.length > 2 ? locations[2].title : ''}`,
             '${TITLE_4}': `${locations.length > 3 ? locations[3].title : ''}`,
             '${LOG_ID}': `${randomPin.logId}`,
-            '${userImage}': `${userImage !== null ? userImage : `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/profile/user.png`}`,
+            '${userImage}': `${userImage !== null ? userImage : `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/profile/unknown.png`}`,
             '${userName}': `${userName}`,
             '${REGI_WEB_DOMAIN}': `${window.location.href}`,
           },
