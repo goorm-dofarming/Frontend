@@ -1,0 +1,55 @@
+@use '@/src/_styles/constants/color' as c;
+@use '@/src/_styles/mixins/' as m;
+
+.container {
+  @include m.flex(center, center, column);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+
+  .modal {
+    @include m.flex(center, center, column);
+    width: 40%;
+    min-width: 600px;
+    height: auto;
+
+    .header {
+      cursor: pointer;
+      color: white;
+      font-size: 900;
+      margin-left: auto;
+    }
+
+    .slider {
+      width: 100%;
+      flex: 1;
+      z-index: 1000;
+
+      > svg {
+        z-index: 1000;
+      }
+
+      .imageContainer {
+        width: 100%;
+        height: 600px;
+        position: relative;
+
+        .image {
+          object-fit: contain;
+        }
+      }
+    }
+
+    .imageContainer {
+      width: 100%;
+      height: 600px;
+      position: relative;
+
+      .image {
+        object-fit: contain;
+      }
+    }
+  }
+}
