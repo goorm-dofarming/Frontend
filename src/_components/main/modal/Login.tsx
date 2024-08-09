@@ -67,7 +67,7 @@ const Login = ({
 
       if (response.status === 200) {
         // 성공 시 cookie에 token 추가
-        setCookies('token', response.data,{
+        setCookies('token', response.data, {
           path: '/',
           // sameSite: 'none',
           // secure: true,
@@ -101,7 +101,6 @@ const Login = ({
         Authorization: `Bearer ${gToken}`,
       };
       const userResponse = await getGoogleUserData(headers);
-      // console.log("userResponse:", userResponse);
 
       const body = {
         socialType: 'GOOGLE',
@@ -111,10 +110,7 @@ const Login = ({
       const signupGoogle = await signupSocialLogin(body);
       setCookies('token', signupGoogle.data, {
         path: '/',
-        // sameSite: 'none',
-        // secure: true,
       });
-      //console.log('signupGoogle: ', signupGoogle);
 
       if (signupGoogle.status === 200) {
         openModal();
@@ -187,7 +183,7 @@ const Login = ({
           </div>
         </div>
         <Image
-          src={pwdShow === true ?  ShowPwd :HidePwd}
+          src={pwdShow === true ? ShowPwd : HidePwd}
           alt="비밀번호 확인"
           width={30}
           height={30}
