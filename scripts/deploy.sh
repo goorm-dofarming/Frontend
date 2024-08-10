@@ -33,8 +33,16 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# node_modules 권한 부여
+echo "Changing ownership of node_modules to ubuntu..." | tee -a $LOG_FILE
+sudo chown -R ubuntu:ubuntu /home/ubuntu/deploy
+sudo chmod -R 755 /home/ubuntu/deploy
+
+# pnpm 재설치
+pnpm install
+
 # 애플리케이션 시작 또는 재시작
 echo "Starting or resurrecting the application..." | tee -a $LOG_FILE
-sudo pm2 resurrect || sudo pm2 start npm --name "Frontend" -- start | tee -a $LOG_FILE
+pm2 resurrect || pm2 start npm --name "Frontend" -- start | tee -a $LOG_FILE
 
 echo "Deployment finished successfully." | tee -a $LOG_FILE
