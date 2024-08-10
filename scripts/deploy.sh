@@ -1,6 +1,5 @@
 #!/bin/bash
-# set -e
-
+set -e
 
 # 권한 부여
 echo "Changing ownership and permissions..."
@@ -12,7 +11,7 @@ cd /home/ubuntu/deploy
 
 # 패키지 설치
 echo "Installing packages..."
-pnpm install
+pnpm install --force
 
 # 애플리케이션 시작 또는 재시작
 echo "Starting or resurrecting the application..."
