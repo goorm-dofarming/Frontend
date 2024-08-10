@@ -3,20 +3,20 @@ set -e  # 에러 발생 시 스크립트 중단
 
 REPOSITORY=/home/ubuntu/deploy
 
+# 권한 부여
+echo "Changing ownership and permissions..." >> error_log.txt 2>&1
+sudo chown -R ubuntu:ubuntu /home/ubuntu/deploy/node_modules >> error_log.txt 2>&1
+sudo chmod -R 755 /home/ubuntu/deploy/node_modules error_log.txt 2>&1
+
 # 작업 디렉토리로 이동
-cd $REPOSITORY
+cd /home/ubuntu/deploy
 
 # 로그 파일 초기화
 echo "Deploy script started" > error_log.txt  # 로그 파일을 초기화합니다.
 
-# 권한 부여
-echo "Changing ownership and permissions..." >> error_log.txt 2>&1
-sudo chown -R ubuntu:ubuntu $REPOSITORY >> error_log.txt 2>&1
-sudo chmod -R 755 $REPOSITORY >> error_log.txt 2>&1
-
 # 캐시 정리
 echo "Cleaning pnpm store..." >> error_log.txt 2>&1
-pnpm store prune >> error_log.txt 2>&1
+sudo pnpm store prune >> error_log.txt 2>&1
 
 # 기존 node_modules 및 관련 디렉터리 삭제
 echo "Removing existing node_modules and build directories..." >> error_log.txt 2>&1
