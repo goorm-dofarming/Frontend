@@ -55,11 +55,15 @@ const Map = () => {
     openToast();
   };
   const onClickCard = (recommend: Recommend) => {
-    setFocusPin(recommend);
-    setSelectedLocation(recommend);
-    setTimeout(() => {
+    if (focusPin === recommend) {
       openModal();
-    }, 500);
+    } else {
+      setFocusPin(recommend);
+      setSelectedLocation(recommend);
+      setTimeout(() => {
+        openModal();
+      }, 500);
+    }
   };
 
   const onClickKakaoButton = () => {

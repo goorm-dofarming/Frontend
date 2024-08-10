@@ -136,11 +136,15 @@ const Log = () => {
   // };
 
   const onClickCard = (recommend: Recommend) => {
-    setFocusPin(recommend);
-    setSelectedLocationId(recommend.locationId);
-    setTimeout(() => {
+    if (focusPin === recommend) {
       openModal();
-    }, 1000);
+    } else {
+      setFocusPin(recommend);
+      setSelectedLocationId(recommend.locationId);
+      setTimeout(() => {
+        openModal();
+      }, 500);
+    }
   };
   useEffect(() => {
     if (selectedLogData.length === 0) {
