@@ -22,7 +22,7 @@ pnpm store prune >> error_log.txt 2>&1
 echo "Removing existing node_modules and build directories..." >> error_log.txt 2>&1
 sudo rm -rf node_modules >> error_log.txt 2>&1
 
-# node_modules 삭제 확인
+# node_modules 삭제 확인s
 if [ ! -d "node_modules" ]; then
     echo "node_modules directory successfully deleted." >> error_log.txt 2>&1
 else
