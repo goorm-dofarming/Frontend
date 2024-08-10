@@ -189,7 +189,9 @@ const Container = styled.div`
 
 interface loadInfoType {
   likeId: number;
-  updatedAt: string;
+  updatedAt?: string;
+  likeCount?: number;
+  avgScore?: string;
 }
 
 const Likes = () => {
@@ -199,7 +201,6 @@ const Likes = () => {
   const [searchText, setSearchText] = useState<string>('');
   const [loadInfo, setLoadInfo] = useState<loadInfoType>({
     likeId: 0,
-    updatedAt: '',
   });
   const [search, setSearch] = useState<boolean>(false);
   const [hasNextPage, setHasNextPage] = useState<boolean>(true);
@@ -224,7 +225,6 @@ const Likes = () => {
     setData([]);
     setLoadInfo({
       likeId: 0,
-      updatedAt: '',
     });
     setHasNextPage(true);
   };
@@ -244,7 +244,7 @@ const Likes = () => {
       if (scrollHeight - scrollTop <= clientHeight + 100 && hasNextPage) {
         fetchLikes();
       }
-    }, 3000),
+    }, 1000),
     [hasNextPage, loadInfo]
   );
   const fetchLikes = async () => {
@@ -259,7 +259,14 @@ const Likes = () => {
       if (loadInfo.likeId !== 0) {
         // console.log(loadInfo);
         params['likeId'] = loadInfo.likeId;
-        params['updatedAt'] = loadInfo.updatedAt;
+
+        if ('updatedAt' in loadInfo) {
+          params['updatedAt'] = loadInfo.updatedAt;
+        } else if ('likeCount' in loadInfo) {
+          params['likeCount'] = loadInfo.likeCount;
+        } else {
+          params['avgScore'] = loadInfo.avgScore;
+        }
       }
       if (selectedThemes.length > 0) {
         params['themes'] = selectedThemes;
@@ -278,17 +285,31 @@ const Likes = () => {
         if (newData.length === 0) {
           setLoadInfo({
             likeId: 0,
-            updatedAt: '',
           });
           setHasNextPage(false);
         } else {
           const lastItem = newData[newData.length - 1];
-          // console.log(lastItem);
+          console.log(lastItem);
           setData((prevData) => [...prevData, ...newData]);
-          setLoadInfo({
-            likeId: lastItem.likeId,
-            updatedAt: lastItem.updatedAt,
-          });
+          if (sortType.value === 'Latest' || sortType.value === 'Earliest') {
+            setLoadInfo({
+              likeId: lastItem.likeId,
+              updatedAt: lastItem.updatedAt,
+            });
+          } else if (
+            sortType.value === 'HighLike' ||
+            sortType.value === 'LowLike'
+          ) {
+            setLoadInfo({
+              likeId: lastItem.likeId,
+              likeCount: lastItem.locationResponse.countLikes,
+            });
+          } else {
+            setLoadInfo({
+              likeId: lastItem.likeId,
+              avgScore: lastItem.locationResponse.averageScore,
+            });
+          }
         }
       } else {
         setError('data load failure');
