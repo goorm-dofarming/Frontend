@@ -15,7 +15,7 @@ rm -rf node_modules pnpm-lock.yaml
 # Install packages
 pnpm install
 
-# build steps
+# build step
 pnpm build --verbose | tee build_log.txt
 
 # Start or restart the application
