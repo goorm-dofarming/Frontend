@@ -20,7 +20,11 @@ pnpm store prune >> error_log.txt 2>&1
 
 # 기존 node_modules 및 관련 디렉터리 삭제
 echo "Removing existing node_modules and build directories..." >> error_log.txt 2>&1
-rm -rf node_modules pnpm-lock.yaml .next >> error_log.txt 2>&1
+sudo rm -rf node_modules pnpm-lock.yaml .next >> error_log.txt 2>&1
+
+# 특정 충돌 디렉토리 삭제 추가
+echo "Removing problematic directory..." >> error_log.txt 2>&1
+sudo rm -rf /home/ubuntu/deploy/node_modules/.pnpm/next@14.2.4_react-dom@18.3.1_react@18.3.1__react@18.3.1_sass@1.77.8/node_modules/next/experimental >> error_log.txt 2>&1
 
 # 패키지 설치
 echo "Installing packages..." >> error_log.txt 2>&1
