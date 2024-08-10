@@ -289,7 +289,7 @@ const Likes = () => {
           setHasNextPage(false);
         } else {
           const lastItem = newData[newData.length - 1];
-          console.log(lastItem);
+          // console.log(lastItem);
           setData((prevData) => [...prevData, ...newData]);
           if (sortType.value === 'Latest' || sortType.value === 'Earliest') {
             setLoadInfo({
