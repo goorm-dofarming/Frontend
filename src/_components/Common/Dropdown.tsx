@@ -110,11 +110,17 @@ const Dropdown = ({
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+
   const onClickDropdown = (e: React.MouseEvent<HTMLDivElement>) => {
     // console.log('onClickDropdown');
     if ((e.target as HTMLElement).classList.contains('icon')) {
       e.stopPropagation();
     }
+    setIsOpen((prev) => !prev);
+  };
+
+  const onClickItem = (item: any) => {
+    onClick(item);
     setIsOpen((prev) => !prev);
   };
   useEffect(() => {
@@ -149,7 +155,7 @@ const Dropdown = ({
             <li
               key={item.id + item.value}
               className="item"
-              onClick={() => onClick(item)}
+              onClick={() => onClickItem(item)}
             >
               {type === 'chat' ? item.value : item.content}
             </li>

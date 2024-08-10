@@ -32,6 +32,7 @@ interface EntireChatListProps {
   refetchChatList: () => void;
   joinMessage: (roomId: number) => void;
   searchInput: string;
+  setActiveTab: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const EntireChatList: React.FC<EntireChatListProps> = ({
@@ -39,6 +40,7 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
   refetchChatList,
   joinMessage,
   searchInput,
+  setActiveTab,
 }) => {
   const {
     data: mainChats = [],
@@ -83,8 +85,8 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
     try {
       await joinChatRoom(chat.roomId);
       joinMessage(chat.roomId);
-      refetchChatList();
       setSelectedChat(chat);
+      setActiveTab(true);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Axios error:', error.response?.data);
@@ -162,18 +164,6 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
       isMounted = false;
     };
   }, [fetchLoading, hasMore, fetchMoreChats]);
-
-  // 5초동안 로딩 시 refetch
-  // useEffect(() => {
-  //   let timer: NodeJS.Timeout;
-  //   if (isLoading) {
-  //     timer = setTimeout(() => {
-
-  //     }, 3000);
-  //   }
-
-  //   return () => clearTimeout(timer);
-  // }, [isLoading, refetchMainChats]);
 
   if (isFetching) {
     return (
