@@ -3,6 +3,10 @@ set -e  # 에러 발생 시 스크립트 중단
 
 REPOSITORY=/home/ubuntu/deploy
 
+LOG_FILE="/var/log/deploy.log"
+
+echo "$(date): Deploy script is starting..." >> $LOG_FILE
+
 # 권한 부여
 echo "Changing ownership and permissions..."
 sudo chown -R ubuntu:ubuntu /home/ubuntu/deploy
