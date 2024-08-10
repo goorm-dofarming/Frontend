@@ -4,9 +4,9 @@ set -e  # 에러 발생 시 스크립트 중단
 REPOSITORY=/home/ubuntu/deploy
 
 # 권한 부여
-echo "Changing ownership and permissions..." >> error_log.txt 2>&1
-sudo chown -R ubuntu:ubuntu /home/ubuntu/deploy >> error_log.txt 2>&1
-sudo chmod -R 755 /home/ubuntu/deploy error_log.txt 2>&1
+echo "Changing ownership and permissions..."
+sudo chown -R ubuntu:ubuntu /home/ubuntu/deploy
+sudo chmod -R 755 /home/ubuntu/deploy
 
 # 작업 디렉토리로 이동
 cd /home/ubuntu/deploy
