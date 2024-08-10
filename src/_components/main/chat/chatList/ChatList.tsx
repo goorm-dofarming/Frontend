@@ -31,7 +31,11 @@ import { Chat } from '@/src/types/aboutChat';
 
 // atoms
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { messageAlarmState, searchState } from '@/src/atom/stats';
+import {
+  messageAlarmState,
+  searchState,
+  selectedChatState,
+} from '@/src/atom/stats';
 
 // 알림
 // headers Accept랑 connection
@@ -52,6 +56,7 @@ const ChatList: React.FC<ChatListProps> = ({
 }) => {
   // true => 내 채팅 , false => 오픈 채팅
   const [activeTab, setActiveTab] = useState(true);
+  const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
 
   const [searchInput, setSearchInput] = useState<string>('');
   const [search, setSearch] = useRecoilState(searchState);
@@ -78,9 +83,32 @@ const ChatList: React.FC<ChatListProps> = ({
       const response = await createChatRoom(body);
       joinMessage(response.data);
       setTimeout(() => {
-        refetchChatList();
         setActiveTab(true);
-      }, 500);
+      }, 200);
+
+      const updatedQuery = await myChatQuery.refetch();
+
+      const selectedChat = updatedQuery.data?.find(
+        (chat) => chat.roomId === response.data
+      );
+
+      setSelectedChat(
+        selectedChat || {
+          roomId: 0,
+          title: '',
+          regionName: '',
+          regionImageUrl: '',
+          tags: [],
+          participantCount: 0,
+          createdAt: new Date(),
+          unreadMessageCount: 0,
+          latestMessage: {
+            messageType: '',
+            content: '',
+            nickname: '',
+          },
+        }
+      );
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(error);
@@ -194,6 +222,7 @@ const ChatList: React.FC<ChatListProps> = ({
           refetchChatList={refetchChatList}
           joinMessage={joinMessage}
           searchInput={searchInput}
+          setActiveTab={setActiveTab}
         />
       )}
       <Modal openModal={openModal} modal={modal} width="35rem" height="40rem">
