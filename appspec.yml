@@ -16,9 +16,9 @@ permissions:
 hooks:
   BeforeInstall:
     - location: scripts/clean_node_modules.sh
-      runas: ubuntu
+      runas: root
       timeout: 180
   AfterInstall:
     - location: scripts/deploy.sh
       timeout: 600
-      runas: ubuntu
+      runas: root
