@@ -30,6 +30,7 @@ import useNaverLogin from '@/src/hooks/Home/useNaverLogin';
 
 // apis
 import { getGoogleUserData, login, signupSocialLogin } from '@/pages/api/auth';
+
 interface LoginType {
   inputData: inputDataType;
   pwdShow: boolean;
@@ -87,8 +88,6 @@ const Login = ({
 
   const gLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
-      // console.log("토큰 발급 성공: ", tokenResponse);
-
       setGToken(tokenResponse.access_token);
     },
     onError: (errorResponse) => console.log('Error: ', errorResponse),
@@ -133,6 +132,7 @@ const Login = ({
     }
   }, [gToken]);
   /* eslint-enable react-hooks/exhaustive-deps */
+
   return (
     <div className="modalContents" style={{ gap: '16px' }}>
       <InputLoginBorder $ischanging={ischanging}>

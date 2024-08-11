@@ -7,8 +7,6 @@ export const getMe = async (): Promise<User> => {
   return data;
 };
 
-//NOTE:body { "multipartFile": "string","userModifyRequest": {"nickname": "usernickname",    "password": "userpassword"}}
-
 export const modifyUser = async (body: {}) => {
   return await apiClient.put(`/users`, body);
 };

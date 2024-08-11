@@ -1,7 +1,6 @@
 import styles from '@/src/home.module.scss';
 import React, { useEffect, useState } from 'react';
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
-import { useCookies } from 'react-cookie';
 
 // components
 import NavBar from '@/src/_components/main/NavBar';
@@ -9,12 +8,10 @@ import { Map, Log, Likes, Chat } from '@/src/_components/main';
 import Main from '@/src/_components/main/Main';
 import RandomPin from '@/src/_components/main/RandomPin';
 import ProfileDropdown from '@/src/_components/main/ProfileDropdown';
+import Toast from '@/src/_components/Common/Toast';
+import { decimalToDMS } from '@/src/_components/main/RandomPin/util';
 
-// api
-import { useQuery } from '@tanstack/react-query';
-import { getMe } from './api/user';
-
-// atoms
+// libraries
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   alarmState,
@@ -23,14 +20,19 @@ import {
   randomPinState,
 } from '@/src/atom/stats';
 import { pageState } from '@/src/atom/stats';
+import { useQuery } from '@tanstack/react-query';
+import { useCookies } from 'react-cookie';
 
 // types
 import { Alarm } from '@/src/types/aboutChat';
-import Toast from '@/src/_components/Common/Toast';
-import useToggle from '@/src/hooks/Home/useToggle';
-import { getLog, getLogData } from './api/log';
-import { decimalToDMS } from '@/src/_components/main/RandomPin/util';
 import { RandomPinType } from '@/src/types/aboutMap';
+
+// hooks
+import useToggle from '@/src/hooks/Home/useToggle';
+
+// apis
+import { getLog, getLogData } from './api/log';
+import { getMe } from './api/user';
 
 const menu: { [key: string]: JSX.Element | null } = {
   home: <div></div>,
@@ -42,7 +44,7 @@ const menu: { [key: string]: JSX.Element | null } = {
 
 const Home = () => {
   const [user, setUser] = useRecoilState(userState);
-  const [cookies, setCookies] = useCookies(['token']);
+  const [cookies] = useCookies(['token']);
   const [fold, setFold] = useState<boolean>(false);
   const [page, setPage] = useRecoilState(pageState);
   const [element, setElement] = useState<React.JSX.Element | null>(menu[page]);
@@ -52,6 +54,7 @@ const Home = () => {
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   const [isClient, setIsClient] = useState(false);
   const [toast, setToast] = useState<boolean>(false);
+
   const openToast = useToggle(toast, setToast);
   useEffect(() => {
     setElement(menu[page]);
@@ -163,6 +166,22 @@ const Home = () => {
       setAlarm(false);
     }
   }, [page, alarm]);
+
+  useEffect(() => {
+    console.log(
+      '카카오 리다이렉션 확인: ',
+      process.env.NEXT_PUBLIC_KAKAO_REDIREDCT_URI
+    );
+    console.log(
+      '카카오 리다이렉션 확인: ',
+      process.env.NEXT_PUBLIC_NAVER_REDIREDCT_URI
+    );
+    console.log(
+      '카카오 리다이렉션 확인: ',
+      process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI,
+      process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+    );
+  }, []);
 
   return (
     <main className={styles.main}>

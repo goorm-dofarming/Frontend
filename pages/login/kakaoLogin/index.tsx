@@ -1,15 +1,10 @@
 import React, { useEffect } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
-// img
-import Logo from '@/src/_assets/main/logo.svg';
 
 // styles
 import { SocialLoginContainer } from '@/src/_styles/kakaoLogin/kakaoLoginStyles';
 
 // libraries
-import axios from 'axios';
 import { useMutation } from '@tanstack/react-query';
 import { useCookies } from 'react-cookie';
 
@@ -25,7 +20,7 @@ import Landing from '@/src/_components/Common/Landing';
 
 const Page = () => {
   const router = useRouter();
-  const [cookies, setCookie,removeCookie] = useCookies(['token']);
+  const [, setCookie] = useCookies(['token']);
 
   const getAccesstoken = useMutation({
     mutationKey: ['getAccesstoken'],
@@ -45,7 +40,6 @@ const Page = () => {
 
       const token = await getKakaoAccessToken(body, headers);
 
-      // console.log('get token:', token.data);
       const { access_token } = token.data;
 
       const userDataHeader = {
@@ -53,7 +47,6 @@ const Page = () => {
       };
 
       const userData = await getKaKaoUserData(userDataHeader);
-      // console.log('user data:', userData.data);
 
       const signupKakaoBody = {
         socialType: 'KAKAO',
@@ -64,11 +57,7 @@ const Page = () => {
 
       setCookie('token', signupKakao.data, {
         path: '/',
-        // sameSite: 'none',
-        // secure: true,
       });
-       // console.log('signupKakao: ', signupKakao);
-
 
       if (signupKakao.status === 200) {
         setTimeout(() => {

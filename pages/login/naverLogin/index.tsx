@@ -1,9 +1,5 @@
-import Image from 'next/image';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-// img
-import Logo from '@/src/_assets/main/logo.svg';
-
 // styles
 import { SocialLoginContainer } from '@/src/_styles/kakaoLogin/kakaoLoginStyles';
 

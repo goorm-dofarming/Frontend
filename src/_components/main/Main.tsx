@@ -21,6 +21,8 @@ import { inputDataType } from '@/src/types/aboutMain';
 
 // hooks
 import useToggle from '@/src/hooks/Home/useToggle';
+
+// libraries
 import { userState } from '@/src/atom/stats';
 import { useRecoilState } from 'recoil';
 
@@ -75,7 +77,6 @@ const Main = ({ pin }: { pin: string }) => {
         >
           <div className={`logo`}>
             <Image className="hatLogo" src={Logo} alt="로고" width={200} />
-            {/* <div className="textLogo">DOFARMING</div> */}
             <svg className="textLogo" viewBox="0 0 500 100">
               <defs>
                 <path
