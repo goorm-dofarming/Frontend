@@ -39,10 +39,10 @@ sudo chown -R ubuntu:ubuntu /home/ubuntu/deploy
 sudo chmod -R 755 /home/ubuntu/deploy
 
 # pnpm 재설치
-pnpm install
+sudo pnpm install
 
 # pnpm build
-pnpm build
+sudo pnpm build
 
 # 애플리케이션 시작 또는 재시작
 echo "Starting or resurrecting the application..." | tee -a $LOG_FILE

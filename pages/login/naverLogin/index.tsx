@@ -41,9 +41,14 @@ const Page = () => {
 
       const signupNaver = await signupSocialLogin(body2);
 
-      console.log('signupNaver: ', signupNaver);
+      console.log('signupNaver: ', signupNaver.data);
+      console.log('네이버 로그인 성공 ');
+      setCookies('token', signupNaver.data, {
+        path: '/',
+      });
 
       if (signupNaver.status === 200) {
+        console.log('네이버 로그인 성공 ');
         setCookies('token', signupNaver.data, {
           path: '/',
         });
@@ -56,8 +61,6 @@ const Page = () => {
     onSuccess: (data) => {
       setCookies('token', data.access_token, {
         path: '/',
-        // sameSite: 'none',
-        // secure: true,
       });
     },
     onError: (error) => {
