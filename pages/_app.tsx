@@ -11,7 +11,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   if (!clientId) {
     console.error('Google Client ID is not set', clientId);
-    return null; // 또는 다른 대체 렌더링을 할 수 있습니다.
+    return null;
   }
 
   return (
