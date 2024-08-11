@@ -15,6 +15,7 @@ import {
   messageAlarmState,
   searchState,
   selectedChatState,
+  userState,
 } from '@/src/atom/stats';
 
 // icons
@@ -29,6 +30,7 @@ interface MyChatListProps {
 }
 
 const MyChatList: React.FC<MyChatListProps> = ({ myChatQuery }) => {
+  const [user, setUser] = useRecoilState(userState);
   const search = useRecoilValue(searchState);
   const { data, error, isLoading: loading } = myChatQuery;
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
@@ -112,7 +114,8 @@ const MyChatList: React.FC<MyChatListProps> = ({ myChatQuery }) => {
                   ? 0
                   : chat.unreadMessageCount + 1,
               participantCount:
-                messageAlarm.messageType === 'JOIN'
+                messageAlarm.messageType === 'JOIN' &&
+                messageAlarm.senderId !== user.userId
                   ? chat.participantCount + 1
                   : messageAlarm.messageType === 'LEAVE'
                     ? chat.participantCount - 1
