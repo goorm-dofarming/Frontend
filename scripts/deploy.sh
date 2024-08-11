@@ -41,6 +41,9 @@ sudo chmod -R 755 /home/ubuntu/deploy
 # pnpm 재설치
 pnpm install
 
+# pnpm build
+pnpm build
+
 # 애플리케이션 시작 또는 재시작
 echo "Starting or resurrecting the application..." | tee -a $LOG_FILE
 pm2 resurrect || pm2 start npm --name "Frontend" -- start | tee -a $LOG_FILE
