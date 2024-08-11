@@ -184,7 +184,7 @@ export const makeShareWindow = (
             '${LOG_ID}': `${randomPin.logId}`,
             '${userImage}': `${userImage !== null ? userImage : `${process.env.NEXT_PUBLIC_DEPLOY}/images/profile/unknown.png`}`,
             '${userName}': `${userName}`,
-            '${REGI_WEB_DOMAIN}': `${window.location.href}`,
+            '${REGI_WEB_DOMAIN}': `${process.env.NEXT_PUBLIC_DEPLOY}`,
           },
         });
       }
