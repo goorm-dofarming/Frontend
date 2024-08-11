@@ -181,6 +181,7 @@ const Home = () => {
       process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI,
       process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
     );
+    console.log('NODE_ENV:', process.env.NODE_ENV);
   }, []);
 
   return (
