@@ -139,7 +139,7 @@ const Map = () => {
         };
         const map = new window.kakao.maps.Map(container.current, options);
         map.setMaxLevel(13);
-        const imageSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/pin/pin_location.png`;
+        const imageSrc = `${process.env.NEXT_PUBLIC_DEPLOY}/images/pin/pin_location.png`;
         const imageSize = new window.kakao.maps.Size(60, 80); // 마커이미지의 크기입니다
         const markerImage = new window.kakao.maps.MarkerImage(
           imageSrc,
