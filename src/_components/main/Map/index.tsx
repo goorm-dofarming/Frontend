@@ -11,6 +11,7 @@ import useToggle from '@/src/hooks/Home/useToggle';
 import Toast from '@/src/_components/Common/Toast';
 import { getLog, getLogData } from '@/pages/api/log';
 import { decimalToDMS } from '../RandomPin/util';
+
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=clusterer`;
 
 const Map = () => {
