@@ -44,6 +44,9 @@ const Page = () => {
       console.log('signupNaver: ', signupNaver);
 
       if (signupNaver.status === 200) {
+        setCookies('token', signupNaver.data, {
+          path: '/',
+        });
         setTimeout(() => {
           router.push('/');
         }, 1500);
