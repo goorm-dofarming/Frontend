@@ -167,16 +167,16 @@ const Home = () => {
     }
   }, [page, alarm]);
 
-  useEffect(() => {
-    console.log(
-      'naver 리다이렉션 확인: ',
-      process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
-      process.env.NEXT_PUBLIC_NAVER_CLIENT_SECRET,
-      process.env.NEXT_PUBLIC_NAVER_REDIREDCT_URI,
-      process.env.NEXT_PUBLIC_NAVER_STATE
-    );
-    console.log('NODE_ENV:', process.env.NODE_ENV);
-  }, []);
+  // useEffect(() => {
+  //   console.log(
+  //     'naver 리다이렉션 확인: ',
+  //     process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
+  //     process.env.NEXT_PUBLIC_NAVER_CLIENT_SECRET,
+  //     process.env.NEXT_PUBLIC_NAVER_REDIREDCT_URI,
+  //     process.env.NEXT_PUBLIC_NAVER_STATE
+  //   );
+  //   console.log('NODE_ENV:', process.env.NODE_ENV);
+  // }, []);
 
   return (
     <main className={styles.main}>
