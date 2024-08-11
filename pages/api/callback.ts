@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { useCookies } from 'react-cookie';
 
 const client_id = process.env.NEXT_PUBLIC_NAVER_CLIENT_ID;
 const client_secret = process.env.NEXT_PUBLIC_NAVER_CLIENT_SECRET;
@@ -9,8 +8,6 @@ const redirectURI = encodeURIComponent(
 );
 
 const naverAuthHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const [, setCookies] = useCookies(['token']);
-
   const code = req.query.code;
   const state = req.query.state;
 
@@ -38,6 +35,7 @@ const naverAuthHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     console.log('success get userData: ', userData);
     res.status(200).json(userData.data);
   } catch (error: any) {
+    console.error('Error Details:', error.response?.data);
     res.status(error.response?.status || 500).json({ error: error.message });
   }
 };

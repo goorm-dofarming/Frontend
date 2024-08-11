@@ -169,17 +169,11 @@ const Home = () => {
 
   useEffect(() => {
     console.log(
-      '카카오 리다이렉션 확인: ',
-      process.env.NEXT_PUBLIC_KAKAO_REDIREDCT_URI
-    );
-    console.log(
-      '카카오 리다이렉션 확인: ',
-      process.env.NEXT_PUBLIC_NAVER_REDIREDCT_URI
-    );
-    console.log(
-      '카카오 리다이렉션 확인: ',
-      process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI,
-      process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+      'naver 리다이렉션 확인: ',
+      process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
+      process.env.NEXT_PUBLIC_NAVER_CLIENT_SECRET,
+      process.env.NEXT_PUBLIC_NAVER_REDIREDCT_URI,
+      process.env.NEXT_PUBLIC_NAVER_STATE
     );
     console.log('NODE_ENV:', process.env.NODE_ENV);
   }, []);

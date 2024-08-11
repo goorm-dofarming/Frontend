@@ -15,7 +15,7 @@ import Landing from '@/src/_components/Common/Landing';
 
 const Page = () => {
   const router = useRouter();
-  const [, setCookies] = useCookies(['token']);
+  const [cookies, setCookies] = useCookies(['token']);
 
   const getAccesstoken = useMutation({
     mutationKey: ['getAccesstoken'],
@@ -42,16 +42,17 @@ const Page = () => {
       const signupNaver = await signupSocialLogin(body2);
 
       console.log('signupNaver: ', signupNaver.data);
-      console.log('네이버 로그인 성공 ');
       setCookies('token', signupNaver.data, {
         path: '/',
       });
 
       if (signupNaver.status === 200) {
         console.log('네이버 로그인 성공 ');
-        setCookies('token', signupNaver.data, {
-          path: '/',
-        });
+        setTimeout(() => {
+          setCookies('token', signupNaver.data, {
+            path: '/',
+          });
+        }, 1000);
         setTimeout(() => {
           router.push('/');
         }, 1500);
