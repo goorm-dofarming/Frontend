@@ -8,7 +8,7 @@ const nextConfig = {
       'tong.visitkorea.or.kr',
       'k.kakaocdn.net',
       'lh3.googleusercontent.com',
-      `${process.env.NEXT_PUBLIC_DEPLOY}`,
+      'api.dofarming.net',
     ],
     unoptimized: true,
   },

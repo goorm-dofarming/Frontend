@@ -64,6 +64,21 @@ const Log = () => {
   // 로그 스크롤바
   const logRefs = useRef<HTMLDivElement>(null);
 
+  const getDate = (inputDate: string) => {
+    const date = new Date(inputDate);
+    // const date = inputDate instanceof Date ? inputDate : new Date(inputDate);
+
+    if (isNaN(date.getTime())) {
+      return;
+    }
+    date.setHours(date.getHours() + 9);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    return `${year}년 ${month}월 ${day}일`;
+  };
+
   // 전체 로그 데이터 불러오기
 
   const getLogs = async () => {
@@ -257,7 +272,7 @@ const Log = () => {
         setInfoWindows([...new_infoWindows]);
 
         if (markers.length === 0 && cluster === null) {
-          const imageSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/pin/pin_location.png`;
+          const imageSrc = `${process.env.NEXT_PUBLIC_DEPLOY}/images/pin/pin_location.png`;
           const imageSize = new window.kakao.maps.Size(36, 48); // 마커이미지의 크기입니다
           const imageOption = {
             offset: new window.kakao.maps.Point(0, 0),
@@ -396,7 +411,7 @@ const Log = () => {
                 className={`${selectedLogIndex === data.logId ? 'log_selected' : 'log'}`}
                 ref={selectedLogIndex === data.logId ? logRefs : null}
               >
-                <div className="logDate">{data.createdAt.split('T')[0]}</div>
+                <div className="logDate">{getDate(data.createdAt)}</div>
                 <div className="logAddress">{data.address}</div>
                 <div className="logTheme">{data.theme}</div>
               </div>

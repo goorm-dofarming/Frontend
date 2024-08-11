@@ -1,6 +1,6 @@
 import { DataType, RandomPinType } from '@/src/types/aboutMap';
 
-const imgSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/share/`;
+const imgSrc = `${process.env.NEXT_PUBLIC_DEPLOY}/images/share/`;
 
 const makeCOImages = (randomPin: RandomPinType) => {
   let images = ``;
@@ -182,7 +182,7 @@ export const makeShareWindow = (
             '${TITLE_3}': `${locations.length > 2 ? locations[2].title : ''}`,
             '${TITLE_4}': `${locations.length > 3 ? locations[3].title : ''}`,
             '${LOG_ID}': `${randomPin.logId}`,
-            '${userImage}': `${userImage !== null ? userImage : `http://${process.env.NEXT_PUBLIC_DEPLOY}/images/profile/unknown.png`}`,
+            '${userImage}': `${userImage !== null ? userImage : `${process.env.NEXT_PUBLIC_DEPLOY}/images/profile/unknown.png`}`,
             '${userName}': `${userName}`,
             '${REGI_WEB_DOMAIN}': `${window.location.href}`,
           },

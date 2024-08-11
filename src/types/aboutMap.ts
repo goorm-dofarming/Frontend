@@ -1,28 +1,28 @@
-import pin_random from "@/src/_assets/main/map/pin_random.svg";
-import pin_food from "@/src/_assets/main/map/pin_food.svg";
-import pin_cafe from "@/src/_assets/main/map/pin_cafe.svg";
-import pin_tour from "@/src/_assets/main/map/pin_tour.svg";
-import pin_mountain from "@/src/_assets/main/map/pin_mountain.svg";
-import pin_ocean from "@/src/_assets/main/map/pin_ocean.png";
-import pin_activity from "@/src/_assets/main/map/pin_activity.svg";
+import pin_random from '@/src/_assets/main/map/pin_random.svg';
+import pin_food from '@/src/_assets/main/map/pin_food.svg';
+import pin_cafe from '@/src/_assets/main/map/pin_cafe.svg';
+import pin_tour from '@/src/_assets/main/map/pin_tour.svg';
+import pin_mountain from '@/src/_assets/main/map/pin_mountain.svg';
+import pin_ocean from '@/src/_assets/main/map/pin_ocean.png';
+import pin_activity from '@/src/_assets/main/map/pin_activity.svg';
 // import config from "@/src/_config";
 
-const imgSrc = `http://${process.env.NEXT_PUBLIC_DEPLOY}`;
+const imgSrc = `${process.env.NEXT_PUBLIC_DEPLOY}`;
 
 export const themes: Theme[] = [
   {
-    id: "Random",
+    id: 'Random',
     img: pin_random,
-    title: "랜덤",
+    title: '랜덤',
     // contentTypeIds: [],
     themeId: 0,
   },
-  { id: "Restaurant", img: pin_food, title: "식도락", themeId: 5 },
-  { id: "Cafe", img: pin_cafe, title: "카페 투어", themeId: 6 },
-  { id: "Activity", img: pin_activity, title: "액티비티", themeId: 3 },
-  { id: "Tour", img: pin_tour, title: "관광지", themeId: 4 },
-  { id: "Ocean", img: pin_ocean, title: "바다", themeId: 1 },
-  { id: "Mountain", img: pin_mountain, title: "산", themeId: 2 },
+  { id: 'Restaurant', img: pin_food, title: '식도락', themeId: 5 },
+  { id: 'Cafe', img: pin_cafe, title: '카페 투어', themeId: 6 },
+  { id: 'Activity', img: pin_activity, title: '액티비티', themeId: 3 },
+  { id: 'Tour', img: pin_tour, title: '관광지', themeId: 4 },
+  { id: 'Ocean', img: pin_ocean, title: '바다', themeId: 1 },
+  { id: 'Mountain', img: pin_mountain, title: '산', themeId: 2 },
 ];
 
 export type Theme = {
@@ -40,12 +40,12 @@ interface DataTypeMap {
   [key: number]: pin;
 }
 export const DataType: DataTypeMap = {
-  1: { type: "Ocean", img: `${imgSrc}/images/pin/pin_ocean.png` },
-  2: { type: "Mountain", img: `${imgSrc}/images/pin/pin_mountain.png` },
-  3: { type: "Activity", img: `${imgSrc}/images/pin/pin_activity.png` },
-  4: { type: "Tour", img: `${imgSrc}/images/pin/pin_tour.png` },
-  5: { type: "Restaurant", img: `${imgSrc}/images/pin/pin_food.png` },
-  6: { type: "Cafe", img: `${imgSrc}/images/pin/pin_cafe.png` },
+  1: { type: 'Ocean', img: `${imgSrc}/images/pin/pin_ocean.png` },
+  2: { type: 'Mountain', img: `${imgSrc}/images/pin/pin_mountain.png` },
+  3: { type: 'Activity', img: `${imgSrc}/images/pin/pin_activity.png` },
+  4: { type: 'Tour', img: `${imgSrc}/images/pin/pin_tour.png` },
+  5: { type: 'Restaurant', img: `${imgSrc}/images/pin/pin_food.png` },
+  6: { type: 'Cafe', img: `${imgSrc}/images/pin/pin_cafe.png` },
 };
 
 export type Recommend = {
@@ -59,9 +59,9 @@ export type Recommend = {
   mapY: number;
   countLikes: number;
   liked: boolean;
-  averageScore:string;
-  totalReview:number;
-  isReviewed:boolean;
+  averageScore: string;
+  totalReview: number;
+  isReviewed: boolean;
 };
 
 export interface RandomPinType {
