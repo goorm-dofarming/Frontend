@@ -128,8 +128,7 @@ const ChatSpace: React.FC<{
     if (messageAlarm.roomId === selectedChat.roomId) {
       switch (messageAlarm.messageType) {
         case 'JOIN':
-          messageAlarm.senderId !== user.userId &&
-            setParticipantCount(participantCount + 1);
+          setParticipantCount(participantCount + 1);
           break;
         case 'LEAVE':
           setParticipantCount(participantCount - 1);

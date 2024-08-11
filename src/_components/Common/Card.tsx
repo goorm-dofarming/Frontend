@@ -201,6 +201,7 @@ const Card = ({
     // 데이터를 불러서 어디저장할지, 다시 리다이렉트를 어떤 데이터를 해야할지 카드 내부 에선 모르기때문
     //좋아요페이지, 맵페이지, 로그페이지
     e.preventDefault(); // 링크의 기본 동작 방지
+    e.stopPropagation();
     if (!user.userId) {
       openToast();
       return;

@@ -68,11 +68,11 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
 
   // 채팅 리스트 세팅
   useEffect(() => {
-    if (mainChats.length && mainChats !== chatsRef.current) {
+    if (mainChats !== chats) {
       setChats(mainChats);
       chatsRef.current = mainChats;
     }
-  }, [mainChats]);
+  }, [search, searchInput]);
 
   // 채팅방 입장
   const onClickEnterBtn = (chat: Chat) => {
