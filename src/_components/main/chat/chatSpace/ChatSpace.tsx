@@ -35,7 +35,14 @@ const ChatSpace: React.FC<{
   messageQuery: QueryObserverResult<Message[], Error>;
   stompClientRef: React.MutableRefObject<Client | null>;
   leaveMessage: (roomId: number) => void;
-}> = ({ refetchChatList, messageQuery, stompClientRef, leaveMessage }) => {
+  message: Message | null;
+}> = ({
+  refetchChatList,
+  messageQuery,
+  stompClientRef,
+  leaveMessage,
+  message,
+}) => {
   const [user] = useRecoilState(userState);
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
   const [input, setInput] = useState<string>(``);
@@ -124,9 +131,27 @@ const ChatSpace: React.FC<{
     setParticipantCount(selectedChat.participantCount);
   }, [selectedChat]);
 
+  // 본인 외 다른 사람 입장/퇴장 시 인원 증감
   useEffect(() => {
-    if (messageAlarm.roomId === selectedChat.roomId) {
-      switch (messageAlarm.messageType) {
+    if (message?.roomId === selectedChat.roomId) {
+      switch (message?.messageType) {
+        case 'JOIN':
+          setParticipantCount(participantCount + 1);
+          break;
+        case 'LEAVE':
+          setParticipantCount(participantCount - 1);
+          break;
+      }
+    }
+  }, [message]);
+
+  // 본인 입장 시 인원 증감
+  useEffect(() => {
+    if (
+      messageAlarm.roomId === selectedChat.roomId &&
+      messageAlarm.senderId === user.userId
+    ) {
+      switch (message?.messageType) {
         case 'JOIN':
           setParticipantCount(participantCount + 1);
           break;
@@ -192,6 +217,7 @@ const ChatSpace: React.FC<{
           <ChatRoom
             messageQuery={messageQuery}
             unreadMessageCount={unreadMessageCount}
+            receiveMessage={message}
           />
           <div className={styles.inputArea}>
             <textarea

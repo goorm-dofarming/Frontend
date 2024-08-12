@@ -39,7 +39,7 @@ export const HomeContainer = styled.div<HomeContainerProps>`
 
   .fog_show {
     animation: fadein 3s ease-in;
-    animation-delay: 2s;
+    animation-delay: 1s;
     @keyframes fadein {
       0% {
         opacity: 0;

@@ -59,7 +59,7 @@ export type Recommend = {
   mapY: number;
   countLikes: number;
   liked: boolean;
-  averageScore: string;
+  averageScore: number;
   totalReview: number;
   isReviewed: boolean;
 };

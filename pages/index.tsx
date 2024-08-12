@@ -82,7 +82,7 @@ const Home = () => {
 
   useEffect(() => {
     // console.log('user: ', user);
-    if (user) {
+    if (user.userId > 0) {
       // setUser(userInfo);
       setInitial();
     }
