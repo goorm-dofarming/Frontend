@@ -30,6 +30,8 @@ import useNaverLogin from '@/src/hooks/Home/useNaverLogin';
 
 // apis
 import { getGoogleUserData, login, signupSocialLogin } from '@/pages/api/auth';
+import Toast from '../../Common/Toast';
+import { AxiosError } from 'axios';
 
 interface LoginType {
   inputData: inputDataType;
@@ -52,11 +54,18 @@ const Login = ({
   openModal,
   setInputData,
 }: LoginType) => {
+  // 토스트 메세지 내용
+  const [signupToast, setSignupToast] = useState<string>('');
+  // 토스트 boolean
+  const [singupToastOpen, setSignupToastOpen] = useState<boolean>(false);
+
   const [, setCookies] = useCookies(['token']);
   // 구글 로그인 토큰
   const [gToken, setGToken] = useState<string>('');
   const { email, password } = inputData;
   const [ischanging, setIsChanging] = useState<ChangingType | null>(null);
+
+  const handleToast = () => setSignupToastOpen(!singupToastOpen);
 
   useEffect(() => {
     if (pageState === false) {
@@ -79,7 +88,7 @@ const Login = ({
 
       const response = await login(body);
 
-      // console.log("login success: ", response);
+      console.log('login success: ', response);
 
       if (response.status === 200) {
         // 성공 시 cookie에 token 추가
@@ -96,9 +105,21 @@ const Login = ({
           authentication: '',
         });
       }
+
+      return response.data;
     },
-    onError: (e) => {
-      console.log(e.message);
+    onError: (e: any) => {
+      console.log(e);
+      if (e.response.data.message === 'Password Not Match.') {
+        setSignupToast('비밀번호가 일치하지 않습니다!');
+        setSignupToastOpen(true);
+      } else if (e.response.data.message === 'User not found.') {
+        setSignupToast('존재하지 않는 이메일 입니다!');
+        setSignupToastOpen(true);
+      } else if (inputData.email === '' || inputData.password === '') {
+        setSignupToast('이메일 혹은 비밀번호가 빈칸입니다!');
+        setSignupToastOpen(true);
+      }
     },
   });
 
@@ -156,6 +177,11 @@ const Login = ({
 
   return (
     <div className="modalContents" style={{ gap: '16px' }}>
+      <Toast
+        content={signupToast}
+        toast={singupToastOpen}
+        openToast={handleToast}
+      />
       <InputLoginBorder $ischanging={ischanging}>
         <div
           style={{

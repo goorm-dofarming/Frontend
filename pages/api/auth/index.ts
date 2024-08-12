@@ -14,7 +14,8 @@ export const oauth = (body: {}) => {
 
 //NOTE:body{ "email": "user@example.com","password": "userpassword"}
 export const login = (body: {}) => {
-  return basicClient.post(`/login`, body);
+  const response = basicClient.post(`/login`, body);
+  return response;
 };
 
 export const sendEmail = (body: {}) => {

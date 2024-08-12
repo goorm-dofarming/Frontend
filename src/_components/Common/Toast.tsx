@@ -23,6 +23,8 @@ const Toast: React.FC<MainToastType> = ({
   toast,
   toastType = 'warning',
 }) => {
+  console.log('content:', content);
+  console.log('toast:', toast);
   const [modalRoot, setModalRoot] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
