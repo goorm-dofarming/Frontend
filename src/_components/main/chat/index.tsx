@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // styles
 import { ChatContainer } from '@/src/_styles/main/chatStyles';
@@ -21,11 +21,13 @@ import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 
 // atoms
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { selectedChatState, userState } from '@/src/atom/stats';
+import { Message } from '@/src/types/aboutChat';
 
 const Chat = () => {
-  const selectedChat = useRecoilValue(selectedChatState);
+  const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
+  const [message, setMessage] = useState<Message | null>(null);
   const stompClientRef = useRef<Client | null>(null);
   const user = useRecoilValue(userState);
 
@@ -59,6 +61,26 @@ const Chat = () => {
   });
 
   useEffect(() => {
+    if (user.userId > 0) {
+      setSelectedChat({
+        roomId: 0,
+        title: '',
+        regionName: '',
+        regionImageUrl: '',
+        tags: [],
+        participantCount: 0,
+        createdAt: new Date(),
+        unreadMessageCount: 0,
+        latestMessage: {
+          messageType: '',
+          content: '',
+          nickname: '',
+        },
+      });
+    }
+  }, [user]);
+
+  useEffect(() => {
     // SockJS 클라이언트 생성
     const socket = new SockJS(
       `${process.env.NEXT_PUBLIC_DEPLOY_WEBSOCKET_ADDRESS}`
@@ -67,17 +89,15 @@ const Chat = () => {
       webSocketFactory: () => socket,
       reconnectDelay: 5000,
       debug: (str) => {
-        // console.log(str);
+        console.log(str);
       },
       onConnect: (frame) => {
-        // console.log('roomId: ', selectedChat.roomId, '\nConnected: ' + frame);
-
         stompClient.subscribe(
           `/room/${selectedChat.roomId}`,
           (messageOutput) => {
-            const message = JSON.parse(messageOutput.body);
+            const receivedMessage = JSON.parse(messageOutput.body);
             if (selectedChat.roomId > 0) {
-              messageQuery.refetch();
+              setMessage(receivedMessage);
             }
           }
         );
@@ -124,11 +144,11 @@ const Chat = () => {
   };
 
   const sendLastJoin = async () => {
-    if (messageQuery.data) {
+    if (message) {
       try {
         await sendLastMessage({
-          roomId: messageQuery.data[0].roomId,
-          messageId: messageQuery.data[0].messageId,
+          roomId: message.roomId,
+          messageId: message.messageId,
         });
       } catch (error) {
         console.error('Failed to save messages:', error);
@@ -173,6 +193,7 @@ const Chat = () => {
         messageQuery={messageQuery}
         stompClientRef={stompClientRef}
         leaveMessage={leaveMessage}
+        message={message}
       />
     </ChatContainer>
   );

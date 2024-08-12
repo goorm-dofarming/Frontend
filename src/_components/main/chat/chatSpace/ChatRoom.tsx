@@ -25,8 +25,11 @@ import Landing from '@/src/_components/Common/Landing';
 const ChatRoom: React.FC<{
   messageQuery: QueryObserverResult<Message[], Error>;
   unreadMessageCount: number;
-}> = ({ messageQuery, unreadMessageCount }) => {
-  const { data: messages = [], error, isLoading } = messageQuery;
+  receiveMessage: Message | null;
+}> = ({ messageQuery, unreadMessageCount, receiveMessage }) => {
+  const { data: oldMessages = [], error, isLoading } = messageQuery;
+  // const [newMessgaes, setNewMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [user] = useRecoilState(userState);
   const [usersImage, setUsersImage] = useState<{
     [key: number]: string | null;
@@ -137,6 +140,28 @@ const ChatRoom: React.FC<{
     });
     prevDateRef.current = null;
   }, [messages]);
+
+  useEffect(() => {
+    if (messages.length === 0) {
+      setMessages(oldMessages);
+    } else {
+      const trimmedMessages = messages.slice(0, oldMessages.length);
+
+      const areArraysEqual = oldMessages.every(
+        (chat, index) => chat.messageId === trimmedMessages[index]?.messageId
+      );
+
+      if (!areArraysEqual) {
+        setMessages(oldMessages);
+      }
+    }
+  }, [oldMessages]);
+
+  useEffect(() => {
+    if (receiveMessage) {
+      setMessages((prevMessages) => [receiveMessage, ...prevMessages]);
+    }
+  }, [receiveMessage]);
 
   if (isLoading) {
     return <Landing />;
