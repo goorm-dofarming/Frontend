@@ -191,7 +191,7 @@ interface loadInfoType {
   likeId: number;
   updatedAt?: string;
   likeCount?: number;
-  avgScore?: string;
+  avgScore?: number;
 }
 
 const Likes = () => {
