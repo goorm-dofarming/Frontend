@@ -97,6 +97,9 @@ const Description = styled.div`
   .phone {
     overflow: hidden;
     font-weight: 200;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
   }
 `;
 
@@ -245,7 +248,9 @@ const Card = ({
           {totalReview !== 0 && (
             <Star>
               <FaStar fontSize={29} fill={'#F9E400'} />
-              <div className="starNumber">{averageScore}</div>
+              <div className="starNumber">
+                {Math.round(averageScore * 10) / 10}
+              </div>
             </Star>
           )}
           <Likes>
