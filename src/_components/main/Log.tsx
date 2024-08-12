@@ -4,9 +4,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { LogContainer } from '@/src/_styles/main/logStyles';
 
 // libraries
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { logEntireData, pageState, logMapState } from '@/src/atom/stats';
+import { useMutation } from '@tanstack/react-query';
+import { useRecoilState } from 'recoil';
+import { logEntireData } from '@/src/atom/stats';
 
 // types
 import { logDataType, recommendsType } from '@/src/types/aboutLog';
@@ -16,8 +16,6 @@ import Card from '../Common/Card';
 
 // apis
 import { getLog, getLogData } from '@/pages/api/log';
-import { StaticImageData } from 'next/image';
-import { pinType } from '@/src/constatns/PinSort';
 import { makeInfoWindow } from './Map/utils';
 import useToggle from '@/src/hooks/Home/useToggle';
 import Modal from '../Common/Modal';
@@ -80,7 +78,6 @@ const Log = () => {
   };
 
   // 전체 로그 데이터 불러오기
-
   const getLogs = async () => {
     const response = await getLog();
     // console.log("get logs", response.data);
@@ -89,18 +86,6 @@ const Log = () => {
       setLogData(data);
     }
   };
-  // const getLogs = useQuery({
-  //   queryKey: ['getLogs'],
-  //   queryFn: async () => {
-  //     const response = await getLog();
-  //     // console.log("get logs", response.data);
-  //     const data= response.data;
-  //     if (response.status === 200) {
-  //       setLogData(data);
-  //     }
-  //     return response.data;
-  //   },
-  // });
 
   useEffect(() => {
     // getLogs.refetch();
@@ -111,6 +96,7 @@ const Log = () => {
     if (logData.length > 0) {
       getLogSubData.mutate(logData[0].logId);
       setSelectedLogIndex(logData[0].logId);
+      setLogId(logData[0].logId);
     }
   }, [logData]);
 
@@ -121,9 +107,6 @@ const Log = () => {
         return [];
       }
       const response = await getLogData(logId);
-      //console.log("hi", logId);
-      // console.log('get log data!!', response.data);
-      // console.log(response);
 
       return response.data.recommendations;
     },
@@ -134,15 +117,6 @@ const Log = () => {
       console.log('get log data error');
     },
   });
-
-  // 이미지 URL을 문자열로 변환하는 함수
-  const getImageSrc = (img: StaticImageData | string): string => {
-    if (typeof img === 'string') {
-      return img;
-    } else {
-      return img.src;
-    }
-  };
 
   // 카드 클릭 시 정보 모달
   // const onClickCard = (locationId: number) => {
@@ -165,10 +139,8 @@ const Log = () => {
     if (selectedLogData.length === 0) {
       return;
     }
-    // document.cookie = 'username=dofarming; SameSite=Strict; Secure';
     const script = document.createElement('script');
     script.src = KAKAO_SDK_URL;
-    // script.async = true;
     script.id = 'kakao_sdk_script';
 
     const prev = document.getElementById('kakao_sdk_script');
@@ -180,12 +152,7 @@ const Log = () => {
     }
     const onLoadKakaoMap = () => {
       window.kakao.maps.load(() => {
-        const center = new window.kakao.maps.LatLng(
-          // location.latitude,
-          // location.longitude
-          35.95,
-          128.125
-        );
+        const center = new window.kakao.maps.LatLng(35.95, 128.125);
         const options = {
           center,
           level: 13,
@@ -193,21 +160,17 @@ const Log = () => {
         let map: any;
 
         if (containerRef.current !== null && kakaoMap === null) {
-          //console.log("null!!!!!!!");
           const mapContainer = document.getElementById('logMapContainer');
           map = new window.kakao.maps.Map(mapContainer, options);
           map.setMaxLevel(13);
         } else {
           map = kakaoMap;
-          //console.log("nullXXXXXXXX!!!!!!!");
         }
 
         if (!window.kakao.maps.MarkerClusterer) {
           console.log('MarkerClusterer 로드 실패');
-          // return;
         }
-        // setMarkers([]);
-        // setCluster(null);
+
         if (pins.length > 0 && infoWindows.length > 0) {
           for (let i = 0; i < pins.length; i++) {
             pins[i].setMap(null);
@@ -232,7 +195,6 @@ const Log = () => {
               selectedLogData[i].mapX
             ), // 마커를 표시할 위치
             image: markerImage, // 마커 이미지
-            // zIndex:1
           });
 
           const latlng = new kakao.maps.LatLng(
@@ -328,6 +290,7 @@ const Log = () => {
         return function () {
           const logData = getLogSubData.mutate(data.logId);
           setSelectedLogIndex(data.logId);
+          setLogId(data.logId);
           setLocation({
             level: 8,
             latitude: Number(data.latitude),
@@ -385,6 +348,11 @@ const Log = () => {
       // kakaoMap.relayout();
     }
   }, [focusPin]);
+
+  useEffect(() => {
+    console.log('selectedLogData:', selectedLogData);
+  }, [selectedLogData]);
+
   return (
     <LogContainer>
       <div className="logContainer">
@@ -432,7 +400,11 @@ const Log = () => {
               <div key={i} className="Container">
                 <Card
                   recommend={recommend}
-                  refetch={() => getLogSubData.mutate(logId)}
+                  refetch={() => {
+                    getLogSubData.mutate(logId),
+                      setSelectedLogIndex(logId),
+                      setLogId(logId);
+                  }}
                   onClick={() => onClickCard(recommend)}
                 />
               </div>

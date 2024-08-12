@@ -18,6 +18,7 @@ import {
   messageAlarmState,
   userState,
   randomPinState,
+  pinShowState,
 } from '@/src/atom/stats';
 import { pageState } from '@/src/atom/stats';
 import { useQuery } from '@tanstack/react-query';
@@ -48,7 +49,7 @@ const Home = () => {
   const [fold, setFold] = useState<boolean>(false);
   const [page, setPage] = useRecoilState(pageState);
   const [element, setElement] = useState<React.JSX.Element | null>(menu[page]);
-  const [pin, setPin] = useState<string>('pin_hide');
+  const [pin, setPin] = useRecoilState<string>(pinShowState);
   const [alarm, setAlarm] = useRecoilState(alarmState);
   const setMessageAlarm = useSetRecoilState(messageAlarmState);
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
@@ -79,13 +80,13 @@ const Home = () => {
     setIsClient(true); // 클라이언트 렌더링 시점에 상태 업데이트
   }, []);
 
-  // useEffect(() => {
-  //   console.log('userInfo: ', userInfo);
-  //   if (userInfo) {
-  //     setUser(userInfo);
-  //     setInitial();
-  //   }
-  // }, [isClient, userInfo, refetchUser]);
+  useEffect(() => {
+    console.log('user: ', user);
+    if (user) {
+      // setUser(userInfo);
+      setInitial();
+    }
+  }, [user]);
 
   const setInitial = async () => {
     const response = await getLog();
@@ -195,7 +196,7 @@ const Home = () => {
         ) : (
           <div className={styles.sliderSection}>
             <div className={styles.slider}>
-              <RandomPin setFold={setFold} setPage={setPage} setPin={setPin} />
+              <RandomPin setFold={setFold} setPage={setPage} />
             </div>
             <div className={styles.description}>
               <p className={styles.eng}>Tap for a Random Adventure</p>
@@ -207,7 +208,7 @@ const Home = () => {
         )}
       </section>
       <section className={fold ? styles.page : styles.home}>
-        {fold ? <>{element}</> : <Main pin={pin} />}
+        {fold ? <>{element}</> : <Main />}
       </section>
       {user.userId > 0 && (
         <Toast

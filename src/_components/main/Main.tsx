@@ -23,10 +23,11 @@ import { inputDataType } from '@/src/types/aboutMain';
 import useToggle from '@/src/hooks/Home/useToggle';
 
 // libraries
-import { userState } from '@/src/atom/stats';
+import { pinShowState, userState } from '@/src/atom/stats';
 import { useRecoilState } from 'recoil';
 
-const Main = ({ pin }: { pin: string }) => {
+const Main = () => {
+  const [pin, setPin] = useRecoilState<string>(pinShowState);
   const [user, setUser] = useRecoilState(userState);
   // 모달 컨트롤
   const [modal, setModal] = useState<boolean>(false);
@@ -61,9 +62,17 @@ const Main = ({ pin }: { pin: string }) => {
     setIsClient(true); // 클라이언트 렌더링 시점에 상태 업데이트
   }, []);
 
+  useEffect(() => {
+    if (pin === 'pin_show') {
+      setShowFog(true);
+    } else {
+      setShowFog(false);
+    }
+  }, [pin]);
+
   return (
     <HomeContainer $modal={modal.toString()}>
-      <div className={`fog  ${pin === 'pin_show' ? 'fog_show' : ''}`}></div>
+      <div className={`fog  ${showFog ? 'fog_show' : ''}`}></div>
       <main className={`mainSection`}>
         <Image
           className={`colorMap ${pin === 'pin_show' ? 'scaleOutMap' : ''}`}

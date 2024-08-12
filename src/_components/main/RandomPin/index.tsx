@@ -16,7 +16,7 @@ import {
 } from '@/pages/api/map';
 import { themes, Theme } from '@/src/types/aboutMap';
 import { useRecoilState } from 'recoil';
-import { randomPinState, userState } from '@/src/atom/stats';
+import { pinShowState, randomPinState, userState } from '@/src/atom/stats';
 import { RandomPinType } from '@/src/types/aboutMap';
 import { useCookies } from 'react-cookie';
 import cx from 'classnames';
@@ -26,12 +26,13 @@ import useToggle from '@/src/hooks/Home/useToggle';
 const RandomPin = ({
   setFold,
   setPage,
-  setPin,
+  // setPin,
 }: {
   setFold: React.Dispatch<React.SetStateAction<boolean>>;
   setPage: React.Dispatch<React.SetStateAction<string>>;
-  setPin: React.Dispatch<React.SetStateAction<string>>;
+  // setPin: React.Dispatch<React.SetStateAction<string>>;
 }) => {
+  const [pin, setPin] = useRecoilState<string>(pinShowState);
   const [user, setUser] = useRecoilState(userState);
   const [randomPin, setRandomPin] = useRecoilState(randomPinState);
   const [showMsg, setShowMsg] = useState(false);

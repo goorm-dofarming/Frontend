@@ -77,7 +77,6 @@ const Map = () => {
 
   const setInitial = async () => {
     const response = await getLog();
-    // console.log("get logs", response.data);
     if (response.status === 200) {
       const data = response.data;
       if (!data.length) {
@@ -271,6 +270,7 @@ const Map = () => {
 
     // kakaoMap.relayout();
   }, [focusPin]);
+
   return (
     <main className={styles.main}>
       <section id="container" ref={container} className={styles.map}>
@@ -282,7 +282,7 @@ const Map = () => {
       <div className={styles.locations}>
         {randomPin.recommends.map((recommend, index) => (
           <Card
-            key={recommend.locationId + index}
+            key={`${recommend.locationId}${recommend.dataType}${index}`}
             recommend={recommend}
             refetch={refetch}
             onClick={() => onClickCard(recommend)}
