@@ -30,6 +30,7 @@ interface MyChatListProps {
 }
 
 const MyChatList: React.FC<MyChatListProps> = ({ myChatQuery }) => {
+  const [user, setUser] = useRecoilState(userState);
   const search = useRecoilValue(searchState);
   const { data, error, isLoading: loading } = myChatQuery;
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);

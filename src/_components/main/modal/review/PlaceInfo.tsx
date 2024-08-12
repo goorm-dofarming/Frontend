@@ -83,6 +83,16 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
   const scrollRef = useRef<HTMLDivElement>(null);
   const [hasMore, setHasMore] = useState<boolean>(true);
 
+  const getMyReviews = async () => {
+    if (location && location.isReviewed) {
+      const myResponse = await getMyReview(locationId);
+      // console.log('my review : ', myResponse);
+      setMyReview(myResponse);
+    } else {
+      setMyReview(null);
+    }
+  };
+
   const getLocation = async () => {
     try {
       if (locationId === 0 || locationId === undefined) return;
@@ -91,13 +101,13 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
       }
       const response = await getLocationData(locationId);
       setLocation(response);
-      if (response.isReviewed) {
-        const myResponse = await getMyReview(locationId);
-        // console.log('my review : ', myResponse);
-        setMyReview(myResponse);
-      } else {
-        setMyReview(null);
-      }
+      // if (response.isReviewed) {
+      //   const myResponse = await getMyReview(locationId);
+      //   // console.log('my review : ', myResponse);
+      //   setMyReview(myResponse);
+      // } else {
+      //   setMyReview(null);
+      // }
       setTimeout(() => {
         setIsLoading(false);
       }, 1500);
@@ -124,10 +134,6 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
 
     try {
       setReviewLoading(true);
-      if (location && location.isReviewed) {
-        const myResponse = await getMyReview(locationId);
-        setMyReview(myResponse);
-      }
       const response = await getReviewData(params);
       clearTimeout(timeoutId);
       setReviews(response);
@@ -238,6 +244,10 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
   }, [selectedSort, locationId]);
 
   useEffect(() => {
+    getMyReviews();
+  }, [location]);
+
+  useEffect(() => {
     let isMounted = true;
     const currentScrollRef = scrollRef.current;
 
@@ -308,7 +318,6 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
       for (let imageId of deleteImages) {
         try {
           const response = await deleteImage(imageId);
-          // console.log(response);
         } catch (error) {
           if (axios.isAxiosError(error)) {
             console.error('Axios error:', error);
@@ -347,7 +356,9 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
 
   const handleDeleteReview = async (reviewId: number) => {
     try {
+      console.log('Deleting review');
       await deleteReview(reviewId);
+
       getLocation();
       getReviews();
     } catch (error) {
