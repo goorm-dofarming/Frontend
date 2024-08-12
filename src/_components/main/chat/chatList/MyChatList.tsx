@@ -113,6 +113,7 @@ const MyChatList: React.FC<MyChatListProps> = ({ myChatQuery }) => {
                 nickname: '',
               },
               unreadMessageCount:
+                messageAlarm.senderId === user.userId ||
                 chat.roomId === selectedChat.roomId
                   ? 0
                   : chat.unreadMessageCount + 1,

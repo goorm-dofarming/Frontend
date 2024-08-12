@@ -46,7 +46,7 @@ const ChatSpace: React.FC<{
   const [user] = useRecoilState(userState);
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
   const [input, setInput] = useState<string>(``);
-  const messageAlarm = useRecoilValue(messageAlarmState);
+  // const messageAlarm = useRecoilValue(messageAlarmState);
   const [participantCount, setParticipantCount] = useState<number>(
     selectedChat.participantCount
   );
@@ -146,21 +146,16 @@ const ChatSpace: React.FC<{
   }, [message]);
 
   // 본인 입장 시 인원 증감
-  useEffect(() => {
-    if (
-      messageAlarm.roomId === selectedChat.roomId &&
-      messageAlarm.senderId === user.userId
-    ) {
-      switch (message?.messageType) {
-        case 'JOIN':
-          setParticipantCount(participantCount + 1);
-          break;
-        case 'LEAVE':
-          setParticipantCount(participantCount - 1);
-          break;
-      }
-    }
-  }, [messageAlarm]);
+  // useEffect(() => {
+  //   if (
+  //     messageQuery?.data &&
+  //     messageQuery?.data.length > 0 &&
+  //     messageQuery?.data[0].userId === user.userId &&
+  //     messageQuery?.data[0].messageType === 'JOIN'
+  //   ) {
+  //     setParticipantCount(participantCount + 1);
+  //   }
+  // }, [messageQuery]);
 
   if (selectedChat.title === '') {
     return (
