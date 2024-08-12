@@ -349,10 +349,6 @@ const Log = () => {
     }
   }, [focusPin]);
 
-  useEffect(() => {
-    console.log('selectedLogData:', selectedLogData);
-  }, [selectedLogData]);
-
   return (
     <LogContainer>
       <div className="logContainer">

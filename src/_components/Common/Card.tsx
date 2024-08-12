@@ -208,7 +208,7 @@ const Card = ({
     }
     const response = await modifyLike(locationId);
 
-    console.log('response:', response.data);
+    // console.log('response:', response.data);
     if (response.status === 200 && refetch) {
       refetch();
     }

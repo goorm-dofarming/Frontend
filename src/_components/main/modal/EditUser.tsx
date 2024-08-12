@@ -8,6 +8,10 @@ import styles from '@/src/_components/main/modal/edituser.module.scss';
 // images
 import ShowPwd from '@/src/_assets/main/eye.svg';
 import HidePwd from '@/src/_assets/main/eye-closed.svg';
+import Logo from '@/src/_assets/icons/hat_logo.png';
+import { FcGoogle } from 'react-icons/fc';
+import { RiKakaoTalkFill } from 'react-icons/ri';
+import { SiNaver } from 'react-icons/si';
 
 // atom
 import { useRecoilValue } from 'recoil';
@@ -16,6 +20,11 @@ import { userState } from '@/src/atom/stats';
 // hooks
 import useToggle from '@/src/hooks/Home/useToggle';
 import Toast from '../../Common/Toast';
+import {
+  GoogleCircleButton,
+  KakaoCircleButton,
+  NAverCircleButton,
+} from '@/src/_styles/common/buttons';
 
 interface EditUserProps {
   openModal: () => void;
@@ -202,6 +211,35 @@ const EditUser: React.FC<EditUserProps> = ({
         </div>
       </div>
       <div className={styles.editArea}>
+        <span className={styles.text}>이메일</span>
+        <div
+          className={styles.textInput}
+          style={{ border: 'none', padding: '0', paddingBottom: '0.8rem' }}
+        >
+          {user.email}
+          {user.role === 'KAKAO' && (
+            <KakaoCircleButton style={{ cursor: 'default' }}>
+              <RiKakaoTalkFill size={36} fill="#000000" />
+            </KakaoCircleButton>
+          )}
+          {user.role === 'NAVER' && (
+            <NAverCircleButton style={{ cursor: 'default' }}>
+              <SiNaver size={24} fill="#FFFFFF" />
+            </NAverCircleButton>
+          )}
+          {user.role === 'GOOGLE' && (
+            <GoogleCircleButton style={{ cursor: 'default' }}>
+              <FcGoogle size={36} />
+            </GoogleCircleButton>
+          )}
+          {user.role === 'DOFARMING' && (
+            <GoogleCircleButton style={{ cursor: 'default' }}>
+              <Image src={Logo} alt="DOFARMING" width={36} height={36} />
+            </GoogleCircleButton>
+          )}
+        </div>
+      </div>
+      <div className={styles.editArea}>
         <span className={styles.text}>닉네임</span>
         <input
           type="text"
@@ -230,7 +268,7 @@ const EditUser: React.FC<EditUserProps> = ({
                 onChange={handlePasswordChange}
               />
               <Image
-                src={pwdShow === true ?  ShowPwd:HidePwd}
+                src={pwdShow === true ? ShowPwd : HidePwd}
                 alt="비밀번호 확인"
                 width={25}
                 height={25}

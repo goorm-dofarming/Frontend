@@ -81,7 +81,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    console.log('user: ', user);
+    // console.log('user: ', user);
     if (user) {
       // setUser(userInfo);
       setInitial();
@@ -121,7 +121,7 @@ const Home = () => {
     }
   };
   useEffect(() => {
-    console.log(cookies);
+    // console.log(cookies);
     if (cookies.token) {
       refetchUser();
     }
