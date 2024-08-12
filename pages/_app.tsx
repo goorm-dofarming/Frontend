@@ -26,7 +26,10 @@ export default function App({ Component, pageProps }: AppProps) {
             <Head>
               <title>Dofarming</title>
               <meta property="og:title" content="Dofarming" key="title" />
-              <link rel="icon" href="/favicon.ico" />
+              <link
+                rel="icon"
+                href={`${process.env.NEXT_PUBLIC_HTTPS_ADDRESS}/favicon.ico`}
+              />
             </Head>
             <Component {...pageProps} />
           </CookiesProvider>
