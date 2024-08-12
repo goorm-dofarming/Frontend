@@ -148,16 +148,17 @@ const Signup = ({
       const response = await sendEmail(body);
       console.log('email certification: ', response);
 
-      if (response.status === 204) {
-        setIsCertificate(true);
-        if (timeLeft < MINUTES_IN_MS) {
-          setTimeLeft(PUSH_TIMES);
-          setSignupToast('인증번호가 재발급되었습니다!');
-          setSignupToastOpen(true);
-        } else {
-          setTimeLeft((prev) => prev - 3 * INTERVAL);
-        }
-      }
+      // if (response.status === 204) {
+      //   setIsCertificate(true);
+      //   if (timeLeft < MINUTES_IN_MS) {
+      //     setTimeLeft(PUSH_TIMES);
+      //     setSignupToast('인증번호가 재발급되었습니다!');
+      //     setSignupToastOpen(true);
+      //   } else {
+      //     setTimeLeft((prev) => prev - 3 * INTERVAL);
+      //   }
+      // }
+      return response;
     },
     onError: (e) => {
       console.log(e.message);
@@ -366,7 +367,17 @@ const Signup = ({
           <div className="tinyContainer">
             <button
               className="certificateButtons"
-              onClick={() => certification.mutate()}
+              onClick={() => {
+                setIsCertificate(true);
+                certification.mutate();
+                if (timeLeft < MINUTES_IN_MS) {
+                  setTimeLeft(PUSH_TIMES);
+                  setSignupToast('인증번호가 재발급되었습니다!');
+                  setSignupToastOpen(true);
+                } else {
+                  setTimeLeft((prev) => prev - 3 * INTERVAL);
+                }
+              }}
             >
               재전송
             </button>
@@ -380,7 +391,17 @@ const Signup = ({
         ) : (
           <button
             className="certificateButtons"
-            onClick={() => certification.mutate()}
+            onClick={() => {
+              setIsCertificate(true);
+              certification.mutate();
+              if (timeLeft < PUSH_TIMES) {
+                setTimeLeft(PUSH_TIMES);
+                setSignupToast('인증번호가 재발급되었습니다!');
+                setSignupToastOpen(true);
+              } else {
+                setTimeLeft((prev) => prev - 3 * INTERVAL);
+              }
+            }}
           >
             인증
           </button>
