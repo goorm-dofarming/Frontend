@@ -57,13 +57,17 @@ const Map = () => {
   };
   const onClickCard = (recommend: Recommend) => {
     if (focusPin === recommend) {
-      openModal();
+      if (user.userId > 0) {
+        openModal();
+      }
     } else {
       setFocusPin(recommend);
       setSelectedLocation(recommend);
-      setTimeout(() => {
-        openModal();
-      }, 500);
+      if (user.userId > 0) {
+        setTimeout(() => {
+          openModal();
+        }, 500);
+      }
     }
   };
 
@@ -106,12 +110,6 @@ const Map = () => {
       }
     }
   };
-
-  useEffect(() => {
-    if (user.userId > 0 && randomPin.logId === 0) {
-      setInitial();
-    }
-  }, [randomPin]);
 
   useEffect(() => {
     // document.cookie = 'username=dofarming; SameSite=Strict; Secure';
@@ -217,7 +215,8 @@ const Map = () => {
       });
     };
     script.addEventListener('load', onLoadKakaoMap);
-  }, [randomPin.lng, randomPin.lat, randomPin.recommends, randomPin.address]);
+  }, [randomPin.lng, randomPin.lat, randomPin.address]);
+
   useEffect(() => {
     if (kakaoMap && pinInfo.length > 0) {
       for (let i = 0; i < showPinInfo.length; i++) {
@@ -229,6 +228,7 @@ const Map = () => {
       }
     }
   }, [showPinInfo]);
+
   useEffect(() => {
     if (kakaoMap === null) {
       return;
@@ -289,15 +289,17 @@ const Map = () => {
           />
         ))}
       </div>
-      <Modal openModal={openModal} modal={modal} width="51rem" height="46rem">
-        <PlaceInfo
-          openModal={openModal}
-          locationId={
-            selectedLocation?.locationId ? selectedLocation?.locationId : 0
-          }
-          refetch={refetch}
-        />
-      </Modal>
+      {user.userId > 0 && (
+        <Modal openModal={openModal} modal={modal} width="51rem" height="46rem">
+          <PlaceInfo
+            openModal={openModal}
+            locationId={
+              selectedLocation?.locationId ? selectedLocation?.locationId : 0
+            }
+            refetch={refetch}
+          />
+        </Modal>
+      )}
       {user.userId === 0 && (
         <Toast
           content={'로그인하여 더 많은 기능을 이용해 보세요 !'}

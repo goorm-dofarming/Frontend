@@ -91,6 +91,7 @@
       .address,
       .telephone {
         color: c.$C_BORDER_INPUT;
+        overflow-y: auto;
       }
     }
 

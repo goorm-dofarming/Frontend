@@ -84,7 +84,7 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
   const [hasMore, setHasMore] = useState<boolean>(true);
 
   const getMyReviews = async () => {
-    if (location && location.isReviewed) {
+    if (location && location.isReviewed && user.userId > 0) {
       const myResponse = await getMyReview(locationId);
       // console.log('my review : ', myResponse);
       setMyReview(myResponse);
@@ -317,6 +317,7 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
       await makeReview(formData);
       getLocation();
       getReviews();
+      if (refetch) refetch();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Axios error:', error);
@@ -365,6 +366,7 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
       setIsUpdate(false);
       getLocation();
       getReviews();
+      if (refetch) refetch();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Axios error:', error);
@@ -381,6 +383,7 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
 
       getLocation();
       getReviews();
+      if (refetch) refetch();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Axios error:', error);
