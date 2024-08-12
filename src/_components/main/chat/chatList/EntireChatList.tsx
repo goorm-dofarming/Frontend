@@ -68,11 +68,19 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
 
   // 채팅 리스트 세팅
   useEffect(() => {
-    if (mainChats !== chats) {
+    const areArraysEqual =
+      mainChats.length === chats.length &&
+      mainChats.every((chat, index) => chat.roomId === chats[index].roomId);
+
+    if (!areArraysEqual) {
       setChats(mainChats);
       chatsRef.current = mainChats;
     }
-  }, [search, searchInput]);
+    // if (mainChats !== chats) {
+    //   setChats(mainChats);
+    //   chatsRef.current = mainChats;
+    // }
+  }, [mainChats]);
 
   // 채팅방 입장
   const onClickEnterBtn = (chat: Chat) => {

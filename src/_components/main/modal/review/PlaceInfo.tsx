@@ -164,8 +164,28 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
     const params = {
       locationId,
       reviewId: reviews[reviews.length - 1].reviewId,
-      createdAt: reviews[reviews.length - 1].createdAt,
       sortType: sortTypes[selectedSort],
+      // 좋아요 일 때는 reviewLikeCount
+      ...(sortTypes[selectedSort] === 'LowLike' ||
+      sortTypes[selectedSort] === 'HighLike'
+        ? {
+            reviewLikeCount: reviews[reviews.length - 1].reviewLikeCount,
+          }
+        : {}),
+      // 기간 기준 일 때는 createdAt
+      ...(sortTypes[selectedSort] === 'Latest' ||
+      sortTypes[selectedSort] === 'Earliest'
+        ? {
+            createdAt: reviews[reviews.length - 1].createdAt,
+          }
+        : {}),
+      // 평점 일 때는 score
+      ...(sortTypes[selectedSort] === 'HighScore' ||
+      sortTypes[selectedSort] === 'LowScore'
+        ? {
+            score: reviews[reviews.length - 1].score,
+          }
+        : {}),
     };
 
     if (locationId === 0 || locationId === undefined) return;
