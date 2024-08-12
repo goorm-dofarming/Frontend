@@ -165,9 +165,9 @@ const MyChatList: React.FC<MyChatListProps> = ({ myChatQuery }) => {
     }
   }, [selectedChat]);
 
-  useEffect(() => {
-    console.log('messageAlarm: ', messageAlarm);
-  }, [messageAlarm]);
+  // useEffect(() => {
+  //   console.log('messageAlarm: ', messageAlarm);
+  // }, [messageAlarm]);
 
   if (loading) {
     return (

@@ -163,7 +163,9 @@ const ChatList: React.FC<ChatListProps> = ({
     if (activeTab) {
       setAlarm(false);
     } else {
-      setAlarm(true);
+      if (messageAlarm.roomId !== selectedChat.roomId) {
+        setAlarm(true);
+      }
     }
   }, [messageAlarm]);
 

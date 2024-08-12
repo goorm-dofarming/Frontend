@@ -37,7 +37,10 @@ export const getMyChatRooms = async (params: {}): Promise<Chat[]> => {
 };
 
 // 채팅방 메세지 가져오기
-export const getMessage = async (params: {}): Promise<Message[]> => {
+export const getMessage = async (params: {
+  roomId: number;
+}): Promise<Message[]> => {
+  if (params.roomId === 0) return [];
   const response = await apiClient.get('/message', { params });
   const data = response.data;
   // console.log('message : ', data);
