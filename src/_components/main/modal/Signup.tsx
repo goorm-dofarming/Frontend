@@ -4,12 +4,10 @@ import Image from 'next/image';
 // img
 import ShowPwd from '@/src/_assets/main/eye.svg';
 import HidePwd from '@/src/_assets/main/eye-closed.svg';
-import KakaoLogo from '@/src/_assets/main/kakao.svg';
-import NaverLogo from '@/src/_assets/main/N.svg';
-import GoogleLogo from '@/src/_assets/main/g-logo.svg';
 import { FcGoogle } from 'react-icons/fc';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { SiNaver } from 'react-icons/si';
+
 // styles
 import {
   GoogleCircleButton,
@@ -27,11 +25,24 @@ import {
 
 // libraries
 import { useMutation } from '@tanstack/react-query';
-import axios, { AxiosError } from 'axios';
+import { useGoogleLogin } from '@react-oauth/google';
+import { useCookies } from 'react-cookie';
+
+// types
 import { inputDataType } from '@/src/types/aboutMain';
 
 // apis
-import { checkEmail, sendEmail, signUp } from '@/pages/api/auth';
+import {
+  checkEmail,
+  getGoogleUserData,
+  sendEmail,
+  signUp,
+  signupSocialLogin,
+} from '@/pages/api/auth';
+
+// hooks
+import useNaverLogin from '@/src/hooks/Home/useNaverLogin';
+import useKaKaoLogin from '@/src/hooks/Home/useKaKaoLogin';
 
 interface SignupType {
   inputData: inputDataType;
@@ -40,6 +51,7 @@ interface SignupType {
   handleInputData: (sort: string, value: string) => void;
   handleComponent: () => void;
   setPageState: React.Dispatch<React.SetStateAction<boolean>>;
+  openModal: () => void;
 }
 type ChangingType = 'email' | 'password' | 'confirmPassword' | 'authentication';
 const Signup = ({
@@ -49,7 +61,12 @@ const Signup = ({
   handleInputData,
   handleComponent,
   setPageState,
+  openModal,
 }: SignupType) => {
+  // 쿠키
+  const [, setCookies] = useCookies(['token']);
+  // 구글 로그인 토큰
+  const [gToken, setGToken] = useState<string>('');
   // input data
   const { email, password, confirmPassword, authentication } = inputData;
   // 인증 버튼 컨트롤
@@ -149,6 +166,58 @@ const Signup = ({
       console.log(e.message);
     },
   });
+  const KakaoLogin = () => {
+    const kLogin = useKaKaoLogin();
+    kLogin();
+  };
+  const NaverLogin = () => {
+    const naver = useNaverLogin();
+    naver();
+  };
+
+  const gLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      setGToken(tokenResponse.access_token);
+    },
+    onError: (errorResponse) => console.log('Error: ', errorResponse),
+  });
+
+  const googleLogin = useMutation({
+    mutationKey: ['googleLogin'],
+    mutationFn: async () => {
+      const headers = {
+        Authorization: `Bearer ${gToken}`,
+      };
+      const userResponse = await getGoogleUserData(headers);
+
+      const body = {
+        socialType: 'GOOGLE',
+        data: userResponse.data,
+      };
+
+      const signupGoogle = await signupSocialLogin(body);
+      setCookies('token', signupGoogle.data, {
+        path: '/',
+      });
+
+      if (signupGoogle.status === 200) {
+        openModal();
+      }
+      return signupGoogle.data;
+    },
+    onError: (error) => {
+      console.error('Error fetching access token:', error);
+    },
+  });
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    if (gToken) {
+      googleLogin.mutate();
+    }
+  }, [gToken]);
+  /* eslint-enable react-hooks/exhaustive-deps */
+
   return (
     <div className="modalContents">
       <InputSignupBorder $ischanging={ischanging === 'email' ? true : false}>
@@ -290,16 +359,13 @@ const Signup = ({
       </div>
       {/* 소셜 로그인 */}
       <div className="signupSocialContainer">
-        <KakaoCircleButton>
-          {/* <Image src={KakaoLogo} alt="카카오버튼" /> */}
+        <KakaoCircleButton onClick={KakaoLogin}>
           <RiKakaoTalkFill size={36} fill="#000000" />
         </KakaoCircleButton>
-        <NAverCircleButton>
-          {/* <Image src={NaverLogo} alt="네이버버튼" /> */}
+        <NAverCircleButton onClick={NaverLogin}>
           <SiNaver size={24} fill="#FFFFFF" />
         </NAverCircleButton>
-        <GoogleCircleButton>
-          {/* <FcGoogle size={"3rem"} /> */}
+        <GoogleCircleButton onClick={() => gLogin()}>
           <FcGoogle size={36} />
         </GoogleCircleButton>
       </div>

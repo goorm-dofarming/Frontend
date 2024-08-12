@@ -68,6 +68,8 @@ const Home = () => {
       if (response.status === 200) {
         setUser(response.data);
       }
+
+      return response.data;
     },
     enabled: false,
     refetchInterval: 1000,

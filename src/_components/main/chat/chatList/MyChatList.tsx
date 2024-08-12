@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { QueryObserverResult } from '@tanstack/react-query';
 
@@ -9,7 +9,8 @@ import styles from './chatlist.module.scss';
 // types
 import { Alarm, Chat } from '@/src/types/aboutChat';
 
-// atom
+// libraries
+import axios from 'axios';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   messageAlarmState,
@@ -20,10 +21,12 @@ import {
 
 // icons
 import { FaRegFaceSadCry } from 'react-icons/fa6';
+
+// components
 import ChatLoader from '@/src/_components/Common/ChatLoader';
-import { getMyChatRooms } from '@/pages/api/chat';
+
+// api
 import { getUser } from '@/pages/api/user';
-import axios from 'axios';
 
 interface MyChatListProps {
   myChatQuery: QueryObserverResult<Chat[], Error>;

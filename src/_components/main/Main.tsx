@@ -120,6 +120,7 @@ const Main = ({ pin }: { pin: string }) => {
             handleInputData={handleInputData}
             handleComponent={handleComponent}
             setPageState={setPageState}
+            openModal={openModal}
           />
         ) : (
           <Login
