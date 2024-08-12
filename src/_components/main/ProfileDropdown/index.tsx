@@ -141,7 +141,7 @@ const ProfileDropdown = ({
     if (id === 'settings') {
       openModal();
     } else {
-      console.log('randomPin:', randomPin);
+      // console.log('randomPin:', randomPin);
       if (randomPin.logId === 0 && (id === 'map' || id === 'log')) {
         if (openToast) {
           openToast();
