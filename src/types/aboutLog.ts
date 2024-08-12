@@ -28,9 +28,9 @@ export interface recommendsType {
   mapY: number;
   countLikes: number;
   liked: boolean;
-  averageScore:string;
-  totalReview:number;
-  isReviewed:boolean;
+  averageScore: number;
+  totalReview: number;
+  isReviewed: boolean;
 }
 
 export interface locationType {
