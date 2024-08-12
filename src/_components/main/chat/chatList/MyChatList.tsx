@@ -34,8 +34,6 @@ const MyChatList: React.FC<MyChatListProps> = ({ myChatQuery }) => {
   const search = useRecoilValue(searchState);
   const { data, error, isLoading: loading } = myChatQuery;
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
-  // user
-  const [user, setUser] = useRecoilState(userState);
 
   // 내 채팅 리스트
   const [myChats, setMyChats] = useState<Chat[]>(myChatQuery.data ?? []);
