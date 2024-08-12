@@ -62,7 +62,13 @@ const Home = () => {
 
   const { data: userInfo, refetch: refetchUser } = useQuery({
     queryKey: ['me'],
-    queryFn: getMe,
+    queryFn: async () => {
+      const response = await getMe();
+
+      if (response.status === 200) {
+        setUser(response.data);
+      }
+    },
     enabled: false,
     refetchInterval: 1000,
   });
@@ -71,12 +77,13 @@ const Home = () => {
     setIsClient(true); // 클라이언트 렌더링 시점에 상태 업데이트
   }, []);
 
-  useEffect(() => {
-    if (userInfo) {
-      setUser(userInfo);
-      setInitial();
-    }
-  }, [isClient, userInfo, refetchUser]);
+  // useEffect(() => {
+  //   console.log('userInfo: ', userInfo);
+  //   if (userInfo) {
+  //     setUser(userInfo);
+  //     setInitial();
+  //   }
+  // }, [isClient, userInfo, refetchUser]);
 
   const setInitial = async () => {
     const response = await getLog();
@@ -111,6 +118,7 @@ const Home = () => {
     }
   };
   useEffect(() => {
+    console.log(cookies);
     if (cookies.token) {
       refetchUser();
     }
@@ -166,17 +174,6 @@ const Home = () => {
       setAlarm(false);
     }
   }, [page, alarm]);
-
-  useEffect(() => {
-    console.log(
-      'naver 리다이렉션 확인: ',
-      process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
-      process.env.NEXT_PUBLIC_NAVER_CLIENT_SECRET,
-      process.env.NEXT_PUBLIC_NAVER_REDIREDCT_URI,
-      process.env.NEXT_PUBLIC_NAVER_STATE
-    );
-    console.log('NODE_ENV:', process.env.NODE_ENV);
-  }, []);
 
   return (
     <main className={styles.main}>

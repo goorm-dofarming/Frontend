@@ -15,6 +15,7 @@ import {
   messageAlarmState,
   searchState,
   selectedChatState,
+  userState,
 } from '@/src/atom/stats';
 
 // icons
@@ -32,6 +33,8 @@ const MyChatList: React.FC<MyChatListProps> = ({ myChatQuery }) => {
   const search = useRecoilValue(searchState);
   const { data, error, isLoading: loading } = myChatQuery;
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
+  // user
+  const [user, setUser] = useRecoilState(userState);
 
   // 내 채팅 리스트
   const [myChats, setMyChats] = useState<Chat[]>(myChatQuery.data ?? []);
@@ -112,7 +115,8 @@ const MyChatList: React.FC<MyChatListProps> = ({ myChatQuery }) => {
                   ? 0
                   : chat.unreadMessageCount + 1,
               participantCount:
-                messageAlarm.messageType === 'JOIN'
+                messageAlarm.messageType === 'JOIN' &&
+                messageAlarm.senderId !== user.userId
                   ? chat.participantCount + 1
                   : messageAlarm.messageType === 'LEAVE'
                     ? chat.participantCount - 1
@@ -158,6 +162,10 @@ const MyChatList: React.FC<MyChatListProps> = ({ myChatQuery }) => {
       });
     }
   }, [selectedChat]);
+
+  useEffect(() => {
+    console.log('messageAlarm: ', messageAlarm);
+  }, [messageAlarm]);
 
   if (loading) {
     return (

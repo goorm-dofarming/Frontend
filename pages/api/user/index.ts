@@ -1,10 +1,8 @@
 import { User } from '@/src/types/aboutMain';
 import apiClient from '../apiClient';
 
-export const getMe = async (): Promise<User> => {
-  const response = await apiClient.get(`/me`);
-  const data = response.data;
-  return data;
+export const getMe = () => {
+  return apiClient.get(`/me`);
 };
 
 export const modifyUser = async (body: {}) => {

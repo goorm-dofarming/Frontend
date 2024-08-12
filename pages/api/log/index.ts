@@ -1,6 +1,4 @@
-import axios from 'axios';
 import apiClient from '../apiClient';
-import basicClient from '../basicClient';
 
 export const getLog = () => {
   return apiClient.get('/getLogs');
