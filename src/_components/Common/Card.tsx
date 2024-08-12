@@ -95,6 +95,7 @@ const Description = styled.div`
     /* transition: all 3s ease-in-out; */
   }
   .phone {
+    width: 100%;
     overflow: hidden;
     font-weight: 200;
     text-overflow: ellipsis;

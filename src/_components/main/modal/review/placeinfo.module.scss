@@ -32,6 +32,7 @@
 
     .leftSection {
       @include m.flex(space-between, flex-start, column);
+      height: 100%;
       font-weight: 600;
       font-size: 1rem;
       padding: 0.5rem;
@@ -88,8 +89,11 @@
         }
       }
 
-      .address,
+      .address {
+        color: c.$C_BORDER_INPUT;
+      }
       .telephone {
+        height: 30%;
         color: c.$C_BORDER_INPUT;
         overflow-y: auto;
       }
