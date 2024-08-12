@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 const useKaKaoLogin = () => {
   function kakaoLogin() {
     const restAPIKeys = process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID;

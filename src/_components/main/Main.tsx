@@ -135,10 +135,12 @@ const Main = () => {
           <Login
             inputData={inputData}
             pwdShow={pwdShow}
+            pageState={pageState}
             handlePwd={handlePwd}
             handleInputData={handleInputData}
             handleComponent={handleComponent}
             openModal={openModal}
+            setInputData={setInputData}
           />
         )}
       </Modal>

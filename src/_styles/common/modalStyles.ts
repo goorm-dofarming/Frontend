@@ -109,19 +109,28 @@ export const ModalContainer = styled.div<ModalContainerProps>`
     align-items: center;
     margin-bottom: 0.8rem;
 
-    button {
-      width: 3vw;
+    .tinyContainer {
+      display: flex;
+      flex-direction: row;
+      width: 8vw;
       height: 60%;
-      border: 1px solid ${colorTheme.primary};
-      color: ${colorTheme.primary};
-      background-color: white;
-      border-radius: 0.2rem;
+      justify-content: space-around;
+      align-items: center;
+    }
+  }
 
-      &:hover {
-        cursor: pointer;
-        color: white;
-        background-color: ${colorTheme.primary};
-      }
+  .certificateButtons {
+    width: 3vw;
+    height: 80%;
+    border: 1px solid ${colorTheme.primary};
+    color: ${colorTheme.primary};
+    background-color: white;
+    border-radius: 0.2rem;
+
+    &:hover {
+      cursor: pointer;
+      color: white;
+      background-color: ${colorTheme.primary};
     }
   }
 

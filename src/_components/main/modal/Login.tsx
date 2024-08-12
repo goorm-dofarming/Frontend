@@ -34,25 +34,40 @@ import { getGoogleUserData, login, signupSocialLogin } from '@/pages/api/auth';
 interface LoginType {
   inputData: inputDataType;
   pwdShow: boolean;
+  pageState: boolean;
   handlePwd: () => void;
   handleInputData: (sort: string, value: string) => void;
   handleComponent: () => void;
   openModal: () => void;
+  setInputData: React.Dispatch<React.SetStateAction<inputDataType>>;
 }
 type ChangingType = 'email' | 'password';
 const Login = ({
   inputData,
   pwdShow,
+  pageState,
   handlePwd,
   handleInputData,
   handleComponent,
   openModal,
+  setInputData,
 }: LoginType) => {
   const [, setCookies] = useCookies(['token']);
   // 구글 로그인 토큰
   const [gToken, setGToken] = useState<string>('');
   const { email, password } = inputData;
   const [ischanging, setIsChanging] = useState<ChangingType | null>(null);
+
+  useEffect(() => {
+    if (pageState === false) {
+      setInputData({
+        email: '',
+        password: '',
+        confirmPassword: '',
+        authentication: '',
+      });
+    }
+  }, [pageState]);
 
   const doLogin = useMutation({
     mutationKey: ['login'],
@@ -74,6 +89,12 @@ const Login = ({
           // secure: true,
         });
         openModal();
+        setInputData({
+          email: '',
+          password: '',
+          confirmPassword: '',
+          authentication: '',
+        });
       }
     },
     onError: (e) => {
@@ -154,6 +175,7 @@ const Login = ({
                 handleInputData(e.target.name, e.target.value);
                 setIsChanging('email');
               }}
+              value={inputData.email}
               onBlur={() => setIsChanging(null)}
             />
           </div>
@@ -178,6 +200,7 @@ const Login = ({
                 handleInputData(e.target.name, e.target.value);
                 setIsChanging('password');
               }}
+              value={inputData.password}
               onBlur={() => setIsChanging(null)}
             />
           </div>

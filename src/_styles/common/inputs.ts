@@ -93,7 +93,7 @@ export const InputSignupBorder = styled(InputBorder)<InputBorderBooleanProps>`
 export const InputSignupAuthpBorder = styled(
   InputBorder
 )<InputBorderBooleanProps>`
-  width: 19vw;
+  width: ${(props) => (props.$ischanging ? '15vw' : '19vw')};
   /* border-radius: 0.5rem; */
   padding: 0.2rem 0.2rem 0.2rem 0.4rem;
   border: ${(props) => props.$ischanging && `2px solid ${colorTheme.primary}`};

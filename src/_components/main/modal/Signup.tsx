@@ -43,6 +43,7 @@ import {
 // hooks
 import useNaverLogin from '@/src/hooks/Home/useNaverLogin';
 import useKaKaoLogin from '@/src/hooks/Home/useKaKaoLogin';
+import Toast from '../../Common/Toast';
 
 interface SignupType {
   inputData: inputDataType;
@@ -74,18 +75,26 @@ const Signup = ({
   // 회원가입 버튼 컨트롤
   const [isActive, setIsActive] = useState<boolean>(false);
   // 타이머
+  const PUSH_TIMES = 3 * 60 * 1000;
   const MINUTES_IN_MS = 3 * 61 * 1000;
   const INTERVAL = 1000;
   const [timeLeft, setTimeLeft] = useState<number>(MINUTES_IN_MS);
   const [ischanging, setIsChanging] = useState<ChangingType | null>(null);
+
+  // 토스트 메세지 내용
+  const [signupToast, setSignupToast] = useState<string>('');
+  // 토스트 boolean
+  const [singupToastOpen, setSignupToastOpen] = useState<boolean>(false);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (isCertificate === true) {
       const timer = setInterval(() => {
         setTimeLeft((prevTime) => prevTime - INTERVAL);
       }, INTERVAL);
-      // console.log("timer:", timer);
-      // console.log("timeLeft:", timeLeft);
+
+      console.log('timer: ', timer);
+      console.log('timeLeft: ', timeLeft);
 
       if (timeLeft <= 0) {
         clearInterval(timer);
@@ -104,6 +113,8 @@ const Signup = ({
     '0'
   );
   const second = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, '0');
+
+  const handleToast = () => setSignupToastOpen(!singupToastOpen);
 
   const doSignup = useMutation({
     mutationKey: ['signup'],
@@ -135,11 +146,17 @@ const Signup = ({
       };
 
       const response = await sendEmail(body);
-      // console.log("email certification: ", response);
+      console.log('email certification: ', response);
 
       if (response.status === 204) {
         setIsCertificate(true);
-        setTimeLeft((prev) => prev - 3 * INTERVAL);
+        if (timeLeft < MINUTES_IN_MS) {
+          setTimeLeft(PUSH_TIMES);
+          setSignupToast('인증번호가 재발급되었습니다!');
+          setSignupToastOpen(true);
+        } else {
+          setTimeLeft((prev) => prev - 3 * INTERVAL);
+        }
       }
     },
     onError: (e) => {
@@ -157,15 +174,20 @@ const Signup = ({
 
       const response = await checkEmail(body);
 
-      // console.log("email certification: ", response);
+      console.log('check email: ', response);
+
       if (response.status === 204) {
         setIsActive(true);
       }
+      return response.data;
     },
     onError: (e) => {
-      console.log(e.message);
+      console.log(e);
+      setSignupToast('인증번호가 틀렸습니다!');
+      setSignupToastOpen(true);
     },
   });
+
   const KakaoLogin = () => {
     const kLogin = useKaKaoLogin();
     kLogin();
@@ -220,6 +242,14 @@ const Signup = ({
 
   return (
     <div className="modalContents">
+      {singupToastOpen && (
+        <Toast
+          content={signupToast}
+          toast={singupToastOpen}
+          openToast={handleToast}
+        />
+      )}
+
       <InputSignupBorder $ischanging={ischanging === 'email' ? true : false}>
         <div
           style={{
@@ -333,9 +363,27 @@ const Signup = ({
           </div>
         </InputSignupAuthpBorder>
         {isCertificate === true ? (
-          <button onClick={() => signup.mutate()}>확인</button>
+          <div className="tinyContainer">
+            <button
+              className="certificateButtons"
+              onClick={() => certification.mutate()}
+            >
+              재전송
+            </button>
+            <button
+              className="certificateButtons"
+              onClick={() => signup.mutate()}
+            >
+              확인
+            </button>
+          </div>
         ) : (
-          <button onClick={() => certification.mutate()}>인증</button>
+          <button
+            className="certificateButtons"
+            onClick={() => certification.mutate()}
+          >
+            인증
+          </button>
         )}
       </div>
       <div className="limitTime">
