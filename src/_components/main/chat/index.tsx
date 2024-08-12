@@ -143,12 +143,12 @@ const Chat = () => {
     await messageQuery.refetch();
   };
 
-  const sendLastJoin = async () => {
-    if (message) {
+  const sendLastJoin = async (msg: Message) => {
+    if (msg) {
       try {
         await sendLastMessage({
-          roomId: message.roomId,
-          messageId: message.messageId,
+          roomId: msg.roomId,
+          messageId: msg.messageId,
         });
       } catch (error) {
         console.error('Failed to save messages:', error);
@@ -157,10 +157,14 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    if (messageQuery.data) {
-      sendLastJoin();
+    if (messageQuery.data && messageQuery.data.length > 0) {
+      if (message && message.roomId === messageQuery.data[0].roomId) {
+        sendLastJoin(message);
+      } else {
+        sendLastJoin(messageQuery.data[0]);
+      }
     }
-  }, [messageQuery]);
+  }, [messageQuery, message]);
 
   // 채팅방 퇴장 메세지
   const leaveMessage = (roomId: number) => {
