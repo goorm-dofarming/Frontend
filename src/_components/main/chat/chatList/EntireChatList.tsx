@@ -93,7 +93,10 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
     try {
       await joinChatRoom(chat.roomId);
       joinMessage(chat.roomId);
-      setSelectedChat(chat);
+      setSelectedChat({
+        ...chat,
+        participantCount: chat.participantCount + 1,
+      });
       setActiveTab(true);
     } catch (error) {
       if (axios.isAxiosError(error)) {
