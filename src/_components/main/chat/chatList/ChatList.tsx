@@ -35,6 +35,7 @@ import {
   messageAlarmState,
   searchState,
   selectedChatState,
+  userState,
 } from '@/src/atom/stats';
 
 // 알림
@@ -54,6 +55,7 @@ const ChatList: React.FC<ChatListProps> = ({
   refetchChatList,
   joinMessage,
 }) => {
+  const user = useRecoilValue(userState);
   // true => 내 채팅 , false => 오픈 채팅
   const [activeTab, setActiveTab] = useState(true);
   const [selectedChat, setSelectedChat] = useRecoilState(selectedChatState);
@@ -163,7 +165,10 @@ const ChatList: React.FC<ChatListProps> = ({
     if (activeTab) {
       setAlarm(false);
     } else {
-      if (messageAlarm.roomId !== selectedChat.roomId) {
+      if (
+        messageAlarm.roomId !== selectedChat.roomId &&
+        messageAlarm.senderId !== user.userId
+      ) {
         setAlarm(true);
       }
     }

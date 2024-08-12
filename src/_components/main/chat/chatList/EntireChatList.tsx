@@ -96,6 +96,7 @@ const EntireChatList: React.FC<EntireChatListProps> = ({
       setSelectedChat({
         ...chat,
         participantCount: chat.participantCount + 1,
+        unreadMessageCount: 0,
       });
       setActiveTab(true);
     } catch (error) {
