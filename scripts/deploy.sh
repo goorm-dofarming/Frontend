@@ -44,6 +44,9 @@ sudo pnpm install
 # pnpm build
 sudo pnpm build
 
+# 배포 중단
+sudo pm2 kill
+
 # 애플리케이션 시작 또는 재시작
 echo "Starting or resurrecting the application..." | tee -a $LOG_FILE
 pm2 resurrect || pm2 start npm --name "Frontend" -- start | tee -a $LOG_FILE
