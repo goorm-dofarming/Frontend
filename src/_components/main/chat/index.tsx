@@ -118,7 +118,7 @@ const Chat = () => {
     return () => {
       if (stompClientRef.current) {
         stompClientRef.current.deactivate();
-        console.log('Disconnected from STOMP broker.');
+        // console.log('Disconnected from STOMP broker.');
       }
     };
   }, [selectedChat]);

@@ -93,8 +93,8 @@ const Signup = ({
         setTimeLeft((prevTime) => prevTime - INTERVAL);
       }, INTERVAL);
 
-      console.log('timer: ', timer);
-      console.log('timeLeft: ', timeLeft);
+      // console.log('timer: ', timer);
+      // console.log('timeLeft: ', timeLeft);
 
       if (timeLeft <= 0) {
         clearInterval(timer);
@@ -146,7 +146,7 @@ const Signup = ({
       };
 
       const response = await sendEmail(body);
-      console.log('email certification: ', response);
+      // console.log('email certification: ', response);
 
       // if (response.status === 204) {
       //   setIsCertificate(true);
@@ -175,7 +175,7 @@ const Signup = ({
 
       const response = await checkEmail(body);
 
-      console.log('check email: ', response);
+      // console.log('check email: ', response);
 
       if (response.status === 204) {
         setIsActive(true);

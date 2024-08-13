@@ -113,6 +113,7 @@ const Login = ({
         e,
         inputData,
       };
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const execute = useCheckError(object);
       execute();
     },

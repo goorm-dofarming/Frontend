@@ -381,9 +381,8 @@ const Likes = () => {
                 <button
                   className="icon"
                   onClick={() => {
-                    setSearch((prev) => !prev),
-                      setSearchText(''),
-                      console.log('click');
+                    setSearch((prev) => !prev), setSearchText('');
+                    // console.log('click');
                   }}
                 >
                   <LuDelete size="24" />
