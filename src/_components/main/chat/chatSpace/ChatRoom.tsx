@@ -142,6 +142,12 @@ const ChatRoom: React.FC<{
   }, [messages]);
 
   useEffect(() => {
+    if (oldMessages && oldMessages.length > 0) {
+      setMessages(oldMessages);
+    }
+  }, [selectedChat]);
+
+  useEffect(() => {
     // console.log('messages : ', messages.slice(0, 4));
     // console.log('old messages : ', oldMessages.slice(0, 4));
     // console.log('received message : ', receiveMessage);
@@ -168,17 +174,17 @@ const ChatRoom: React.FC<{
       setMessages((prevMessages) => [receiveMessage, ...prevMessages]);
     }
     // messages와 oldMessages를 비교해서 다르면 oldMessages로 초기화
-    // else if (oldMessages.length > 0) {
-    //   const trimmedMessages = messages.slice(0, oldMessages.length);
+    else if (oldMessages.length > 0) {
+      const trimmedMessages = messages.slice(-oldMessages.length);
 
-    //   const areArraysEqual = oldMessages.every(
-    //     (chat, index) => chat.messageId === trimmedMessages[index]?.messageId
-    //   );
+      const areArraysEqual = oldMessages.every(
+        (chat, index) => chat.messageId === trimmedMessages[index]?.messageId
+      );
 
-    //   if (!areArraysEqual) {
-    //     setMessages(oldMessages);
-    //   }
-    // }
+      if (!areArraysEqual) {
+        setMessages(oldMessages);
+      }
+    }
   }, [oldMessages, messages, receiveMessage]);
 
   if (isLoading) {
