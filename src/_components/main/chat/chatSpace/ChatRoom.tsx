@@ -142,10 +142,40 @@ const ChatRoom: React.FC<{
   }, [messages]);
 
   useEffect(() => {
-    if (messages.length === 0) {
+    if (oldMessages && oldMessages.length > 0) {
       setMessages(oldMessages);
-    } else {
-      const trimmedMessages = messages.slice(0, oldMessages.length);
+    }
+  }, [selectedChat]);
+
+  useEffect(() => {
+    // console.log('messages : ', messages.slice(0, 4));
+    // console.log('old messages : ', oldMessages.slice(0, 4));
+    // console.log('received message : ', receiveMessage);
+
+    // 만약 messages가 비어있고 oldMessages가 존재하면, oldMessages로 초기화
+    if (messages.length === 0 && oldMessages.length > 0) {
+      setMessages(oldMessages);
+    }
+    // 만약 messages에 저장된 메세지와 query의 메세지가 다른 채팅방이라면 oldMessages로 초기화
+    else if (messages[0]?.roomId !== oldMessages[0]?.roomId) {
+      setMessages(oldMessages);
+    }
+    // 만약 messages보다 query의 메세지가 최신본이라면 oldMessages로 초기화
+    else if (messages[0]?.messageId < oldMessages[0]?.messageId) {
+      setMessages(oldMessages);
+    }
+    // receiveMessage가 존재하면, messages 앞에 추가
+    else if (
+      receiveMessage &&
+      receiveMessage.roomId === messages[0]?.roomId &&
+      receiveMessage.messageId !== messages[0]?.messageId &&
+      receiveMessage.messageId > messages[0]?.messageId
+    ) {
+      setMessages((prevMessages) => [receiveMessage, ...prevMessages]);
+    }
+    // messages와 oldMessages를 비교해서 다르면 oldMessages로 초기화
+    else if (oldMessages.length > 0) {
+      const trimmedMessages = messages.slice(-oldMessages.length);
 
       const areArraysEqual = oldMessages.every(
         (chat, index) => chat.messageId === trimmedMessages[index]?.messageId
@@ -155,13 +185,7 @@ const ChatRoom: React.FC<{
         setMessages(oldMessages);
       }
     }
-  }, [oldMessages]);
-
-  useEffect(() => {
-    if (receiveMessage) {
-      setMessages((prevMessages) => [receiveMessage, ...prevMessages]);
-    }
-  }, [receiveMessage]);
+  }, [oldMessages, messages, receiveMessage]);
 
   if (isLoading) {
     return <Landing />;

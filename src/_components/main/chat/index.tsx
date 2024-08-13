@@ -81,6 +81,9 @@ const Chat = () => {
   }, [user]);
 
   useEffect(() => {
+    if (selectedChat.roomId > 0) {
+      messageQuery.refetch();
+    }
     // SockJS 클라이언트 생성
     const socket = new SockJS(
       `${process.env.NEXT_PUBLIC_DEPLOY_WEBSOCKET_ADDRESS}`
@@ -89,7 +92,7 @@ const Chat = () => {
       webSocketFactory: () => socket,
       reconnectDelay: 5000,
       debug: (str) => {
-        console.log(str);
+        // console.log(str);
       },
       onConnect: (frame) => {
         stompClient.subscribe(
@@ -101,9 +104,6 @@ const Chat = () => {
             }
           }
         );
-        if (selectedChat.roomId > 0) {
-          messageQuery.refetch();
-        }
       },
       onStompError: (frame) => {
         console.error('Broker reported error: ' + frame.headers['message']);
@@ -150,6 +150,7 @@ const Chat = () => {
           roomId: msg.roomId,
           messageId: msg.messageId,
         });
+        // console.log('send join : ', msg);
       } catch (error) {
         console.error('Failed to save messages:', error);
       }
@@ -158,10 +159,16 @@ const Chat = () => {
 
   useEffect(() => {
     if (messageQuery.data && messageQuery.data.length > 0) {
-      if (message && message.roomId === messageQuery.data[0].roomId) {
+      if (
+        message &&
+        message.roomId === messageQuery.data[0].roomId &&
+        message.messageId > messageQuery.data[0].messageId
+      ) {
         sendLastJoin(message);
+        // console.log('send join ws : ', message);
       } else {
         sendLastJoin(messageQuery.data[0]);
+        // console.log('send join api : ', messageQuery.data[0]);
       }
     }
   }, [messageQuery, message]);
