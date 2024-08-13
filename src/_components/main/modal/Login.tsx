@@ -32,6 +32,9 @@ import useNaverLogin from '@/src/hooks/Home/useNaverLogin';
 import { getGoogleUserData, login, signupSocialLogin } from '@/pages/api/auth';
 import Toast from '../../Common/Toast';
 import { AxiosError } from 'axios';
+import useCheckError, {
+  useCheckErrorType,
+} from '@/src/hooks/login/useCheckError';
 
 interface LoginType {
   inputData: inputDataType;
@@ -88,14 +91,9 @@ const Login = ({
 
       const response = await login(body);
 
-      console.log('login success: ', response);
-
       if (response.status === 200) {
-        // 성공 시 cookie에 token 추가
         setCookies('token', response.data, {
           path: '/',
-          // sameSite: 'none',
-          // secure: true,
         });
         openModal();
         setInputData({
@@ -109,17 +107,14 @@ const Login = ({
       return response.data;
     },
     onError: (e: any) => {
-      console.log(e);
-      if (e.response.data.message === 'Password Not Match.') {
-        setSignupToast('비밀번호가 일치하지 않습니다!');
-        setSignupToastOpen(true);
-      } else if (e.response.data.message === 'User not found.') {
-        setSignupToast('존재하지 않는 이메일 입니다!');
-        setSignupToastOpen(true);
-      } else if (inputData.email === '' || inputData.password === '') {
-        setSignupToast('이메일 혹은 비밀번호가 빈칸입니다!');
-        setSignupToastOpen(true);
-      }
+      const object: useCheckErrorType = {
+        setSignupToast,
+        setSignupToastOpen,
+        e,
+        inputData,
+      };
+      const execute = useCheckError(object);
+      execute();
     },
   });
 
