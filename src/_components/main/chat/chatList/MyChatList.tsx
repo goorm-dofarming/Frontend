@@ -224,7 +224,9 @@ const MyChatList: React.FC<MyChatListProps> = ({ myChatQuery }) => {
             {chat.unreadMessageCount > 0 &&
               selectedChat.roomId !== chat.roomId && (
                 <div className={styles.chatBadge}>
-                  {chat.unreadMessageCount}
+                  {chat.unreadMessageCount > 300
+                    ? '300+'
+                    : chat.unreadMessageCount}
                 </div>
               )}
           </div>
