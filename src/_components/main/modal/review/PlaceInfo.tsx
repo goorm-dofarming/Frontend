@@ -378,7 +378,7 @@ const PlaceInfo: React.FC<PlaceInfoProps> = ({
 
   const handleDeleteReview = async (reviewId: number) => {
     try {
-      console.log('Deleting review');
+      // console.log('Deleting review');
       await deleteReview(reviewId);
 
       getLocation();

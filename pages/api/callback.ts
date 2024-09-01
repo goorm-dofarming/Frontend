@@ -24,6 +24,7 @@ const naverAuthHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         'X-Naver-Client-Secret': client_secret,
       },
     });
+    // console.log(response);
 
     const userData = await axios.get(`https://openapi.naver.com/v1/nid/me`, {
       headers: {
@@ -31,6 +32,7 @@ const naverAuthHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
+    // console.log('success get userData: ', userData);
     res.status(200).json(userData.data);
   } catch (error: any) {
     console.error('Error Details:', error.response?.data);

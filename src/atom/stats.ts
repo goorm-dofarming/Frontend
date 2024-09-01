@@ -4,7 +4,7 @@ import { atom } from 'recoil';
 import { Alarm, Chat } from '@/src/types/aboutChat';
 import { RandomPinType } from '@/src/types/aboutMap';
 import { User } from '../types/aboutMain';
-import { logDataType } from '../types/aboutLog';
+import { logDataType, recommendsType } from '../types/aboutLog';
 
 export const selectedChatState = atom<Chat>({
   key: 'selectedChatState',
@@ -100,4 +100,16 @@ export const logMapState = atom<kakao.maps.Map | null>({
 export const pinShowState = atom<string>({
   key: 'pinShowState',
   default: 'pin_hide',
+});
+
+export interface LogData {
+  selectedLogIndex: number;
+  selectedLogData: recommendsType[];
+}
+export const selectedLogState = atom<LogData>({
+  key: 'selectedLogState',
+  default: {
+    selectedLogIndex: 0,
+    selectedLogData: [],
+  },
 });

@@ -6,7 +6,7 @@ import { LogContainer } from '@/src/_styles/main/logStyles';
 // libraries
 import { useMutation } from '@tanstack/react-query';
 import { useRecoilState } from 'recoil';
-import { logEntireData } from '@/src/atom/stats';
+import { logEntireData, logMapState, selectedLogState } from '@/src/atom/stats';
 
 // types
 import { logDataType, recommendsType } from '@/src/types/aboutLog';
@@ -26,7 +26,9 @@ import { clustererStyle } from './log/cluster';
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SDK}&autoload=false&libraries=clusterer`;
 
 const Log = () => {
-  // const [kakaoMap, setKakaoMap] = useRecoilState<kakao.maps.Map | null>(logMapState);
+  // const [kakaoMap, setKakaoMap] = useRecoilState<kakao.maps.Map | null>(
+  //   logMapState
+  // );
   const [kakaoMap, setKakaoMap] = useState<kakao.maps.Map | null>(null);
   // 위치 이동
   const [location, setLocation] = useState({
@@ -36,7 +38,9 @@ const Log = () => {
   });
 
   // 클릭된 로그 판별
-  const [selectedLogIndex, setSelectedLogIndex] = useState<number | null>(null);
+  // const [selectedLogIndex, setSelectedLogIndex] = useState<number | null>(null);
+  // const [selectedLogIndex, setSelectedLogIndex] = useState<number>(0);
+  const [selectedLog, setSelectedLog] = useRecoilState(selectedLogState);
 
   // kakao map dom 컨트롤
   const containerRef = useRef<HTMLElement>(null);
@@ -45,7 +49,7 @@ const Log = () => {
   const [logData, setLogData] = useRecoilState<logDataType[]>(logEntireData);
 
   // 선택된 로그 데이터들
-  const [selectedLogData, setSelectedLogData] = useState<recommendsType[]>([]);
+  // const [selectedLogData, setSelectedLogData] = useState<recommendsType[]>([]);
   const [selectedLocationId, setSelectedLocationId] = useState<number>(0);
   const [pins, setPins] = useState<any[]>([]);
   const [infoWindows, setInfoWindows] = useState<any[]>([]);
@@ -53,7 +57,7 @@ const Log = () => {
   const [cluster, setCluster] = useState<any>(null);
   const [focusPin, setFocusPin] = useState<Recommend | null>(null);
   // 로그 아이디
-  const [logId, setLogId] = useState<number>(0);
+  // const [logId, setLogId] = useState<number>(0);
 
   // 카드 클릭 시 정보 모달
   const [modal, setModal] = useState<boolean>(false);
@@ -94,9 +98,16 @@ const Log = () => {
 
   useEffect(() => {
     if (logData.length > 0) {
-      getLogSubData.mutate(logData[0].logId);
-      setSelectedLogIndex(logData[0].logId);
-      setLogId(logData[0].logId);
+      if (selectedLog.selectedLogData.length === 0) {
+        getLogSubData.mutate(logData[0].logId);
+        // setSelectedLogIndex(logData[0].logId);
+        setSelectedLog((prev) => ({
+          selectedLogData: prev.selectedLogData,
+          selectedLogIndex: logData[0].logId,
+        }));
+      }
+
+      // setLogId(logData[0].logId);
     }
   }, [logData]);
 
@@ -111,7 +122,11 @@ const Log = () => {
       return response.data.recommendations;
     },
     onSuccess: (data) => {
-      setSelectedLogData(data);
+      // setSelectedLogData(data);
+      setSelectedLog((prev) => ({
+        selectedLogData: data,
+        selectedLogIndex: prev.selectedLogIndex,
+      }));
     },
     onError: () => {
       console.log('get log data error');
@@ -136,7 +151,7 @@ const Log = () => {
     }
   };
   useEffect(() => {
-    if (selectedLogData.length === 0) {
+    if (selectedLog.selectedLogData.length === 0) {
       return;
     }
     const script = document.createElement('script');
@@ -160,10 +175,12 @@ const Log = () => {
         let map: any;
 
         if (containerRef.current !== null && kakaoMap === null) {
+          // console.log(kakaoMap);
           const mapContainer = document.getElementById('logMapContainer');
           map = new window.kakao.maps.Map(mapContainer, options);
           map.setMaxLevel(13);
         } else {
+          // console.log(kakaoMap);
           map = kakaoMap;
         }
 
@@ -179,10 +196,10 @@ const Log = () => {
         }
         const new_pins = [];
         const new_infoWindows = [];
-        for (let i = 0; i < selectedLogData.length; i++) {
+        for (let i = 0; i < selectedLog.selectedLogData.length; i++) {
           let imageSize = new kakao.maps.Size(36, 48);
 
-          let imageSrc = DataType[selectedLogData[i].dataType].img;
+          let imageSrc = DataType[selectedLog.selectedLogData[i].dataType].img;
 
           // 마커 이미지를 생성합니다
           let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
@@ -191,21 +208,23 @@ const Log = () => {
           let marker = new kakao.maps.Marker({
             map: map, // 마커를 표시할 지도
             position: new kakao.maps.LatLng(
-              selectedLogData[i].mapY,
-              selectedLogData[i].mapX
+              selectedLog.selectedLogData[i].mapY,
+              selectedLog.selectedLogData[i].mapX
             ), // 마커를 표시할 위치
             image: markerImage, // 마커 이미지
           });
 
           const latlng = new kakao.maps.LatLng(
-            selectedLogData[i].mapY,
-            selectedLogData[i].mapX
+            selectedLog.selectedLogData[i].mapY,
+            selectedLog.selectedLogData[i].mapX
           );
 
           // 마커 객체에 title 속성을 추가합니다
-          marker.title = selectedLogData[i].title;
+          marker.title = selectedLog.selectedLogData[i].title;
 
-          const infowindowContent = makeInfoWindow(selectedLogData[i].title);
+          const infowindowContent = makeInfoWindow(
+            selectedLog.selectedLogData[i].title
+          );
 
           const infowindow = new window.kakao.maps.CustomOverlay({
             map: null, // 초기에는 null로 설정하여 오버레이를 숨깁니다
@@ -289,8 +308,11 @@ const Log = () => {
       function makeClickListener(data: logDataType) {
         return function () {
           const logData = getLogSubData.mutate(data.logId);
-          setSelectedLogIndex(data.logId);
-          setLogId(data.logId);
+          setSelectedLog((prev) => ({
+            selectedLogData: prev.selectedLogData,
+            selectedLogIndex: data.logId,
+          }));
+          // setLogId(data.logId);
           setLocation({
             level: 8,
             latitude: Number(data.latitude),
@@ -300,7 +322,7 @@ const Log = () => {
       }
     };
     script.addEventListener('load', onLoadKakaoMap);
-  }, [selectedLogData]);
+  }, [selectedLog.selectedLogData]);
   useEffect(() => {
     if (kakaoMap === null) {
       return;
@@ -320,7 +342,7 @@ const Log = () => {
 
   // 스크롤바 이동
   useEffect(() => {
-    if (selectedLogIndex) {
+    if (selectedLog.selectedLogIndex) {
       setTimeout(() => {
         if (logRefs.current) {
           logRefs.current.scrollIntoView({
@@ -330,7 +352,7 @@ const Log = () => {
         }
       }, 200);
     }
-  }, [selectedLogIndex]);
+  }, [selectedLog.selectedLogIndex]);
 
   useEffect(() => {
     if (kakaoMap === null || containerRef.current === null) {
@@ -367,13 +389,18 @@ const Log = () => {
                   longitude: Number(data.longitude),
                   level: 8,
                 });
-                setSelectedLogIndex(data.logId);
-                setLogId(data.logId);
+                setSelectedLog((prev) => ({
+                  selectedLogData: prev.selectedLogData,
+                  selectedLogIndex: data.logId,
+                }));
+                // setLogId(data.logId);
               }}
             >
               <div
-                className={`${selectedLogIndex === data.logId ? 'log_selected' : 'log'}`}
-                ref={selectedLogIndex === data.logId ? logRefs : null}
+                className={`${selectedLog.selectedLogIndex === data.logId ? 'log_selected' : 'log'}`}
+                ref={
+                  selectedLog.selectedLogIndex === data.logId ? logRefs : null
+                }
               >
                 <div className="logDate">{getDate(data.createdAt)}</div>
                 <div className="logAddress">{data.address}</div>
@@ -391,15 +418,15 @@ const Log = () => {
       <div className="logSideContent">
         <header></header>
         <main>
-          {selectedLogData.length > 0 &&
-            selectedLogData.map((recommend, i) => (
+          {selectedLog.selectedLogData.length > 0 &&
+            selectedLog.selectedLogData.map((recommend, i) => (
               <div key={i} className="Container">
                 <Card
                   recommend={recommend}
                   refetch={() => {
-                    getLogSubData.mutate(logId),
-                      setSelectedLogIndex(logId),
-                      setLogId(logId);
+                    getLogSubData.mutate(selectedLog.selectedLogIndex);
+                    // setSelectedLogIndex(logId),
+                    // setLogId(logId);
                   }}
                   onClick={() => onClickCard(recommend)}
                 />
@@ -411,7 +438,7 @@ const Log = () => {
         <PlaceInfo
           openModal={openModal}
           locationId={selectedLocationId}
-          refetch={() => getLogSubData.mutate(logId)}
+          refetch={() => getLogSubData.mutate(selectedLog.selectedLogIndex)}
         />
       </Modal>
     </LogContainer>

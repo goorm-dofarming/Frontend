@@ -17,8 +17,8 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <GoogleOAuthProvider
       clientId={clientId}
-      onScriptLoadSuccess={() => console.log('성공')}
-      onScriptLoadError={() => console.log('실패')}
+      // onScriptLoadSuccess={() => console.log('성공')}
+      onScriptLoadError={() => console.log('구글 로그인 실패')}
     >
       <RecoilProvider>
         <ReactQueryProvider>
