@@ -1,12 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import Image from 'next/image';
 
-// img
-import { MdClose } from 'react-icons/md';
-
-// contestAPI
+// styles
 import { ModalContainer } from '@/src/_styles/common/modalStyles';
+
 interface MainModalType {
   children: React.ReactNode;
   width: string;
@@ -40,7 +37,13 @@ const Modal: React.FC<MainModalType> = ({
       $height={height}
       onClick={openModal}
     >
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal"
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log(e);
+        }}
+      >
         {/* 모달 헤더 */}
         <div className="modalHeader">
           <div onClick={openModal} className="logo">

@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
 import cx from 'classnames';
 import { colorTheme } from '@/src/_styles/common/commonColorStyles';
-import { SortType } from '@/src/types/aboutLikes';
 
 interface DropdownContainerProps {
   $width?: string;

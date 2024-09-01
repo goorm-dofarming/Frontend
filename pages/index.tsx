@@ -1,6 +1,5 @@
 import styles from '@/src/home.module.scss';
 import React, { useEffect, useState } from 'react';
-import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
 
 // components
 import NavBar from '@/src/_components/main/NavBar';
@@ -23,6 +22,7 @@ import {
 import { pageState } from '@/src/atom/stats';
 import { useQuery } from '@tanstack/react-query';
 import { useCookies } from 'react-cookie';
+import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
 
 // types
 import { Alarm } from '@/src/types/aboutChat';
@@ -44,15 +44,16 @@ const menu: { [key: string]: JSX.Element | null } = {
 };
 
 const Home = () => {
+  // 유저 상태
   const [user, setUser] = useRecoilState(userState);
+  // 토큰
   const [cookies] = useCookies(['token']);
   const [fold, setFold] = useState<boolean>(false);
   const [page, setPage] = useRecoilState(pageState);
   const [element, setElement] = useState<React.JSX.Element | null>(menu[page]);
-  const [pin, setPin] = useRecoilState<string>(pinShowState);
   const [alarm, setAlarm] = useRecoilState(alarmState);
   const setMessageAlarm = useSetRecoilState(messageAlarmState);
-  const [randomPin, setRandomPin] = useRecoilState(randomPinState);
+  const [, setRandomPin] = useRecoilState(randomPinState);
   const [isClient, setIsClient] = useState(false);
   const [toast, setToast] = useState<boolean>(false);
 
@@ -81,9 +82,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    // console.log('user: ', user);
     if (user.userId > 0) {
-      // setUser(userInfo);
       setInitial();
     }
   }, [user]);
@@ -121,7 +120,6 @@ const Home = () => {
     }
   };
   useEffect(() => {
-    // console.log(cookies);
     if (cookies.token) {
       refetchUser();
     }

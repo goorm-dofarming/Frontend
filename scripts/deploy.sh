@@ -4,7 +4,7 @@ set -e
 LOG_FILE="/home/ubuntu/deploy/install.log"
 
 # 권한 부여
-echo "Changing ownership and permissions..." | tee -a $LOG_FILE
+echo "Changing ownership and permissions..."
 sudo chown -R ubuntu:ubuntu /home/ubuntu/deploy
 sudo chmod -R 755 /home/ubuntu/deploy
 
@@ -13,15 +13,15 @@ cd /home/ubuntu/deploy
 
 # 패키지 설치 함수 정의
 install_packages() {
-    echo "Installing packages..." | tee -a $LOG_FILE
-    pnpm install --force | tee -a $LOG_FILE
+    echo "Installing packages..."
+    pnpm install --force
 
     if [ $? -eq 0 ]; then
-        echo "Packages installed successfully." | tee -a $LOG_FILE
+        echo "Packages installed successfully."
         return 0
     else
-        echo "Package installation failed. Retrying..." | tee -a $LOG_FILE
-        pnpm install --force | tee -a $LOG_FILE
+        echo "Package installation failed. Retrying..."
+        pnpm install --force
         return $?
     fi
 }
@@ -29,12 +29,12 @@ install_packages() {
 # 패키지 설치 시도
 install_packages
 if [ $? -ne 0 ]; then
-    echo "Packages failed to install after retrying." | tee -a $LOG_FILE
+    echo "Packages failed to install after retrying."
     exit 1
 fi
 
 # node_modules 권한 부여
-echo "Changing ownership of node_modules to ubuntu..." | tee -a $LOG_FILE
+echo "Changing ownership of node_modules to ubuntu..."
 sudo chown -R ubuntu:ubuntu /home/ubuntu/deploy
 sudo chmod -R 755 /home/ubuntu/deploy
 
@@ -44,8 +44,14 @@ sudo pnpm install
 # pnpm build
 sudo pnpm build
 
-# 애플리케이션 시작 또는 재시작
-echo "Starting or resurrecting the application..." | tee -a $LOG_FILE
-pm2 resurrect || pm2 start npm --name "Frontend" -- start | tee -a $LOG_FILE
+# 모든 PM2 프로세스 중지
+echo "Stopping all currently running PM2 processes..."
+pm2 stop all
 
-echo "Deployment finished successfully." | tee -a $LOG_FILE
+# 애플리케이션 시작
+echo "Starting the new application..."
+pm2 start npm --name "Frontend" -- start
+
+echo "Deployment finished successfully."
+
+
