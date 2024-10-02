@@ -33,20 +33,12 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# node_modules 권한 부여
-echo "Changing ownership of node_modules to ubuntu..."
-sudo chown -R ubuntu:ubuntu /home/ubuntu/deploy
-sudo chmod -R 755 /home/ubuntu/deploy
-
-# pnpm 재설치
-sudo pnpm install
-
 # pnpm build
 sudo pnpm build
 
 # 모든 PM2 프로세스 중지
 echo "Stopping all currently running PM2 processes..."
-pm2 stop all
+sudo pm2 stop all
 
 # 애플리케이션 시작
 echo "Starting the new application..."
